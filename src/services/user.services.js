@@ -1,0 +1,41 @@
+import axios from "axios";
+
+class UserService {
+    constructor() {
+        this.api = axios.create({
+            baseURL: `${import.meta.env.VITE_API_URL}/user`
+        })
+
+        this.api.interceptors.request.use((config) => {
+            const storedToken = localStorage.getItem("authToken")
+
+            if (storedToken) {
+                config.headers = { Authorization: `Bearer ${storedToken}` }
+            }
+
+            return config
+        })
+    }
+
+    getAllUsers() {
+        return this.api.get(`/getAllUsers`)
+    }
+
+    getUserDetails(user_id) {
+        return this.api.get(`/getOneUser/${user_id}`)
+    }
+
+    deleteUser(user_id) {
+        return this.api.delete(`/deleteUser/${user_id}`)
+    }
+
+    editProfile(user_id, userData) {
+        console.log("este es el data que me llega al edit service", userData)
+        return this.api.put(`/editProfile/${user_id}`, userData)
+    }
+
+}
+
+const userService = new UserService()
+
+export default userService

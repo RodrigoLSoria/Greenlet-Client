@@ -1,0 +1,29 @@
+.message-card {
+    /* Add your default styles here */
+    padding: 5px;
+    border: 1px solid #ccc;
+    background-color: #000;
+    margin-bottom: 10px;
+
+    /* Smooth transition effect */
+}
+
+
+div.message-card.sender-message {
+    background-color: green !important;
+}
+
+div.message-card.receiver-message {
+    background-color: red !important;
+}
+
+.message-time {
+    font-size: 12px;
+    /* Adjust the font size as needed */
+    text-align: right;
+    /* Right-align sender time, you can adjust this as needed */
+    color: #888;
+    /* Adjust the color as needed */
+    margin-top: 4px;
+    /* Adjust the margin as needed */
+}

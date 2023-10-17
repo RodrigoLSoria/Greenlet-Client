@@ -1,0 +1,30 @@
+.unread-dot {
+    width: 10px;
+    /* Adjust the size of the dot */
+    height: 10px;
+    /* Adjust the size of the dot */
+    background-color: red;
+    /* Red color for the dot */
+    border-radius: 50%;
+    /* Makes the dot round */
+    display: inline-block;
+    /* Keeps the dot inline with the text */
+    margin-right: 5px;
+    /* Adjust the spacing between the dot and text */
+}
+
+.conversation-card {
+    /* Add your default styles here */
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+    /* Smooth transition effect */
+}
+
+.conversation-card.hovered {
+    /* Styles for hovered card */
+    background-color: rgba(128, 128, 128, 0.2);
+    /* Grey translucent color */
+}
