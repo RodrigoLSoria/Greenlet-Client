@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { Button, Form } from "react-bootstrap"
+import { Button, Form, Card } from "react-bootstrap"
 import authService from "../../services/auth.services"
 import uploadServices from "../../services/upload.services"
 import { AuthContext } from "../../contexts/auth.context"

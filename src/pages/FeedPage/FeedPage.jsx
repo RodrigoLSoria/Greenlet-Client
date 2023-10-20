@@ -8,7 +8,7 @@ import setGeolocation from "../../utils/setGeolocation"
 import Carousel from 'react-bootstrap/Carousel'
 
 
-const FeedPage = ({ socket }) => {
+const FeedPage = () => {
 
     const [posts, setPosts] = useState()
     const [filteredPosts, setFilteredPosts] = useState([])
@@ -16,17 +16,17 @@ const FeedPage = ({ socket }) => {
     const [selectedPlantTypes, setSelectedPlantTypes] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
     const [showOffCanvas, setShowOffCanvas] = useState(false)
-    // const [dateFilter, setDateFilter] = useState('all');
+    const [dateFilter, setDateFilter] = useState('all');
 
     const handleClose = () => setShowOffCanvas(false);
     const handleShow = () => setShowOffCanvas(true);
 
+
     useEffect(() => {
         loadFeed();
 
-    }, [searchQuery, selectedCategories, selectedPlantTypes]);
+    }, [searchQuery, selectedCategories, selectedPlantTypes, dateFilter]);
 
-    // incluye dateFilter en el []
 
     const refreshPosts = () => {
         loadFeed();
@@ -43,7 +43,7 @@ const FeedPage = ({ socket }) => {
                     userLatitude: latitude,
                     userLongitude: longitude,
                     plantType: selectedPlantTypes,
-                    // dateFilter
+                    dateFilter
                 }
 
                 postsService
@@ -95,7 +95,7 @@ const FeedPage = ({ socket }) => {
                     Filters
                 </Button>
                 <Dropdown>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">Filter by Category</Dropdown.Toggle>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">Category</Dropdown.Toggle>
                     <Dropdown.Menu>
                         <Form>
                             {Constants.POST_CATEGORIES.map((category) => (
@@ -114,18 +114,17 @@ const FeedPage = ({ socket }) => {
                     </Dropdown.Menu>
                 </Dropdown>
 
-                {/* <Dropdown>
-                    <Dropdown.Toggle variant="success" id="date-dropdown-basic">Filter by Date</Dropdown.Toggle>
+                <Dropdown>
+                    <Dropdown.Toggle variant="success" id="date-dropdown-basic">Posted</Dropdown.Toggle>
                     <Dropdown.Menu>
                         <Dropdown.Item onClick={() => setDateFilter('24h')}>Last 24 Hours</Dropdown.Item>
                         <Dropdown.Item onClick={() => setDateFilter('7d')}>Last Week</Dropdown.Item>
                         <Dropdown.Item onClick={() => setDateFilter('30d')}>Last Month</Dropdown.Item>
                         <Dropdown.Item onClick={() => setDateFilter('all')}>All</Dropdown.Item>
                     </Dropdown.Menu>
-                </Dropdown> */}
+                </Dropdown>
 
-                <Feed filteredPosts={filteredPosts} setPosts={setPosts}
-                    socket={socket} refreshPosts={refreshPosts} />
+                <Feed filteredPosts={filteredPosts} setPosts={setPosts} refreshPosts={refreshPosts} />
             </Container>
 
             <div className="OffCanvas">

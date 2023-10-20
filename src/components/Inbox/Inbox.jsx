@@ -2,7 +2,7 @@ import { Col, Row } from "react-bootstrap";
 import Loader from "../Loader/Loader";
 import ConversationDisplay from "../ConversationDisplay/ConversationDisplay";
 import "./Inbox.css"
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 import ChatIcon from '@mui/icons-material/Chat';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -10,26 +10,33 @@ import { Avatar } from "@mui/material";
 import { Search } from "@mui/icons-material"
 import ChatItem from "../ChatItem/ChatItem";
 import conversationService from "../../services/conversations.services";
+import { SocketContext } from '../../contexts/socket.context'
 
+const Inbox = ({ conversations }) => {
 
-const Inbox = ({ conversations, socket }) => {
 
     const [selectedConversation, setSelectedConversation] = useState(null);
+    const { socket, messages } = useContext(SocketContext)
+
     console.log("esta es la selected conversation", selectedConversation)
 
     useEffect(() => {
         if (socket) {
-            socket.on("newMessage", (message) => {
+            socket.on("newMessage", handleMessage);
+        }
 
-                selectedConversation &&
-                    setSelectedConversation((prevConversation) => ({
-                        ...prevConversation,
-                        messages: [...prevConversation.messages, message],
-                    }))
-
-            });
+        return () => {
+            socket && socket.off('newMessage', handleMessage);
         }
     }, [socket, selectedConversation])
+
+    const handleMessage = (message) => {
+        selectedConversation &&
+            setSelectedConversation((prevConversation) => ({
+                ...prevConversation,
+                messages: [...prevConversation.messages, message],
+            }));
+    }
 
     const handleConversationClick = (conversation) => {
 
@@ -65,14 +72,6 @@ const Inbox = ({ conversations, socket }) => {
                     {!conversations ? (
                         <Loader />
                     ) : (
-                        // conversations.map((elm) => (
-                        //     <ConversationCard
-                        //         key={elm._id}
-                        //         conversationData={elm}
-                        //         onClick={() => alert("heeeeey")}
-                        //         selected={selectedConversation === elm}
-                        //     />
-                        // ))
                         conversations.map((elm) => (
                             <ChatItem
                                 key={elm._id}
@@ -83,7 +82,6 @@ const Inbox = ({ conversations, socket }) => {
                                 selected={selectedConversation === elm}
                             />
                         ))
-
                     )
                     }
                 </div>

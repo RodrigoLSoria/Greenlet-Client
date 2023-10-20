@@ -1,4 +1,3 @@
-import { Form } from 'react-bootstrap'
 import './ConversationDisplay.css'
 import { Avatar } from '@mui/material';
 import { Search } from '@mui/icons-material';
@@ -8,15 +7,15 @@ import MessageForm from '../MessageForm/MessageForm';
 import ConversationLog from '../ConversationLog/ConversationLog'
 
 
-const ConversationDisplay = ({ socket, selectedConversation }) => {
+const ConversationDisplay = ({ selectedConversation }) => {
 
     return (
         <div className="conversation-display">
             <div className="bg-conversation"></div>
             <div className="chat-header">
-                <Avatar />
+                <Avatar src={selectedConversation.sender.avatar} />
                 <div className="chat-header-details">
-                    <span className="chosenConversation">{selectedConversation.receiver.username}</span>
+                    <span className="chosenConversation">{selectedConversation.sender.username}</span>
                 </div>
                 <div className="chat-header-right">
                     <Search color="action" />
@@ -31,7 +30,7 @@ const ConversationDisplay = ({ socket, selectedConversation }) => {
                     <InsertEmoticonIcon color="action" />
                 </div>
                 <div className="chat-footer-input">
-                    <MessageForm socket={socket} selectedConversation={selectedConversation} />
+                    <MessageForm selectedConversation={selectedConversation} />
                 </div>
             </div>
         </div>

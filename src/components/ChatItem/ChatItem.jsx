@@ -1,10 +1,23 @@
 import { Avatar } from '@mui/material'
 import './ChatItem.css'
 import Loader from '../Loader/Loader'
+import { useContext, useState } from 'react'
+import { AuthContext } from '../../contexts/auth.context'
 
 const ChatItem = ({ conversationData, onClick, selected }) => {
 
-    //TO-DO: añadir el red dot aquí para los unreadmessages y repensar esa lógica
+    const { loggedUser } = useContext(AuthContext)
+    const [HoveredConversation, setHoveredConversation] = useState(false)
+
+    console.log(conversationData)
+
+    const handleMouseEnter = () => {
+        setHoveredConversation(true)
+    }
+
+    const handleMouseLeave = () => {
+        setHoveredConversation(false)
+    }
 
     return (
         !conversationData.receiver ?
@@ -13,12 +26,16 @@ const ChatItem = ({ conversationData, onClick, selected }) => {
             )
             :
             (
-                <div className={`conversation-item ${selected ? 'selected' : ''
-                    }`} onClick={() => onClick(conversationData)}>
+                <div role="gridcell"
+                    aria-colindex="2"
+                    className={`conversation-item ${HoveredConversation ? 'hovered' : ''}`}
+                    onClick={() => onClick(conversationData)}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}>
                     <Avatar src={conversationData.sender.avatar} />
                     <div className="item-info">
-                        <span className="title">{conversationData.receiver.username}</span><br />
-                        {/* <span className="info">{conversationData.post.title}</span> */}
+                        <span className="title">{conversationData.sender.username}</span><br />
+                        <span className="info">{conversationData.post.title}</span>
                     </div>
                 </div>
             )

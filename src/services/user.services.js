@@ -34,6 +34,10 @@ class UserService {
         return this.api.put(`/editProfile/${user_id}`, userData)
     }
 
+    getUserFavorites(user_id) {
+        return this.api.get(`/Favorites/${user_id}`)
+    }
+
 }
 
 const userService = new UserService()

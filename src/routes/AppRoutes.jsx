@@ -7,15 +7,15 @@ import InboxPage from '../pages/InboxPage/InboxPage'
 import UserPostsPage from '../pages/UserPostsPage/UserPostsPage'
 
 
-const AppRoutes = ({ socket }) => {
+const AppRoutes = () => {
 
     return (
         <Routes>
-            <Route path={'/'} element={<FeedPage socket={socket} />} />
+            <Route path={'/'} element={<FeedPage />} />
             <Route path={'/newPost'} element={<NewPostPage />} />
             <Route path={'/postDetails/:post_id'} element={<PostDetailsPage />} />
             <Route path={'/profile/:user_id'} element={<ProfilePage />} />
-            <Route path={'/getAllForUser/:user_id'} element={<InboxPage socket={socket} />} />
+            <Route path={'/getAllForUser/:user_id'} element={<InboxPage />} />
             {/* <Route path={'/getConversation/:sender_id/:receiver_id`'} element={<ConversationPage />} /> */}
             <Route path={'/getPostsByOwner/:user_id'} element={<UserPostsPage />} />
             <Route path={'*'} element={<p>el error</p>} />

@@ -50,6 +50,18 @@ class PostService {
     getPostsByLocation(city) {
         return this.api.get(`/getPostsByLocation/${city}`)
     }
+
+    favouritePost(post_id, user_id) {
+        return this.api.post(`/favouritePost/${post_id}`, user_id)
+    }
+
+    unfavouritePost(post_id, user_id) {
+        return this.api.post(`/unfavouritePost/${post_id}`, user_id)
+    }
+
+    closePost(post_id) {
+        return this.api.put(`/closePost/${post_id}`);
+    }
 }
 
 
