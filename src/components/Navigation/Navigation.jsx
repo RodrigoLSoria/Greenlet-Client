@@ -12,7 +12,7 @@ import { useSignupModalContext } from '../../contexts/signupModal.context'
 
 const Navigation = () => {
 
-    const { showLoginModal, setShowLoginModal } = useLoginModalContext();
+    const { showLoginModal, setShowLoginModal } = useLoginModalContext()
     const { showSignupModal, setShowSignupModal } = useSignupModalContext()
 
     const [showPostModal, setShowPostModal] = useState(false)

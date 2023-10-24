@@ -8,21 +8,24 @@ import { LoginModalProvider } from './contexts/loginModal.context'
 import { SignupModalProvider } from './contexts/signupModal.context'
 import { MessageModalProvider } from './contexts/messageModal.context'
 import { SocketProvider } from './contexts/socket.context'
+import { FeedRefreshProvider } from './contexts/postsRefresh.context';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Router>
     <AuthProviderWrapper>
-      <SocketProvider>
-        <SignupModalProvider>
-          <LoginModalProvider>
-            <MessageModalProvider>
-              <React.StrictMode>
-                <App />
-              </React.StrictMode>
-            </MessageModalProvider>
-          </LoginModalProvider>
-        </SignupModalProvider>
-      </SocketProvider>
+      <FeedRefreshProvider>
+        <SocketProvider>
+          <SignupModalProvider>
+            <LoginModalProvider>
+              <MessageModalProvider>
+                <React.StrictMode>
+                  <App />
+                </React.StrictMode>
+              </MessageModalProvider>
+            </LoginModalProvider>
+          </SignupModalProvider>
+        </SocketProvider>
+      </FeedRefreshProvider>
     </AuthProviderWrapper >
   </Router>
 )

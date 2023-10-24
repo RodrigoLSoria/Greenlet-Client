@@ -18,7 +18,6 @@ class ExchangeService {
 
     saveExchange(exchangeData) {
 
-        console.log("esto es lo que me llega al service", exchangeData)
         return this.api.post('/saveExchange', exchangeData)
     }
 
@@ -26,8 +25,12 @@ class ExchangeService {
         return this.api.put(`/updateExchange/${exchange_id}`, exchangeData)
     }
 
-    getPendingExchangesForUser(user_id) {
-        return this.api.get(`/pendingExchanges/${user_id}`);
+    updateExchangeStatus(exchange_id, status) {
+        return this.api.put(`/updateExchange/${exchange_id}`, { status });
+    }
+
+    getExchangesForUserByStatus(user_id, status) {
+        return this.api.get(`/getExchangesForUserByStatus/${user_id}/${status}`);
     }
 
 

@@ -9,7 +9,6 @@ const ChatItem = ({ conversationData, onClick, selected }) => {
     const { loggedUser } = useContext(AuthContext)
     const [HoveredConversation, setHoveredConversation] = useState(false)
 
-    console.log(conversationData)
 
     const handleMouseEnter = () => {
         setHoveredConversation(true)
@@ -18,6 +17,11 @@ const ChatItem = ({ conversationData, onClick, selected }) => {
     const handleMouseLeave = () => {
         setHoveredConversation(false)
     }
+
+    const otherUser = conversationData.sender._id === loggedUser?._id
+        ? conversationData.receiver
+        : conversationData.sender
+
 
     return (
         !conversationData.receiver ?
@@ -32,10 +36,10 @@ const ChatItem = ({ conversationData, onClick, selected }) => {
                     onClick={() => onClick(conversationData)}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}>
-                    <Avatar src={conversationData.sender.avatar} />
+                    <Avatar src={otherUser.avatar} />
                     <div className="item-info">
-                        <span className="title">{conversationData.sender.username}</span><br />
-                        <span className="info">{conversationData.post.title}</span>
+                        <span className="title">{otherUser.username}</span><br />
+                        <span className="info">{conversationData.post?.title}</span>
                     </div>
                 </div>
             )

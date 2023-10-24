@@ -16,9 +16,11 @@ class BadgeService {
         })
     }
 
+    getAllBadges() {
+        return this.api.get('/getAllBadges')
+    }
 
     updateExchangeCount(user_id, exchangeData) {
-        console.log("esto es lo que me llega al servicio", exchangeData)
         return this.api.put(`/updateExchangeCount/${user_id}`, exchangeData)
     }
 

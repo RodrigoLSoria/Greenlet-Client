@@ -9,6 +9,7 @@ import postsService from "../../services/posts.services"
 import PostCard from '../../components/PostCard/PostCard'
 import exchangeService from "../../services/exchange.services"
 import ExchangeCard from "../../components/ExchangeCard/ExchangeCard"
+import { DataArray } from "@mui/icons-material"
 
 
 const ProfilePage = () => {
@@ -17,8 +18,13 @@ const ProfilePage = () => {
     const [posts, setPosts] = useState([])
     // const [favourites, setFavourites] = useState([])
     const [pendingExchanges, setPendingExchanges] = useState([])
+    const [closedExchanges, setClosedExchanges] = useState([]);
+
     const { loggedUser, logout } = useContext(AuthContext)
     const [showModal, setShowModal] = useState(false)
+
+    const openPosts = posts.filter(post => !post.isClosed);
+    const closedPosts = posts.filter(post => post.isClosed)
 
 
     console.log("pendingExchanges", pendingExchanges)
@@ -26,6 +32,7 @@ const ProfilePage = () => {
         loadUserDetails()
         loadUserPosts()
         loadPendingExchanges()
+        loadClosedExchanges()
         // loadUserFavourites()
     }, [])
 
@@ -43,11 +50,28 @@ const ProfilePage = () => {
             .catch(err => console.log(err))
     }
 
-    const loadPendingExchanges = () => {
+    const loadExchangesByStatus = (status) => {
+        console.log("este es el status", status, "y este el id del user", user_id)
         exchangeService
-            .getPendingExchangesForUser(user_id)
-            .then(({ data }) => setPendingExchanges(data))
+            .getExchangesForUserByStatus(user_id, status) // Updated service function name
+            .then(({ data }) => {
+                console.log("esta e la data q me vuelve", data)
+
+                if (status === 'pending') {
+                    setPendingExchanges(data);
+                } else if (status === 'closed') {
+                    setClosedExchanges(data);
+                }
+            })
             .catch(err => console.log(err));
+    }
+
+    const loadPendingExchanges = () => {
+        loadExchangesByStatus('pending');
+    }
+
+    const loadClosedExchanges = () => {
+        loadExchangesByStatus('closed');
     }
 
 
@@ -80,12 +104,12 @@ const ProfilePage = () => {
                         </Col>
                     </Row>
 
-                    <h2>My Posts</h2>
-
+                    <h2>My Badges</h2>
                     <Row>
-                        {posts.map(post => (
-                            <Col key={post._id} md={4}>
-                                <PostCard previousPostData={post} />
+                        {user.badges?.map(badge => (
+                            <Col key={badge._id} md={4}>
+                                <h2>{badge.name}</h2>
+                                <img src={badge.imageUrl} style={{ width: '100%' }} />
                             </Col>
                         ))}
                     </Row>
@@ -95,6 +119,24 @@ const ProfilePage = () => {
                         {pendingExchanges.map(exchange => (
                             <Col key={exchange._id} md={4}>
                                 <ExchangeCard exchangeData={exchange} />
+                            </Col>
+                        ))}
+                    </Row>
+
+                    <h2>My Posts</h2>
+                    <Row>
+                        {openPosts.map(post => (
+                            <Col key={post._id} md={4}>
+                                <PostCard previousPostData={post} />
+                            </Col>
+                        ))}
+                    </Row>
+
+                    <h2>My Closed Posts</h2>
+                    <Row>
+                        {closedPosts.map(post => (
+                            <Col key={post._id} md={4}>
+                                <PostCard previousPostData={post} />
                             </Col>
                         ))}
                     </Row>

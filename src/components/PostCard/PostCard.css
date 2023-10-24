@@ -18,3 +18,11 @@
     background-color: rgba(0, 0, 0, 0.3);
     /* Optional: Add a semi-transparent background */
 }
+
+.closed-post {
+    /* Define your styles for closed posts here */
+    opacity: 0.5;
+    /* Example: Reducing opacity for a disabled appearance */
+    pointer-events: none;
+    /* Example: Disabling interactions with the card */
+}

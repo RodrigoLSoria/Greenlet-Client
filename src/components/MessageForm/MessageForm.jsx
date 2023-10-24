@@ -14,6 +14,7 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation }) => {
     const { socket } = useContext(SocketContext)
     const { setShowMessageModal } = useMessageModalContext()
     const [messages, setMessages] = useState([])
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false)
     const isOwner = loggedUser?._id === selectedConversation?.post.owner
 
 
@@ -89,12 +90,10 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation }) => {
     }
 
     const handleConfirmExchange = () => {
-        // logic for confirming exchange can be implemented here
-        console.log("Exchange confirmed!");
+        setIsButtonDisabled(true)
         handleSaveExchange()
         // You might want to notify the other user, update the database, etc.
     }
-    console.log("esta es la conversatondata de donde tengo que sacar el receiver tdel exchange", conversationData)
     const handleSaveExchange = () => {
         // Define the exchange data based on your data model
         const exchangeData = {
@@ -117,7 +116,7 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation }) => {
             });
     };
 
-
+    console.log("esta es la selecvted conversation y este el isowner", selectedConversation, isOwner)
     return (
         <div className="MessageForm">
             <Form onSubmit={handleMessageSubmit}>
@@ -125,7 +124,8 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation }) => {
                     <Col xs={2}>
                         {selectedConversation && isOwner && (
                             <div className="d-grid">
-                                <Button variant="warning" onClick={handleConfirmExchange}>
+                                <Button variant="warning" onClick={handleConfirmExchange}
+                                    disabled={isButtonDisabled}>
                                     Confirm Exchange/Gift
                                 </Button>
                             </div>

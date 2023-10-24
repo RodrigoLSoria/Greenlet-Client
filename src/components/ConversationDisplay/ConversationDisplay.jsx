@@ -5,17 +5,26 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import MessageForm from '../MessageForm/MessageForm';
 import ConversationLog from '../ConversationLog/ConversationLog'
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/auth.context';
 
 
 const ConversationDisplay = ({ selectedConversation }) => {
+
+    const { loggedUser } = useContext(AuthContext)
+
+    const otherUser = selectedConversation.sender._id === loggedUser?._id
+        ? selectedConversation.receiver
+        : selectedConversation.sender
+
 
     return (
         <div className="conversation-display">
             <div className="bg-conversation"></div>
             <div className="chat-header">
-                <Avatar src={selectedConversation.sender.avatar} />
+                <Avatar src={otherUser.avatar} />
                 <div className="chat-header-details">
-                    <span className="chosenConversation">{selectedConversation.sender.username}</span>
+                    <span className="chosenConversation">{otherUser.username}</span>
                 </div>
                 <div className="chat-header-right">
                     <Search color="action" />

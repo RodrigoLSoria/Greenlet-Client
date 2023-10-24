@@ -84,7 +84,7 @@ const PostCard = ({ refreshPosts, previousPostData, setPosts }) => {
         <>
             <Col lg={{ span: 3 }} md={{ span: 6 }}>
                 <article>
-                    <Card style={{ width: '18rem' }}>
+                    <Card style={{ width: '18rem' }} className={`${previousPostData.isClosed ? 'closed-post' : ''}`}>
                         <Card.Img variant="top" src={previousPostData.image} />
                         <Card.Body>
                             <Card.Title>{previousPostData.title}</Card.Title>
@@ -92,19 +92,26 @@ const PostCard = ({ refreshPosts, previousPostData, setPosts }) => {
                             <Card.Text>Type: {previousPostData.plantType}</Card.Text>
                             <Card.Text>Posted: {formatDate(previousPostData.createdAt)}</Card.Text>
                             <Link to={`/postDetails/${previousPostData._id}`} className="btn-btn-dark">See Details</Link>
-                            {
-                                loggedUser ?
+
+                            {loggedUser ? (
+                                loggedUser._id !== previousPostData.owner._id ? (
                                     <Link onClick={() => setShowMessageModal(true)} className="btn-btn-dark"><EmailIcon /></Link>
-                                    :
-                                    <Link onClick={() => setShowLoginReminder(true)} className="btn-btn-dark"><EmailIcon /></Link>
+                                ) : (
+                                    <>
 
-                            }
+                                    </>
+                                )
+                            ) : (
+                                <Link onClick={() => setShowLoginReminder(true)} className="btn-btn-dark"><EmailIcon /></Link>
+                            )}
 
-                            {
-                                isFavorite ?
-                                    <FavoriteIcon onClick={handleUnfavoritePost} /> :
+                            {!loggedUser?._id === previousPostData.owner._id && (
+                                isFavorite ? (
+                                    <FavoriteIcon onClick={handleUnfavoritePost} />
+                                ) : (
                                     <FavoriteBorderIcon onClick={handleFavoritePost} />
-                            }
+                                )
+                            )}
 
 
                             {loggedUser?._id === previousPostData.owner._id &&

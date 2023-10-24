@@ -6,7 +6,7 @@ import * as Constants from "../../consts/consts"
 import Offcanvas from 'react-bootstrap/Offcanvas'
 import setGeolocation from "../../utils/setGeolocation"
 import Carousel from 'react-bootstrap/Carousel'
-
+import { useFeedRefresh } from '../../contexts/postsRefresh.context'
 
 const FeedPage = () => {
 
@@ -16,16 +16,21 @@ const FeedPage = () => {
     const [selectedPlantTypes, setSelectedPlantTypes] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
     const [showOffCanvas, setShowOffCanvas] = useState(false)
-    const [dateFilter, setDateFilter] = useState('all');
+    const [dateFilter, setDateFilter] = useState('all')
+    const { refreshFeed, setRefreshFeed } = useFeedRefresh()
+
 
     const handleClose = () => setShowOffCanvas(false);
     const handleShow = () => setShowOffCanvas(true);
 
-
     useEffect(() => {
-        loadFeed();
+        loadFeed()
+        if (refreshFeed) {
+            setRefreshFeed(false)
+        }
+    }, [refreshFeed, searchQuery, selectedCategories, selectedPlantTypes, dateFilter])
 
-    }, [searchQuery, selectedCategories, selectedPlantTypes, dateFilter]);
+
 
 
     const refreshPosts = () => {

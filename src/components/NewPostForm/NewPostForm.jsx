@@ -5,8 +5,11 @@ import uploadServices from "../../services/upload.services"
 import { AuthContext } from "../../contexts/auth.context"
 import * as Constants from '../../consts/consts'
 import setGeolocation from '../../utils/setGeolocation';
+import { useFeedRefresh } from '../../contexts/postsRefresh.context'
+
 
 const NewPostForm = ({ refreshPosts, setShowPostModal, setShowEditModal, previousPostData }) => {
+    const { setRefreshFeed } = useFeedRefresh()
 
     const emptyPostForm = {
         title: '',
@@ -57,7 +60,7 @@ const NewPostForm = ({ refreshPosts, setShowPostModal, setShowEditModal, previou
 
         postsService
             .savePost(postData)
-            .then(() => setShowPostModal(false))
+            .then(() => { setShowPostModal(false), setRefreshFeed(true) })
             .catch(err => console.log(err))
 
     }
