@@ -16,6 +16,7 @@ import formatDate from '../../utils/setPostDate'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import userService from "../../services/user.services"
+import { CSSTransition } from 'react-transition-group'
 
 const PostCard = ({ refreshPosts, previousPostData, setPosts }) => {
 
@@ -24,8 +25,12 @@ const PostCard = ({ refreshPosts, previousPostData, setPosts }) => {
     const { setShowSignupModal } = useSignupModalContext()
     const { showMessageModal, setShowMessageModal } = useMessageModalContext()
     const [showLoginReminder, setShowLoginReminder] = useState(false)
+    const [showMessageForm, setShowMessageForm] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
     const [isFavorite, setIsFavorite] = useState(false)
+
+
+    // console.log("esto es lo que me llega por previousPostData los ids del post y el owner----------------------------------------------------------------------------------------------------------------------------------------------------------", previousPostData._id, previousPostData.owner._id)
 
     useEffect(() => {
         if (loggedUser) {
@@ -79,7 +84,6 @@ const PostCard = ({ refreshPosts, previousPostData, setPosts }) => {
                 console.error('Error fetching user favorites:', error);
             });
     }
-
     return (
         <>
             <Col lg={{ span: 3 }} md={{ span: 6 }}>
@@ -91,21 +95,36 @@ const PostCard = ({ refreshPosts, previousPostData, setPosts }) => {
                             <Card.Text>Post by: {previousPostData.owner.username}</Card.Text>
                             <Card.Text>Type: {previousPostData.plantType}</Card.Text>
                             <Card.Text>Posted: {formatDate(previousPostData.createdAt)}</Card.Text>
-                            <Link to={`/postDetails/${previousPostData._id}`} className="btn-btn-dark">See Details</Link>
+                            {/* <Link to={`/postDetails/${previousPostData._id}`} className="btn-btn-dark">See Details</Link> */}
+                            <EmailIcon onClick={() => setShowMessageForm(!showMessageForm)} />
 
-                            {loggedUser ? (
-                                loggedUser._id !== previousPostData.owner._id ? (
-                                    <Link onClick={() => setShowMessageModal(true)} className="btn-btn-dark"><EmailIcon /></Link>
-                                ) : (
-                                    <>
+                            <CSSTransition
+                                in={showMessageForm}
+                                timeout={300}
+                                classNames="message-form"
+                                unmountOnExit
+                            >
+                                <div>
+                                    {showMessageForm && (
+                                        <MessageForm
+                                            refreshPosts={refreshPosts}
+                                            postOwnerId={previousPostData.owner._id}
+                                            postId={previousPostData._id}
+                                            setShowMessageModal={setShowMessageModal}
+                                        />
+                                    )}
+                                </div>
+                            </CSSTransition>
 
-                                    </>
-                                )
+                            {/* {loggedUser ? (
+                                loggedUser._id !== previousPostData.owner._id &&
+                                <Link onClick={() => setShowMessageModal(true)} className="btn-btn-dark"><EmailIcon /></Link>
                             ) : (
                                 <Link onClick={() => setShowLoginReminder(true)} className="btn-btn-dark"><EmailIcon /></Link>
-                            )}
+                            )} */}
 
-                            {!loggedUser?._id === previousPostData.owner._id && (
+
+                            {loggedUser?._id !== previousPostData.owner._id && (
                                 isFavorite ? (
                                     <FavoriteIcon onClick={handleUnfavoritePost} />
                                 ) : (

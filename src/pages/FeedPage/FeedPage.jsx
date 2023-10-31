@@ -4,9 +4,11 @@ import postsService from "../../services/posts.services"
 import Feed from "../../components/Feed/Feed"
 import * as Constants from "../../consts/consts"
 import Offcanvas from 'react-bootstrap/Offcanvas'
-import setGeolocation from "../../utils/setGeolocation"
 import Carousel from 'react-bootstrap/Carousel'
 import { useFeedRefresh } from '../../contexts/postsRefresh.context'
+import setGeolocation from '../../utils/setGeolocation';
+import LocationOnIcon from '@mui/icons-material/LocationOn'
+import mapsService from "../../services/maps.services"
 
 const FeedPage = () => {
 
@@ -17,6 +19,7 @@ const FeedPage = () => {
     const [searchQuery, setSearchQuery] = useState('')
     const [showOffCanvas, setShowOffCanvas] = useState(false)
     const [dateFilter, setDateFilter] = useState('all')
+    const [location, setLocation] = useState('')
     const { refreshFeed, setRefreshFeed } = useFeedRefresh()
 
 
@@ -40,23 +43,32 @@ const FeedPage = () => {
 
     const loadFeed = () => {
         setGeolocation(
-            ({ latitude, longitude }) => {
+            async ({ latitude, longitude }) => {
 
-                const queryParams = {
-                    searchQuery,
-                    category: selectedCategories,
-                    userLatitude: latitude,
-                    userLongitude: longitude,
-                    plantType: selectedPlantTypes,
-                    dateFilter
+                try {
+                    // Use mapsService to get the reverse geocode data
+                    const locationData = await mapsService.reverseGeocode(latitude, longitude);
+
+                    setLocation(`${locationData.data.city}, ${locationData.data.country}`);
+
+                    const queryParams = {
+                        searchQuery,
+                        category: selectedCategories,
+                        userLatitude: latitude,
+                        userLongitude: longitude,
+                        plantType: selectedPlantTypes,
+                        dateFilter
+                    }
+
+                    postsService
+                        .getFilteredPosts(queryParams)
+                        .then(({ data }) => {
+                            setFilteredPosts(data);
+                        })
+                        .catch((err) => console.log(err))
+                } catch (error) {
+                    console.error('Error fetching location:', error);
                 }
-
-                postsService
-                    .getFilteredPosts(queryParams)
-                    .then(({ data }) => {
-                        setFilteredPosts(data);
-                    })
-                    .catch((err) => console.log(err));
             })
     }
 
@@ -95,6 +107,7 @@ const FeedPage = () => {
                     placeholder='Search...'
                     className="form-control"
                 />
+                <LocationOnIcon /> <span>{location}</span>
                 <hr />
                 <Button variant="primary" onClick={handleShow}>
                     Filters

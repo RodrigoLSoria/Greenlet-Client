@@ -11,13 +11,12 @@ const InboxPage = () => {
     const [conversations, setConversations] = useState()
     const { loggedUser } = useContext(AuthContext)
 
-    console.log("esto es lo qe me llllllogeduser", loggedUser)
     const loadInbox = () => {
 
         conversationService
             .getAllConversationsForUser(loggedUser?._id)
             .then(({ data }) => {
-                console.log("esto es lo que me llega de conversacioens", data)
+                console.log("esto es lo que me llega de conversacioens-----------------------------------------------", data)
                 setConversations(data)
             })
             .catch(err => console.log(err))

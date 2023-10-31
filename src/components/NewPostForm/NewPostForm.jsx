@@ -60,7 +60,10 @@ const NewPostForm = ({ refreshPosts, setShowPostModal, setShowEditModal, previou
 
         postsService
             .savePost(postData)
-            .then(() => { setShowPostModal(false), setRefreshFeed(true) })
+            .then(() => {
+                setShowPostModal(false);
+                setRefreshFeed(true);
+            })
             .catch(err => console.log(err))
 
     }

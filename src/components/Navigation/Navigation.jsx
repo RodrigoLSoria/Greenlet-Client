@@ -38,7 +38,7 @@ const Navigation = () => {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
 
-                            <Link className="nav-link" to="/"
+                            <Link className="nav-link" to="#"
                                 onClick={() => loggedUser ? setShowPostModal(true) : setShowLoginModal(true)}>Upload Plant</Link>
 
                             {loggedUser ?

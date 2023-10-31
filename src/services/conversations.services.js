@@ -20,12 +20,20 @@ class ConversationService {
         return this.api.get(`/getAllConversationsForUser/${user_id}`);
     }
 
-    getConversation(sender_Id, receiver_Id) {
-        return this.api.get(`/getConversation/${sender_Id}/${receiver_Id}`);
+    getConversation(sender_Id, receiver_Id, post_id,) {
+        console.log("sender_id:", sender_Id, "receiver_id:", receiver_Id, "post_id", post_id,);
+
+        return this.api.get(`/getConversation/${sender_Id}/${receiver_Id}/${post_id}`,);
     }
 
-    saveConversation(conversationData) {
-        return this.api.post(`/saveConversation`, conversationData)
+    createConversation(conversationData) {
+        console.log("eeeeey soy el service de  la createConversation y funciono ")
+        return this.api.post(`/createConversation`, conversationData);
+    }
+
+    updateConversation(data) {
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>esto es lo que me llega por data al service", data)
+        return this.api.put(`/updateConversation/${data.conversationId}`, data);
     }
 
     deleteConversation(conversation_id) {

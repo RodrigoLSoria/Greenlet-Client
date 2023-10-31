@@ -34,3 +34,18 @@
     background-color: rgba(128, 128, 128, 0.2);
     /* Grey translucent color */
 }
+
+/* En tu archivo CSS */
+.pending-chip {
+    background-color: yellow;
+    padding: 5px;
+    border-radius: 4px;
+    margin: 5px 0;
+    display: inline-block;
+}
+
+.conversation-item.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    background-color: #f0f0f0;
+}

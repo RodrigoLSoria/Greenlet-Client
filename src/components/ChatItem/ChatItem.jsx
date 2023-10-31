@@ -3,10 +3,13 @@ import './ChatItem.css'
 import Loader from '../Loader/Loader'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../contexts/auth.context'
+import { useExchangeStatusContext } from '../../contexts/exchangeStatus.context';
+
 
 const ChatItem = ({ conversationData, onClick, selected }) => {
 
     const { loggedUser } = useContext(AuthContext)
+    const { exchangeStatus } = useExchangeStatusContext()
     const [HoveredConversation, setHoveredConversation] = useState(false)
 
 
@@ -32,10 +35,15 @@ const ChatItem = ({ conversationData, onClick, selected }) => {
             (
                 <div role="gridcell"
                     aria-colindex="2"
-                    className={`conversation-item ${HoveredConversation ? 'hovered' : ''}`}
+                    className={`conversation-item 
+                    ${exchangeStatus === 'PENDING' ? 'disabled' : ''}
+                     ${HoveredConversation ? 'hovered' : ''}`}
                     onClick={() => onClick(conversationData)}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}>
+                    {exchangeStatus === 'PENDING' && (
+                        <div className="pending-chip">PENDING</div>  // Esta es la ficha 'PENDING'
+                    )}
                     <Avatar src={otherUser.avatar} />
                     <div className="item-info">
                         <span className="title">{otherUser.username}</span><br />

@@ -18,7 +18,6 @@ const Inbox = ({ conversations }) => {
     const [selectedConversation, setSelectedConversation] = useState(null);
     const { socket, messages } = useContext(SocketContext)
 
-    console.log("esta es la selected conversation", selectedConversation)
 
     useEffect(() => {
         if (socket) {
@@ -39,13 +38,21 @@ const Inbox = ({ conversations }) => {
     }
 
     const handleConversationClick = (conversation) => {
+        const senderId = conversation.sender._id;
+        const receiverId = conversation.receiver._id;
+        const postId = conversation.post?._id;  // Ensure you have this field in your conversation object
+
+        if (!postId) {
+            console.error("Post ID is not defined in the clicked conversation.");
+            return;
+        }
 
         conversationService
-            .getConversation(conversation.sender._id, conversation.receiver._id)
+            .getConversation(senderId, receiverId, postId) // Passing postId as well
             .then(({ data }) => {
-                setSelectedConversation(data)
+                setSelectedConversation(data);
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log(err));
     };
 
 

@@ -10,18 +10,22 @@ import PostCard from '../../components/PostCard/PostCard'
 import exchangeService from "../../services/exchange.services"
 import ExchangeCard from "../../components/ExchangeCard/ExchangeCard"
 import { DataArray } from "@mui/icons-material"
+import { useFeedRefresh } from '../../contexts/postsRefresh.context'
+
 
 
 const ProfilePage = () => {
     const { user_id } = useParams()
+
     const [user, setUser] = useState({})
     const [posts, setPosts] = useState([])
     // const [favourites, setFavourites] = useState([])
     const [pendingExchanges, setPendingExchanges] = useState([])
     const [closedExchanges, setClosedExchanges] = useState([]);
-
-    const { loggedUser, logout } = useContext(AuthContext)
     const [showModal, setShowModal] = useState(false)
+
+    const { refreshFeed, setRefreshFeed } = useFeedRefresh()
+    const { loggedUser, logout } = useContext(AuthContext)
 
     const openPosts = posts.filter(post => !post.isClosed);
     const closedPosts = posts.filter(post => post.isClosed)
@@ -33,8 +37,13 @@ const ProfilePage = () => {
         loadUserPosts()
         loadPendingExchanges()
         loadClosedExchanges()
-        // loadUserFavourites()
-    }, [])
+        if (refreshFeed) {
+            loadUserDetails();
+            loadUserPosts();
+            setRefreshFeed(false); // Resetting the refresh state
+        }
+
+    }, [refreshFeed])
 
     const loadUserDetails = () => {
         userService
