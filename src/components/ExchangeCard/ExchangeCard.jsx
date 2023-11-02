@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Col } from "react-bootstrap"
+import { Alert, Button, Modal, Card, Col } from "react-bootstrap"
 import './ExchangeCard.css'
 import { Link } from "react-router-dom"
 import { useContext, useState } from "react"
@@ -7,12 +7,14 @@ import formatDate from '../../utils/setPostDate'
 import badgeService from "../../services/badge.services"
 import exchangeService from "../../services/exchange.services";
 import postsService from "../../services/posts.services"
+import RatingForm from "../RatingForm/RatingForm"
 
 const ExchangeCard = ({ exchangeData, onExchangeUpdate }) => {
 
     const { loggedUser } = useContext(AuthContext)
     const [status, setStatus] = useState(exchangeData.status);
     const [isDisabled, setIsDisabled] = useState(false)
+    const [showRatingModal, setShowRatingModal] = useState(false);
 
 
     const handleBadgeUpdate = () => {
@@ -24,7 +26,6 @@ const ExchangeCard = ({ exchangeData, onExchangeUpdate }) => {
 
         badgeService.updateExchangeCount(loggedUser._id, payload)
             .then(({ data: user }) => {
-                console.log("esto es lo que me llega del user", user)
                 const totalExchanges = user.exchanges.reduce((acc, exchange) => acc + exchange.count, 0);
 
                 return Promise.all([badgeService.getAllBadges(), totalExchanges, user]);
@@ -99,12 +100,27 @@ const ExchangeCard = ({ exchangeData, onExchangeUpdate }) => {
                             <Card.Text>Post by: {exchangeData.givenPost.owner.username}</Card.Text>
                             <Card.Text>Type: {exchangeData.givenPost.plantType}</Card.Text>
                             <Card.Text>Posted: {formatDate(exchangeData.givenPost.createdAt)}</Card.Text>
-                            <Button onClick={handleBadgeUpdate} className="btn-btn-dark"
-                                disabled={isDisabled}>Exchange completed</Button>
+                            <Button onClick={() => { handleBadgeUpdate(); setShowRatingModal(true); }} className="btn-btn-dark" disabled={isDisabled}>
+                                Exchange completed
+                            </Button>
                         </Card.Body>
                     </Card>
                 </article>
             </Col>
+
+            <div className="RatingModal">
+                <Modal show={showRatingModal} onHide={() => setShowRatingModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Rating</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <RatingForm
+                            setShowRatingModal={setShowRatingModal}
+                            exchangeData={exchangeData}
+                        />
+                    </Modal.Body>
+                </Modal>
+            </div>
         </>
     )
 }

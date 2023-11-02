@@ -38,6 +38,7 @@ class UserService {
         return this.api.get(`/Favorites/${user_id}`)
     }
 
+
 }
 
 const userService = new UserService()

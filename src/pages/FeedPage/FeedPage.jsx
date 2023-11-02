@@ -9,6 +9,8 @@ import { useFeedRefresh } from '../../contexts/postsRefresh.context'
 import setGeolocation from '../../utils/setGeolocation';
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import mapsService from "../../services/maps.services"
+import alertsService from "../../services/alerts.services"
+
 
 const FeedPage = () => {
 
@@ -20,6 +22,9 @@ const FeedPage = () => {
     const [showOffCanvas, setShowOffCanvas] = useState(false)
     const [dateFilter, setDateFilter] = useState('all')
     const [location, setLocation] = useState('')
+    const [showCreateAlertButton, setShowCreateAlertButton] = useState(false)
+    const [alertCriteria, setAlertCriteria] = useState(null)
+
     const { refreshFeed, setRefreshFeed } = useFeedRefresh()
 
 
@@ -34,7 +39,26 @@ const FeedPage = () => {
     }, [refreshFeed, searchQuery, selectedCategories, selectedPlantTypes, dateFilter])
 
 
+    const handleSearch = () => {
+        // Show the "Create Alert" button and prepare the alert criteria
+        setShowCreateAlertButton(true);
+        setAlertCriteria({
+            searchQuery,
+            selectedCategories,
+            selectedPlantTypes,
+            dateFilter
+        });
+    }
 
+    const handleCreateAlert = () => {
+
+        // Save the alert criteria to your database
+        // Adjust the API call according to your backend implementation
+        alertsService
+            .saveAlert(alertCriteria)
+            .then(console.log('Alert created successfully!'))
+            .catch((err) => { console.log(err) })
+    }
 
     const refreshPosts = () => {
         loadFeed();
@@ -107,6 +131,10 @@ const FeedPage = () => {
                     placeholder='Search...'
                     className="form-control"
                 />
+                <Button variant="primary" onClick={handleSearch}>Search</Button>
+                {showCreateAlertButton && (
+                    <Button variant="secondary" onClick={handleCreateAlert}>Create Alert</Button>
+                )}
                 <LocationOnIcon /> <span>{location}</span>
                 <hr />
                 <Button variant="primary" onClick={handleShow}>

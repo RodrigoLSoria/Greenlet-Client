@@ -26,5 +26,62 @@ export const PLANT_TYPES = [
     'Grass',
     'Air Plants',
     'Carnivorous Plants'
-];
+]
+
+export const EQUIPMENT_CONDITION = ['new', 'like new', 'used', 'well-worn']
+
+export const EQUIPMENT_TYPES = {
+    PotsAndContainers: [
+        "pot",
+        "container",
+        "plant stand",
+    ],
+    WateringEquipment: [
+        "watering can",
+        "spray bottle",
+        "garden hose",
+        "nozzle",
+        "watering system",
+    ],
+    GardeningTools: [
+        "pruning shears",
+        "gloves",
+        "trowel",
+        "spade",
+        "rake",
+        "shovel",
+        "plant clips",
+        "garden twine",
+    ],
+    PlantCare: [
+        "grow lights",
+        "humidity tray",
+        "misting bottle",
+        "fertilizer",
+        "compost bin",
+        "mulch",
+        "potting mix",
+        "insecticidal soap",
+        "neem oil",
+        "fungicide",
+        "pest control sprays",
+    ],
+    PropagationAndSupport: [
+        "propagation station",
+        "trellis",
+        "stakes",
+        "plant support",
+        "seed tray",
+    ],
+    MonitoringTools: [
+        "moisture meter",
+        "pH meter",
+        "temperature and humidity monitor",
+        "plant labels",
+    ],
+    DecorativeAndMiscellaneous: [
+        "pebbles",
+        "decorative stones",
+    ],
+}
 

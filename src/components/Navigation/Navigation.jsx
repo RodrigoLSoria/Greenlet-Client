@@ -4,7 +4,7 @@ import { useContext, useState } from "react"
 import { Modal } from "react-bootstrap"
 import SignupForm from "../../components/SignupForm/SignupForm"
 import LoginForm from "../LoginForm/LoginForm"
-import NewPostForm from "../NewPostForm/NewPostForm"
+import MainForm from "../MainForm/MainForm"
 import { AuthContext } from '../../contexts/auth.context'
 import { useNavigate } from "react-router-dom"
 import { useLoginModalContext } from '../../contexts/loginModal.context'
@@ -15,7 +15,7 @@ const Navigation = () => {
     const { showLoginModal, setShowLoginModal } = useLoginModalContext()
     const { showSignupModal, setShowSignupModal } = useSignupModalContext()
 
-    const [showPostModal, setShowPostModal] = useState(false)
+    const [showMainFormModal, setShowMainFormModal] = useState(false)
 
     const { loggedUser, logout } = useContext(AuthContext)
 
@@ -39,7 +39,9 @@ const Navigation = () => {
                         <Nav className="me-auto">
 
                             <Link className="nav-link" to="#"
-                                onClick={() => loggedUser ? setShowPostModal(true) : setShowLoginModal(true)}>Upload Plant</Link>
+                                onClick={() => loggedUser ? setShowMainFormModal(true) : setShowLoginModal(true)}>Upload Plant</Link>
+
+
 
                             {loggedUser ?
                                 <>
@@ -86,12 +88,12 @@ const Navigation = () => {
             </div>
 
             <div className="PostModal">
-                <Modal show={showPostModal} onHide={() => setShowPostModal(false)}>
+                <Modal show={showMainFormModal} onHide={() => setShowMainFormModal(false)}>
                     <Modal.Header closeButton>
                         <Modal.Title>Post</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <NewPostForm setShowPostModal={setShowPostModal} />
+                        <MainForm showMainFormModal={showMainFormModal} setShowMainFormModal={setShowMainFormModal} />
                     </Modal.Body>
                 </Modal>
             </div>

@@ -30,7 +30,6 @@ const PostCard = ({ refreshPosts, previousPostData, setPosts }) => {
     const [isFavorite, setIsFavorite] = useState(false)
 
 
-    // console.log("esto es lo que me llega por previousPostData los ids del post y el owner----------------------------------------------------------------------------------------------------------------------------------------------------------", previousPostData._id, previousPostData.owner._id)
 
     useEffect(() => {
         if (loggedUser) {

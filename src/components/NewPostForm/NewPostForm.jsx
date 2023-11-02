@@ -8,7 +8,7 @@ import setGeolocation from '../../utils/setGeolocation';
 import { useFeedRefresh } from '../../contexts/postsRefresh.context'
 
 
-const NewPostForm = ({ refreshPosts, setShowPostModal, setShowEditModal, previousPostData }) => {
+const NewPostForm = ({ refreshPosts, setShowMainFormModal, setShowEditModal, previousPostData }) => {
     const { setRefreshFeed } = useFeedRefresh()
 
     const emptyPostForm = {
@@ -21,12 +21,35 @@ const NewPostForm = ({ refreshPosts, setShowPostModal, setShowEditModal, previou
             coordinates: [null, null],
         },
         category: '',
-        owner: ''
+        owner: '',
+        careInstructions: {
+            location: 'interior',
+            light: 'medium',
+            wateringFrequency: 7,
+            temperature: {
+                indoor: 'temperate',
+                outdoor: 'temperate',
+            },
+            humidity: 'medium',
+            soilType: 'loamy',
+            potting: true,
+            fertilizingFrequency: 4,
+            pruning: false,
+            repotting: false,
+            pestManagement: '',
+            dormancy: false,
+            propagation: '',
+            wateringMethod: 'top-watering',
+            toxicity: 'non-toxic',
+            specialNeeds: '',
+            otherNotes: ''
+        }
     }
 
     const { loggedUser } = useContext(AuthContext)
     const [postData, setPostData] = useState(emptyPostForm)
     const [loadingImage, setLoadingImage] = useState(false)
+    const [showCareInstructions, setShowCareInstructions] = useState(false)
 
     useEffect(() => {
         previousPostData ?
@@ -61,11 +84,26 @@ const NewPostForm = ({ refreshPosts, setShowPostModal, setShowEditModal, previou
         postsService
             .savePost(postData)
             .then(() => {
-                setShowPostModal(false);
+                setShowMainFormModal(false);
                 setRefreshFeed(true);
+                checkForAlertMatches(postData)
             })
             .catch(err => console.log(err))
 
+    }
+
+    const checkForAlertMatches = (newPost) => {
+        postsService
+            .checkForAlertMatches(newPost)
+            .then(matches => {
+                if (matches.length > 0) {
+                    // Handle the matches as required, e.g., send an email
+                    console.log('Alert matches found:', matches);
+                } else {
+                    console.log('No alert matches found.');
+                }
+            })
+            .catch(err => console.log(err));
     }
 
     const handleFileUpload = e => {
@@ -86,6 +124,17 @@ const NewPostForm = ({ refreshPosts, setShowPostModal, setShowEditModal, previou
                 setLoadingImage(false)
             })
     }
+
+    const handleCareInstructionsChange = e => {
+        const { name, value } = e.target;
+        setPostData({
+            ...postData,
+            careInstructions: {
+                ...postData.careInstructions,
+                [name]: value,
+            }
+        });
+    };
 
     const postUpdating = () => {
         postsService
@@ -159,14 +208,43 @@ const NewPostForm = ({ refreshPosts, setShowPostModal, setShowEditModal, previou
                         onChange={handleInputChange}
                     />
                 </Form.Group>
+                <Form.Group className="mb-3" controlId="addCareInstructions">
+                    <Form.Check
+                        type="checkbox"
+                        label="Do you want to add caring instruction for the future owner?"
+                        onChange={() => setShowCareInstructions(!showCareInstructions)}
+                        checked={showCareInstructions}
+                    />
+                </Form.Group>
 
+                {showCareInstructions && (
+                    <div>
+                        {/* Example for a dropdown */}
+                        <Form.Group className="mb-3" controlId="careInstructionsLight">
+                            <Form.Label>Light</Form.Label>
+                            <Form.Control
+                                as="select"
+                                onChange={handleCareInstructionsChange}
+                                name="light"
+                                value={postData.careInstructions.light}
+                            >
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="direct sunlight">Direct Sunlight</option>
+                            </Form.Control>
+                        </Form.Group>
+
+                        {/* Repeat for other care instruction fields */}
+                    </div>
+                )}
 
 
                 <div className="d-grid">
                     <Button variant="primary" type="submit">
                         Post
                     </Button>
-                    <button onClick={() => setShowPostModal(false)}>Close Modal</button>
+                    <button onClick={() => setShowMainFormModal(false)}>Close Modal</button>
                 </div>
             </Form>
         </div>

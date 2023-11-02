@@ -96,7 +96,6 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation }) => {
     }
     const handleMessageSubmit = e => {
         e.preventDefault();
-        // console.log("esto es lo que me llega por post, por loggeduseer y receiver, el villain tiene id 65325a2003d536524c9b6c52   el fulanito tiene id 65325a7d03d536524c9b6c5a , el post del paraiso tiene id 65377cc04bbb7e9b974d48a4 (es de fulanito) el post de la cinta tiene id 653787ca4bbb7e9b974d49ea   (es de villain) a cointnuacion los valores de receiver y post respectivamente:", receiver, post,)
         // Check for existing conversation between the sender and receiver for the post
         conversationService
             .getConversation(loggedUser?._id, receiver, post)
@@ -116,8 +115,6 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation }) => {
             conversation: conversationId
         }
 
-        console.log("---------------------------- lets pray for an id esto es lo que hay dentro de fullmesageData", fullMessageData)
-
         try {
             const { data: sentMessage } = await messageService.sendMessage(fullMessageData);
 
@@ -131,10 +128,8 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation }) => {
                 messageId: sentMessage._id
             };
 
-            // console.log("esto es lo que hay en el updateDate", updateData)
 
             setTimeout(async () => {
-                console.log("esto es lo que hay dentro de settiemout cuando le paso el update data", updateData)
                 try {
                     const { data: updatedConversation } = await conversationService
                         .updateConversation(updateData);

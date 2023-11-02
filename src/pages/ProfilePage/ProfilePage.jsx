@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { Container, Row, Col, Button, Modal } from "react-bootstrap"
+import { Container, Row, Col, Form, Button, Modal } from "react-bootstrap"
 import { useParams } from "react-router-dom"
 import { AuthContext } from '../../contexts/auth.context'
 import userService from '../../services/user.services'
@@ -21,8 +21,10 @@ const ProfilePage = () => {
     const [posts, setPosts] = useState([])
     // const [favourites, setFavourites] = useState([])
     const [pendingExchanges, setPendingExchanges] = useState([])
-    const [closedExchanges, setClosedExchanges] = useState([]);
+    const [closedExchanges, setClosedExchanges] = useState([])
     const [showModal, setShowModal] = useState(false)
+    const [wishlistItem, setWishlistItem] = useState('')
+    const [wishlist, setWishlist] = useState(user.wishlist || [])
 
     const { refreshFeed, setRefreshFeed } = useFeedRefresh()
     const { loggedUser, logout } = useContext(AuthContext)
@@ -31,7 +33,7 @@ const ProfilePage = () => {
     const closedPosts = posts.filter(post => post.isClosed)
 
 
-    console.log("pendingExchanges", pendingExchanges)
+    // console.log("pendingExchanges", pendingExchanges)
     useEffect(() => {
         loadUserDetails()
         loadUserPosts()
@@ -44,6 +46,23 @@ const ProfilePage = () => {
         }
 
     }, [refreshFeed])
+
+    useEffect(() => {
+        // Update local wishlist when user data is updated
+        setWishlist(user.wishlist || []);
+    }, [user])
+
+    useEffect(() => {
+        setEditData(prevData => ({
+            ...prevData,
+            wishlist: user.wishlist || []
+        }));
+    }, [user])
+
+    const [editData, setEditData] = useState({
+        // ... other fields,
+        wishlist: user.wishlist || []
+    })
 
     const loadUserDetails = () => {
         userService
@@ -94,6 +113,27 @@ const ProfilePage = () => {
             .catch(err => console.log(err))
     }
 
+    const handleWishlistSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const updatedWishlist = [...editData.wishlist, wishlistItem];
+            const updatedData = { ...editData, wishlist: updatedWishlist };
+
+            await userService.editProfile(user._id, updatedData);
+            loadUserDetails();
+            setShowModal(false);
+            setWishlistItem('');
+        } catch (error) {
+            console.error("Error updating wishlist: ", error);
+        }
+    }
+
+    const handleWishlistChange = (e) => {
+        setWishlistItem(e.target.value);
+    };
+
+
+
     return (
 
 
@@ -122,6 +162,33 @@ const ProfilePage = () => {
                             </Col>
                         ))}
                     </Row>
+                    <h2>My Wishlist</h2>
+
+                    <ul>
+                        {wishlist.map((item, index) => (
+                            <li key={index}>{item}</li>
+                        ))}
+                    </ul>
+
+
+                    <Form onSubmit={handleWishlistSubmit}>
+                        <Form.Group className="mb-3" controlId="wishlistForm">
+                            <Form.Label>Wishlist</Form.Label>
+                            <Row>
+                                <Col>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Add to wishlist"
+                                        value={wishlistItem}
+                                        onChange={handleWishlistChange}
+                                    />
+                                </Col>
+                                <Col md="auto">
+                                    <Button type="submit">Add</Button>
+                                </Col>
+                            </Row>
+                        </Form.Group>
+                    </Form>
 
                     <h2>Pending Exchanges</h2>
                     <Row>
