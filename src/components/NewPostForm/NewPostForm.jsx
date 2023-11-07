@@ -50,6 +50,8 @@ const NewPostForm = ({ refreshPosts, setShowMainFormModal, setShowEditModal, pre
     const [postData, setPostData] = useState(emptyPostForm)
     const [loadingImage, setLoadingImage] = useState(false)
     const [showCareInstructions, setShowCareInstructions] = useState(false)
+    const [descriptionPlaceholder, setDescriptionPlaceholder] = useState('');
+
 
     useEffect(() => {
         previousPostData ?
@@ -76,6 +78,13 @@ const NewPostForm = ({ refreshPosts, setShowMainFormModal, setShowEditModal, pre
             ...postData,
             [name]: value,
         })
+
+        if (name === 'category' && value === 'found') {
+            setDescriptionPlaceholder("Enter the specific location of the plant you found, including street, neighborhood, or metro stop details.");
+        } else {
+            // Reset placeholder if the category is changed to something else
+            setDescriptionPlaceholder('');
+        }
     }
 
     const handlePostSubmit = e => {
@@ -202,10 +211,13 @@ const NewPostForm = ({ refreshPosts, setShowMainFormModal, setShowEditModal, pre
                 <Form.Group className="mb-3" controlId="formBasicDescription">
                     <Form.Label>Description</Form.Label>
                     <Form.Control
-                        type="text"
+                        as="textarea"  // Change to textarea
+                        rows={3}       // Set the number of rows
                         name="description"
                         value={postData.description}
                         onChange={handleInputChange}
+                        placeholder={descriptionPlaceholder} // Add the placeholder here
+
                     />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="addCareInstructions">

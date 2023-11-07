@@ -1,9 +1,11 @@
 import { Avatar } from '@mui/material'
+import { Delete as DeleteIcon } from '@mui/icons-material'
 import './ChatItem.css'
 import Loader from '../Loader/Loader'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../contexts/auth.context'
-import { useExchangeStatusContext } from '../../contexts/exchangeStatus.context';
+import { useExchangeStatusContext } from '../../contexts/exchangeStatus.context'
+import conversationService from '../../services/conversations.services'
 
 
 const ChatItem = ({ conversationData, onClick, selected }) => {
@@ -19,6 +21,16 @@ const ChatItem = ({ conversationData, onClick, selected }) => {
 
     const handleMouseLeave = () => {
         setHoveredConversation(false)
+    }
+
+    const handleDeleteConversation = async () => {
+        // Call the delete API
+        try {
+            await conversationService.deleteConversation(conversationData._id);
+            // Handle what happens after delete, e.g., refresh the list, show a message, etc.
+        } catch (error) {
+            console.error('Failed to delete conversation:', error);
+        }
     }
 
     const otherUser = conversationData.sender._id === loggedUser?._id
@@ -48,6 +60,9 @@ const ChatItem = ({ conversationData, onClick, selected }) => {
                     <div className="item-info">
                         <span className="title">{otherUser.username}</span><br />
                         <span className="info">{conversationData.post?.title}</span>
+                    </div>
+                    <div onClick={handleDeleteConversation} className="delete-icon">
+                        <DeleteIcon />
                     </div>
                 </div>
             )

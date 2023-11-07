@@ -86,6 +86,7 @@ const ProfilePage = () => {
                 console.log("esta e la data q me vuelve", data)
 
                 if (status === 'pending') {
+                    console.log("hay exchanfes con status pendinggggggg")
                     setPendingExchanges(data);
                 } else if (status === 'closed') {
                     setClosedExchanges(data);

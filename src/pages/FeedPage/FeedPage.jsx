@@ -75,13 +75,15 @@ const FeedPage = () => {
 
                     setLocation(`${locationData.data.city}, ${locationData.data.country}`);
 
+                    const isFoundCategorySelected = selectedCategories.includes('found');
+
                     const queryParams = {
                         searchQuery,
                         category: selectedCategories,
                         userLatitude: latitude,
                         userLongitude: longitude,
                         plantType: selectedPlantTypes,
-                        dateFilter
+                        dateFilter: isFoundCategorySelected ? '24h' : dateFilter
                     }
 
                     postsService

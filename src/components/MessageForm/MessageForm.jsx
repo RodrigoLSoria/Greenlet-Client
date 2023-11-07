@@ -167,6 +167,7 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation }) => {
         updateExchangeStatus('PENDING')
         // You might want to notify the other user, update the database, etc.
     }
+
     const handleSaveExchange = () => {
         // Define the exchange data based on your data model
         const exchangeData = {
