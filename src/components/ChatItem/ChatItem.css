@@ -10,32 +10,21 @@
 .item-info {
     margin-left: 16px;
     border-bottom: 1px solid #e9edef;
-    /* te quedaste en el minuto 40:24 */
 }
 
-/* .conversation-item {
-    display: grid;
-    grid-template-columns: 40px auto;
-    margin: 16px 8px;
-} */
 
 .conversation-item {
-    /* Add your default styles here */
     padding: 10px;
     border: 1px solid #ccc;
     margin-bottom: 10px;
     background-color: #fff;
     transition: background-color 0.3s ease;
-    /* Smooth transition effect */
 }
 
 .conversation-item.hovered {
-    /* Styles for hovered card */
     background-color: rgba(128, 128, 128, 0.2);
-    /* Grey translucent color */
 }
 
-/* En tu archivo CSS */
 .pending-chip {
     background-color: yellow;
     padding: 5px;
