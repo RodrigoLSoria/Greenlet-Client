@@ -24,10 +24,8 @@ const ChatItem = ({ conversationData, onClick, selected }) => {
     }
 
     const handleDeleteConversation = async () => {
-        // Call the delete API
         try {
             await conversationService.deleteConversation(conversationData._id);
-            // Handle what happens after delete, e.g., refresh the list, show a message, etc.
         } catch (error) {
             console.error('Failed to delete conversation:', error);
         }
@@ -54,7 +52,7 @@ const ChatItem = ({ conversationData, onClick, selected }) => {
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}>
                     {exchangeStatus === 'PENDING' && (
-                        <div className="pending-chip">PENDING</div>  // Esta es la ficha 'PENDING'
+                        <div className="pending-chip">PENDING</div>
                     )}
                     <Avatar src={otherUser.avatar} />
                     <div className="item-info">

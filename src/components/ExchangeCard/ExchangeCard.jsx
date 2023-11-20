@@ -35,27 +35,6 @@ const ExchangeCard = ({ exchangeData, onExchangeUpdate }) => {
                     switch (badge.criteria.type) {
                         case 'exchangesCompleted':
                             return totalExchanges >= badge.criteria.count && !user.badges.includes(badge._id)
-                        // case 'earlyAdopter':
-                        //     // Assuming users have a 'joinedDate' property
-                        //     const earlyAdopters = allUsers.slice(0, badge.criteria.count)
-                        //     return earlyAdopters.includes(loggedUser._id) && !loggedUser.badges.includes(badge._id)
-                        // case 'positiveReviews':
-                        //     // Assuming users have a 'reviews' array with 'positive' or 'negative' values
-                        //     const positiveReviewCount = loggedUser.reviews.filter(r => r === 'positive').length
-                        //     return positiveReviewCount === badge.criteria.count && !loggedUser.badges.includes(badge._id)
-                        // case 'exchangesWithoutNegativeFeedback':
-                        //     // Assuming there's a way to get exchanges without negative feedback
-                        //     return exchangesWithoutNegative === badge.criteria.count && !loggedUser.badges.includes(badge._id)
-                        // case 'referrals':
-                        //     // Assuming users have a 'referrals' count
-                        //     return loggedUser.referrals === badge.criteria.count && !loggedUser.badges.includes(badge._id)
-                        // case 'sustainablePackaging':
-                        //     // Assuming there's a way to get count of exchanges with sustainable packaging
-                        //     return sustainablePackagingCount === badge.criteria.count && !loggedUser.badges.includes(badge._id)
-                        // case 'exchangedFromEachCategory':
-                        //     // Assuming users have a list of exchanged categories
-                        //     const hasExchangedAllCategories = allCategories.every(c => loggedUser.exchangedCategories.includes(c))
-                        //     return hasExchangedAllCategories && !loggedUser.badges.includes(badge._id)
                         case 'specificPlantExchanged':
                             const specificPlantExchange = user.exchanges.find(ex => ex.plantType === badge.criteria.plantType)
                             return specificPlantExchange && specificPlantExchange.count === badge.criteria.count && !user.badges.includes(badge._id)

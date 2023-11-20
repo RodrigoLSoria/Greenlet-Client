@@ -12,20 +12,16 @@ const ConversationLog = ({ messages }) => {
     const containerRef = useRef(null)
 
     useEffect(() => {
-        // Display the most recent messages when component mounts
         setVisibleMessages(messages.slice(-INITIAL_MESSAGE_COUNT));
 
-        // Scroll to the bottom initially
         if (containerRef.current) {
             containerRef.current.scrollTop = containerRef.current.scrollHeight;
         }
 
-        // Attach scroll event listener
         if (containerRef.current) {
             containerRef.current.addEventListener('scroll', handleScroll);
         }
 
-        // Cleanup listener on unmount
         return () => {
             if (containerRef.current) {
                 containerRef.current.removeEventListener('scroll', handleScroll);
@@ -36,7 +32,6 @@ const ConversationLog = ({ messages }) => {
     const handleScroll = (event) => {
         const scrollTop = event.target.scrollTop;
 
-        // Load more messages if user has scrolled to the top of the container
         if (scrollTop === 0) {
             loadMoreMessages();
         }
@@ -69,7 +64,6 @@ const ConversationLog = ({ messages }) => {
         }
     }
 
-    // Push the last group
     if (currentGroup.length > 0) {
         messageGroups.push(currentGroup);
     }
