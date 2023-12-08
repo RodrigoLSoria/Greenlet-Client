@@ -1,0 +1,89 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(236, 89, 89);
+    /* Match Wallapop's navbar color */
+    padding: 10px 20px;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+
+.navbar-actions svg {
+    margin-left: 20px;
+    /* Space between icons */
+    cursor: pointer;
+}
+
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    /* Adjust as needed */
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    /* Other styles for the dropdown */
+}
+
+.navbar .dropdown {
+    display: none;
+    /* Hide the dropdown by default */
+    position: absolute;
+    /* Position it below the navbar item */
+    background-color: white;
+    /* Background color */
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    /* Some shadow for visibility */
+    z-index: 1;
+    /* Ensure it's on top of other elements */
+}
+
+.navbar .navbar-item:hover .dropdown {
+    display: block;
+    /* Show the dropdown on hover */
+}
+
+.form-control.search-input {
+    width: 100%;
+    /* Make it take the full width of its container */
+
+    border-radius: 50px;
+    /* Rounded borders */
+    padding: 10px 20px;
+    /* Comfortable padding */
+}
+
+/* Style for the 'Upload Plant' button to make it green */
+.nav-link.upload-plant-button {
+    background-color: #4CAF50;
+    /* Green background */
+    color: white;
+    /* White text */
+    padding: 10px 20px;
+    /* Padding to make it look like a button */
+    border: none;
+    /* No border */
+    border-radius: 20px;
+    /* Rounded borders */
+    text-decoration: none;
+    /* No underlines on the text */
+    display: inline-block;
+    /* Allows padding and width adjustments */
+    margin: 4px 2px;
+    /* Some space around the button */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+}
+
+.nav-link.upload-plant-button:hover {
+    background-color: #45a049;
+    /* Slightly darker green on hover */
+}

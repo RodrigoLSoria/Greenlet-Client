@@ -6,26 +6,28 @@ import * as Constants from "../../consts/consts"
 import Offcanvas from 'react-bootstrap/Offcanvas'
 import Carousel from 'react-bootstrap/Carousel'
 import { useFeedRefresh } from '../../contexts/postsRefresh.context'
-import setGeolocation from '../../utils/setGeolocation';
+import setGeolocation from '../../utils/setGeolocation'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import mapsService from "../../services/maps.services"
 import alertsService from "../../services/alerts.services"
+import { useSearchContext } from '../../contexts/search.Context'
+import { useFilterContext } from "../../contexts/filter.context"
+
 
 
 const FeedPage = () => {
 
     const [posts, setPosts] = useState()
     const [filteredPosts, setFilteredPosts] = useState([])
-    const [selectedCategories, setSelectedCategories] = useState([])
-    const [selectedPlantTypes, setSelectedPlantTypes] = useState([])
-    const [searchQuery, setSearchQuery] = useState('')
     const [showOffCanvas, setShowOffCanvas] = useState(false)
-    const [dateFilter, setDateFilter] = useState('all')
     const [location, setLocation] = useState('')
     const [showCreateAlertButton, setShowCreateAlertButton] = useState(false)
     const [alertCriteria, setAlertCriteria] = useState(null)
+    const { searchQuery } = useSearchContext()
 
     const { refreshFeed, setRefreshFeed } = useFeedRefresh()
+    const { selectedCategories, selectedPlantTypes, dateFilter } = useFilterContext();
+
 
 
     const handleClose = () => setShowOffCanvas(false);
@@ -50,15 +52,6 @@ const FeedPage = () => {
         });
     }
 
-    const handleCreateAlert = () => {
-
-        // Save the alert criteria to your database
-        // Adjust the API call according to your backend implementation
-        alertsService
-            .saveAlert(alertCriteria)
-            .then(console.log('Alert created successfully!'))
-            .catch((err) => { console.log(err) })
-    }
 
     const refreshPosts = () => {
         loadFeed();
@@ -66,77 +59,32 @@ const FeedPage = () => {
 
 
     const loadFeed = () => {
-        setGeolocation(
-            async ({ latitude, longitude }) => {
+        // If you need latitude and longitude, you should also manage them in your LocationContext
+        const queryParams = {
+            searchQuery,
+            category: selectedCategories,
+            dateFilter: dateFilter,
+            // Add latitude and longitude to the query if needed
+        };
 
-                try {
-                    // Use mapsService to get the reverse geocode data
-                    const locationData = await mapsService.reverseGeocode(latitude, longitude);
-
-                    setLocation(`${locationData.data.city}, ${locationData.data.country}`);
-
-                    const isFoundCategorySelected = selectedCategories.includes('found');
-
-                    const queryParams = {
-                        searchQuery,
-                        category: selectedCategories,
-                        userLatitude: latitude,
-                        userLongitude: longitude,
-                        plantType: selectedPlantTypes,
-                        dateFilter: isFoundCategorySelected ? '24h' : dateFilter
-                    }
-
-                    postsService
-                        .getFilteredPosts(queryParams)
-                        .then(({ data }) => {
-                            setFilteredPosts(data);
-                        })
-                        .catch((err) => console.log(err))
-                } catch (error) {
-                    console.error('Error fetching location:', error);
-                }
+        postsService.getFilteredPosts(queryParams)
+            .then(({ data }) => {
+                setFilteredPosts(data);
             })
-    }
+            .catch((err) => console.log(err));
+    };
 
-
-    const handleInputChange = (e) => {
-        const searchWord = e.target.value
-        setSearchQuery(searchWord)
-
-    }
-
-    const handleCategoryToggle = (category) => {
-        if (selectedCategories.includes(category)) {
-            setSelectedCategories(selectedCategories.filter(c => c !== category))
-        } else {
-            setSelectedCategories([...selectedCategories, category])
+    useEffect(() => {
+        loadFeed();
+        if (refreshFeed) {
+            setRefreshFeed(false);
         }
-    }
-
-    const handlePlantTypeToggle = (type) => {
-        if (selectedPlantTypes.includes(type)) {
-            setSelectedPlantTypes(selectedPlantTypes.filter(c => c !== type))
-        } else {
-            setSelectedPlantTypes([...selectedPlantTypes, type])
-        }
-    }
+    }, [refreshFeed, searchQuery, selectedCategories, selectedPlantTypes, dateFilter, location]);
 
 
     return (
         <div className="feedPage">
-            <Container>
-                <h1>Find the perfect plant for your home</h1>
-                <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={handleInputChange}
-                    placeholder='Search...'
-                    className="form-control"
-                />
-                <Button variant="primary" onClick={handleSearch}>Search</Button>
-                {showCreateAlertButton && (
-                    <Button variant="secondary" onClick={handleCreateAlert}>Create Alert</Button>
-                )}
+            {/* <Container>
                 <LocationOnIcon /> <span>{location}</span>
                 <hr />
                 <Button variant="primary" onClick={handleShow}>
@@ -215,7 +163,7 @@ const FeedPage = () => {
                         </div>
                     </Offcanvas.Body>
                 </Offcanvas>
-            </div>
+            </div> */}
         </div >
     )
 }

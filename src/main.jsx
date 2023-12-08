@@ -10,25 +10,34 @@ import { MessageModalProvider } from './contexts/messageModal.context'
 import { SocketProvider } from './contexts/socket.context'
 import { FeedRefreshProvider } from './contexts/postsRefresh.context';
 import { ExchangeStatusProvider } from './contexts/exchangeStatus.context'
+import { SearchProvider } from './contexts/search.Context'
+import { FilterProvider } from './contexts/filter.context';
+import { LocationProvider } from './contexts/location.context'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Router>
     <AuthProviderWrapper>
       <ExchangeStatusProvider>
-        <FeedRefreshProvider>
-          <SocketProvider>
-            <SignupModalProvider>
-              <LoginModalProvider>
-                <MessageModalProvider>
-                  <React.StrictMode>
-                    <App />
-                  </React.StrictMode>
-                </MessageModalProvider>
-              </LoginModalProvider>
-            </SignupModalProvider>
-          </SocketProvider>
-        </FeedRefreshProvider>
+        <SearchProvider>
+          <FilterProvider>
+            <LocationProvider>
+              <FeedRefreshProvider>
+                <SocketProvider>
+                  <SignupModalProvider>
+                    <LoginModalProvider>
+                      <MessageModalProvider>
+                        <React.StrictMode>
+                          <App />
+                        </React.StrictMode>
+                      </MessageModalProvider>
+                    </LoginModalProvider>
+                  </SignupModalProvider>
+                </SocketProvider>
+              </FeedRefreshProvider>
+            </LocationProvider>
+          </FilterProvider>
+        </SearchProvider>
       </ExchangeStatusProvider>
     </AuthProviderWrapper >
   </Router>
