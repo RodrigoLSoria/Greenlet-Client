@@ -1,118 +1,30 @@
-.conversation-panel {
-    height: 80vh;
+.inbox-container {
+    display: flex;
+    padding: 24px;
+    min-height: calc(100vh - 60px)
+}
+
+.sidebar {
+    width: 20%;
+    border-right: 1px solid #ccc;
+    padding: 16px;
+}
+
+.sidebar-list {
     overflow-y: auto;
-
+    max-height: calc(100vh - 200px);
 }
 
-
-.sidebar-header {
-    display: flex;
-    height: 60px;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 8px;
-    background-color: #f0f2f5;
+.chat-panel {
+    width: 70%;
+    padding: 16px;
 }
 
-
-.sidebar-header-right svg {
-    margin-left: 8px;
-}
-
-
-.search-container {
-    margin: 8px;
-    background-color: #f0f2f5;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    border-radius: 7px;
-}
-
-
-.search-container input {
-    border: 0px;
-    background-color: #f0f2f5;
-    outline: none;
-}
-
-
-.conversation-display {
-    position: relative;
-    height: 100%;
-    display: grid;
-    grid-template-rows: 60px auto 60px;
-}
-
-
-.bg-conversation {
-    background-image: url("https: //www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg");
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background-size: cover;
-}
-
-
-.chat-header {
-    height: 60px;
-    position: relative;
-    display: grid;
-    grid-template-columns: 40px auto 90px;
-    align-items: center;
-    padding-left: 16px;
-    border-left: 1px solid #d1d7db;
-    background-color: #f0f2f5;
-}
-
-
-.chat-header-right {
-    display: flex;
-}
-
-.chat-header-details {
-    margin-left: 16px;
-}
-
-
-.chat-footer {
-    margin-top: auto;
-    display: grid;
-    grid-template-columns: 60px auto 40px;
-    background-color: #f0f2f5;
-    position: relative;
-
-}
-
-
-.chat-footer-actions svg {
-    margin-left: 8px;
-}
-
-
-.chat-footer-input {
-    margin-left: 16px;
-
-}
-
-
-.chat-footer-input input {
-    width: 90%;
-    border: none;
-    padding: 12px;
-    border-radius: 4px;
-    outline: none;
-}
-
-
-.conversation-display {
-    position: relative;
+.empty-chat-placeholder {
     display: flex;
     flex-direction: column;
-}
-
-.conversation-panel {
-    flex-grow: 1;
-    /* Allow the conversation-panel to grow and occupy available space */
-    overflow-y: auto;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
 }

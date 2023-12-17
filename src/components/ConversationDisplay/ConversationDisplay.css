@@ -1,0 +1,15 @@
+.chat-footer {
+    position: fixed;
+    bottom: 60px;
+}
+
+.conversation-display {
+    padding: 10px 10px;
+    display: block
+}
+
+.chat-body {
+    display: flex;
+    flex-direction: column;
+    /* ... other styles ... */
+}

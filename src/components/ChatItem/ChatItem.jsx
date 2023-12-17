@@ -15,55 +15,46 @@ const ChatItem = ({ conversationData, onClick, selected }) => {
     const [HoveredConversation, setHoveredConversation] = useState(false)
 
 
-    const handleMouseEnter = () => {
-        setHoveredConversation(true)
-    }
+    const handleMouseEnter = () => { setHoveredConversation(true) }
+    const handleMouseLeave = () => { setHoveredConversation(false) }
 
-    const handleMouseLeave = () => {
-        setHoveredConversation(false)
-    }
+
+    const otherUser = conversationData.participants.find(participant =>
+        participant._id !== loggedUser?._id)
 
     const handleDeleteConversation = async () => {
         try {
-            await conversationService.deleteConversation(conversationData._id);
+            await conversationService.deleteConversation(conversationData._id)
         } catch (error) {
-            console.error('Failed to delete conversation:', error);
+            console.error('Failed to delete conversation:', error)
         }
     }
 
-    const otherUser = conversationData.sender._id === loggedUser?._id
-        ? conversationData.receiver
-        : conversationData.sender
-
-
     return (
-        !conversationData.receiver ?
-            (
-                <Loader />
-            )
-            :
-            (
-                <div role="gridcell"
-                    aria-colindex="2"
-                    className={`conversation-item 
+        !otherUser ? (
+            <Loader />
+        ) : (
+            <div role="gridcell"
+                aria-colindex="2"
+                className={`conversation-item 
                     ${exchangeStatus === 'PENDING' ? 'disabled' : ''}
                      ${HoveredConversation ? 'hovered' : ''}`}
-                    onClick={() => onClick(conversationData)}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}>
-                    {exchangeStatus === 'PENDING' && (
-                        <div className="pending-chip">PENDING</div>
-                    )}
-                    <Avatar src={otherUser.avatar} />
-                    <div className="item-info">
-                        <span className="title">{otherUser.username}</span><br />
-                        <span className="info">{conversationData.post?.title}</span>
-                    </div>
-                    <div onClick={handleDeleteConversation} className="delete-icon">
-                        <DeleteIcon />
-                    </div>
+                onClick={() => onClick(conversationData)}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}>
+                {exchangeStatus === 'PENDING' && (
+                    <div className="pending-chip">PENDING</div>
+                )}
+                <Avatar src={conversationData.post.image} />
+
+                <div className="item-info">
+                    <span className="info">{conversationData.post.title}</span>
                 </div>
-            )
+                <div onClick={handleDeleteConversation} className="delete-icon">
+                    <DeleteIcon />
+                </div>
+            </div>
+        )
 
     )
 }

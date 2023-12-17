@@ -2,7 +2,8 @@ import { Col, Row } from "react-bootstrap";
 import PostCard from "../PostCard/PostCard";
 import Loader from "../Loader/Loader";
 
-const Feed = ({ refreshPosts, filteredPosts, setPosts }) => {
+const Feed = ({ filteredPosts }) => {
+
 
     return (
         <>
@@ -11,11 +12,9 @@ const Feed = ({ refreshPosts, filteredPosts, setPosts }) => {
                 :
                 <Row>
                     {filteredPosts.map((elm) => (
-                        <Col key={elm._id} sm={4} xl={4}>
+                        <Col key={elm._id} xs={4} sm={4} md={3} xl={3}>
                             <PostCard
-                                refreshPosts={refreshPosts}
                                 previousPostData={elm}
-                                setPosts={setPosts}
                             />
                         </Col>
                     ))}

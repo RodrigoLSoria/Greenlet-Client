@@ -1,51 +1,29 @@
 import { Alert, Card, Col, Modal } from "react-bootstrap"
 import './MessageCard.css'
 import { Link } from "react-router-dom"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { AuthContext } from "../../contexts/auth.context"
 import formatMessageTime from "../../utils/formatMessageTime"
 import messageService from "../../services/messages.services"
 
 
-const MessageCard = ({ messageData }) => {
+const MessageCard = ({ message }) => {
 
     const { loggedUser } = useContext(AuthContext)
 
-    const isSender = messageData.sender === loggedUser._id;
+    const isSender = message.sender._id === loggedUser._id
 
-    // const [readStatus, setReadStatus] = useState(messageData.read)
-    const [HoveredConversation, setHoveredConversation] = useState(false)
-
-    const isUnread = !messageData.read
-    // TODO: METERLE CSS AL LINK PARA QUE NO SALGA SUBRAYADO
-
-    const handleCardClick = () => {
-        //esta logica sacarla de aqui y llevarla a cuando haces click en la conversación no en la carta del mensaje
-        messageService
-            .markAsRead(messageData._id)
-            .then(() => console.log("state changed succesfully"))
-            .catch(err => console.log(err))
-    }
-
-    const handleMouseEnter = () => {
-        setHoveredConversation(true)
-    }
-
-    const handleMouseLeave = () => {
-        setHoveredConversation(false)
-    }
+    console.log("message", message)
 
 
     return (
         <Card
             className={`message-card ${isSender ? 'sender-message' : 'receiver-message'}`}
-            onClick={handleCardClick}
+            style={{ maxWidth: '80%', alignSelf: isSender ? 'end' : 'start' }}
         >
-            <div className="message-content">
-                <div className={`message-text ${isSender ? 'sender-text' : 'receiver-text'}`}>
-                    {messageData.content}
-                    <div className="message-time">{formatMessageTime(messageData.timestamp)}</div>
-                </div>
+            <div className="d-flex align-items-center">
+                <Card.Text className="mb-0">{message.content}</Card.Text>
+                <div className="message-time ms-2">{formatMessageTime(message.timestamp)}</div>
             </div>
         </Card>
     )

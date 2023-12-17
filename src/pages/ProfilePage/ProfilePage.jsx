@@ -10,8 +10,7 @@ import PostCard from '../../components/PostCard/PostCard'
 import exchangeService from "../../services/exchange.services"
 import ExchangeCard from "../../components/ExchangeCard/ExchangeCard"
 import { DataArray } from "@mui/icons-material"
-import { useFeedRefresh } from '../../contexts/postsRefresh.context'
-
+import "./ProfilePage.css"
 
 
 const ProfilePage = () => {
@@ -26,41 +25,35 @@ const ProfilePage = () => {
     const [wishlistItem, setWishlistItem] = useState('')
     const [wishlist, setWishlist] = useState(user.wishlist || [])
 
-    const { refreshFeed, setRefreshFeed } = useFeedRefresh()
     const { loggedUser, logout } = useContext(AuthContext)
 
-    const openPosts = posts.filter(post => !post.isClosed);
+    const openPosts = posts.filter(post => !post.isClosed)
     const closedPosts = posts.filter(post => post.isClosed)
 
 
-    // console.log("pendingExchanges", pendingExchanges)
     useEffect(() => {
         loadUserDetails()
         loadUserPosts()
         loadPendingExchanges()
         loadClosedExchanges()
-        if (refreshFeed) {
-            loadUserDetails();
-            loadUserPosts();
-            setRefreshFeed(false); // Resetting the refresh state
-        }
+        loadUserDetails()
+        loadUserPosts()
 
-    }, [refreshFeed])
+
+    }, [])
 
     useEffect(() => {
-        // Update local wishlist when user data is updated
-        setWishlist(user.wishlist || []);
+        setWishlist(user.wishlist || [])
     }, [user])
 
     useEffect(() => {
         setEditData(prevData => ({
             ...prevData,
             wishlist: user.wishlist || []
-        }));
+        }))
     }, [user])
 
     const [editData, setEditData] = useState({
-        // ... other fields,
         wishlist: user.wishlist || []
     })
 
@@ -81,26 +74,25 @@ const ProfilePage = () => {
     const loadExchangesByStatus = (status) => {
         console.log("este es el status", status, "y este el id del user", user_id)
         exchangeService
-            .getExchangesForUserByStatus(user_id, status) // Updated service function name
+            .getExchangesForUserByStatus(user_id, status)
             .then(({ data }) => {
-                console.log("esta e la data q me vuelve", data)
 
                 if (status === 'pending') {
                     console.log("hay exchanfes con status pendinggggggg")
-                    setPendingExchanges(data);
+                    setPendingExchanges(data)
                 } else if (status === 'closed') {
-                    setClosedExchanges(data);
+                    setClosedExchanges(data)
                 }
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err))
     }
 
     const loadPendingExchanges = () => {
-        loadExchangesByStatus('pending');
+        loadExchangesByStatus('pending')
     }
 
     const loadClosedExchanges = () => {
-        loadExchangesByStatus('closed');
+        loadExchangesByStatus('closed')
     }
 
 
@@ -115,24 +107,23 @@ const ProfilePage = () => {
     }
 
     const handleWishlistSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         try {
-            const updatedWishlist = [...editData.wishlist, wishlistItem];
-            const updatedData = { ...editData, wishlist: updatedWishlist };
+            const updatedWishlist = [...editData.wishlist, wishlistItem]
+            const updatedData = { ...editData, wishlist: updatedWishlist }
 
-            await userService.editProfile(user._id, updatedData);
-            loadUserDetails();
-            setShowModal(false);
-            setWishlistItem('');
+            await userService.editProfile(user._id, updatedData)
+            loadUserDetails()
+            setShowModal(false)
+            setWishlistItem('')
         } catch (error) {
-            console.error("Error updating wishlist: ", error);
+            console.error("Error updating wishlist: ", error)
         }
     }
 
     const handleWishlistChange = (e) => {
-        setWishlistItem(e.target.value);
-    };
-
+        setWishlistItem(e.target.value)
+    }
 
 
     return (
@@ -141,83 +132,110 @@ const ProfilePage = () => {
         !user ?
             <Loader />
             :
-            <>
-                <Container>
 
-                    <h1 className="mb-4">Welcome to your profile, {user.username}</h1>
-                    <Button variant="dark" onClick={handleDeleteUser}>Delete profile</Button>
-                    <Button variant="dark" onClick={() => setShowModal(true)}>Edit profile</Button>
+            <div className="profilePage-container">
+                <div className="profilePage-header">
+                    <img src={user.avatar} className="profilePage-avatar" />
+                    <div className="profilePage-userInfo">
+                        <h2>{user.username}</h2>
+                    </div>
 
-                    <Row>
-                        <Col md={{ span: 4 }}>
-                            <img src={user.avatar} style={{ width: '100%' }} />
+                    {/* <Button variant="dark" onClick={handleDeleteUser}>Delete profile</Button>
+                    <Button variant="dark" onClick={() => setShowModal(true)}>Edit profile</Button> */}
+
+                </div>
+                <hr />
+                {/* <h2>My Badges</h2>
+                <Row>
+                    {user.badges?.map(badge => (
+                        <Col key={badge._id} md={4}>
+                            <h2>{badge.name}</h2>
+                            <img src={badge.imageUrl} style={{ width: '100%' }} />
                         </Col>
-                    </Row>
+                    ))}
+                </Row>
+                <h2>My Wishlist</h2>
 
-                    <h2>My Badges</h2>
-                    <Row>
-                        {user.badges?.map(badge => (
-                            <Col key={badge._id} md={4}>
-                                <h2>{badge.name}</h2>
-                                <img src={badge.imageUrl} style={{ width: '100%' }} />
+                <ul>
+                    {wishlist.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
+                </ul> */}
+
+
+                {/* <Form onSubmit={handleWishlistSubmit}>
+                    <Form.Group className="mb-3" controlId="wishlistForm">
+                        <Form.Label>Wishlist</Form.Label>
+                        <Row>
+                            <Col>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Add to wishlist"
+                                    value={wishlistItem}
+                                    onChange={handleWishlistChange}
+                                />
                             </Col>
-                        ))}
-                    </Row>
-                    <h2>My Wishlist</h2>
+                            <Col md="auto">
+                                <Button type="submit">Add</Button>
+                            </Col>
+                        </Row>
+                    </Form.Group>
+                </Form> */}
 
-                    <ul>
-                        {wishlist.map((item, index) => (
-                            <li key={index}>{item}</li>
-                        ))}
-                    </ul>
-
-
-                    <Form onSubmit={handleWishlistSubmit}>
-                        <Form.Group className="mb-3" controlId="wishlistForm">
-                            <Form.Label>Wishlist</Form.Label>
+                <div className="pendingExchanges">
+                    <h4>Pending Exchanges</h4>
+                    <hr />
+                    {
+                        !pendingExchanges ? (
                             <Row>
-                                <Col>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Add to wishlist"
-                                        value={wishlistItem}
-                                        onChange={handleWishlistChange}
-                                    />
-                                </Col>
-                                <Col md="auto">
-                                    <Button type="submit">Add</Button>
-                                </Col>
+                                {pendingExchanges.map(exchange => (
+                                    <Col key={exchange._id} md={4}>
+                                        <ExchangeCard exchangeData={exchange} />
+                                    </Col>
+                                ))}
                             </Row>
-                        </Form.Group>
-                    </Form>
+                        ) : (
+                            <p>No pending exchanges at the moment.</p>
+                        )
+                    }
+                </div>
 
-                    <h2>Pending Exchanges</h2>
-                    <Row>
-                        {pendingExchanges.map(exchange => (
-                            <Col key={exchange._id} md={4}>
-                                <ExchangeCard exchangeData={exchange} />
-                            </Col>
-                        ))}
-                    </Row>
+                <div className="openPosts">
+                    <h4>My Posts</h4>
+                    <hr />
+                    {
+                        openPosts ? (
+                            <Row>
+                                {openPosts.map(post => (
+                                    <Col key={post._id} md={4}>
+                                        <PostCard previousPostData={post} />
+                                    </Col>
+                                ))}
+                            </Row>
+                        ) : (
+                            <p>No open posts at the moment.</p>
+                        )
+                    }
 
-                    <h2>My Posts</h2>
-                    <Row>
-                        {openPosts.map(post => (
-                            <Col key={post._id} md={4}>
-                                <PostCard previousPostData={post} />
-                            </Col>
-                        ))}
-                    </Row>
+                </div>
 
-                    <h2>My Closed Posts</h2>
-                    <Row>
-                        {closedPosts.map(post => (
-                            <Col key={post._id} md={4}>
-                                <PostCard previousPostData={post} />
-                            </Col>
-                        ))}
-                    </Row>
-                </Container >
+                <div className="closedPosts">
+                    <h4>My Closed Posts</h4>
+                    <hr />
+                    {
+                        closedPosts ? (
+                            <Row>
+                                {closedPosts.map(post => (
+                                    <Col key={post._id} md={4}>
+                                        <PostCard previousPostData={post} />
+                                    </Col>
+                                ))}
+                            </Row>
+                        ) : (
+                            <p>No closed posts at the moment.</p>
+                        )
+                    }
+                </div>
 
                 <Modal show={showModal} onHide={() => { setShowModal(false) }}>
                     <Modal.Header closeButton>
@@ -225,7 +243,8 @@ const ProfilePage = () => {
                     </Modal.Header>
                     <SignupForm loadUserDetails={loadUserDetails} setShowModal={setShowModal} />
                 </Modal>
-            </>
+            </div>
+
     )
 }
 

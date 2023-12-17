@@ -5,7 +5,7 @@ function setConversationDate(timestamp) {
 
     if (diffInDays <= 6) {
         // Within the last seven days, display day of the week
-        const daysOfWeek = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"];
+        const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
         return daysOfWeek[messageDate.getDay()];
     } else {
         // Older than seven days, display full date

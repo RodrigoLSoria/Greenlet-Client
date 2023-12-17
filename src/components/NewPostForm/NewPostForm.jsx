@@ -5,11 +5,10 @@ import uploadServices from "../../services/upload.services"
 import { AuthContext } from "../../contexts/auth.context"
 import * as Constants from '../../consts/consts'
 import setGeolocation from '../../utils/setGeolocation';
-import { useFeedRefresh } from '../../contexts/postsRefresh.context'
 
 
-const NewPostForm = ({ refreshPosts, setShowMainFormModal, setShowEditModal, previousPostData }) => {
-    const { setRefreshFeed } = useFeedRefresh()
+const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData }) => {
+
 
     const emptyPostForm = {
         title: '',
@@ -94,7 +93,6 @@ const NewPostForm = ({ refreshPosts, setShowMainFormModal, setShowEditModal, pre
             .savePost(postData)
             .then(() => {
                 setShowMainFormModal(false);
-                setRefreshFeed(true);
                 checkForAlertMatches(postData)
             })
             .catch(err => console.log(err))
@@ -159,7 +157,6 @@ const NewPostForm = ({ refreshPosts, setShowMainFormModal, setShowEditModal, pre
         postsService
             .editPost(postData._id, postData)
             .then(() => {
-                refreshPosts()
                 setShowEditModal(false)
             })
             .catch(err => console.log(err))

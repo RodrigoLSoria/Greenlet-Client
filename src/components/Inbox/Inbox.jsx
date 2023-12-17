@@ -1,114 +1,98 @@
-import { Col, Row } from "react-bootstrap";
-import Loader from "../Loader/Loader";
-import ConversationDisplay from "../ConversationDisplay/ConversationDisplay";
+import { Col, Row } from "react-bootstrap"
+import Loader from "../Loader/Loader"
+import ConversationDisplay from "../ConversationDisplay/ConversationDisplay"
 import "./Inbox.css"
-import { useContext, useEffect, useState } from "react";
-import DonutLargeIcon from '@mui/icons-material/DonutLarge';
-import ChatIcon from '@mui/icons-material/Chat';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Avatar } from "@mui/material";
+import DonutLargeIcon from '@mui/icons-material/DonutLarge'
+import ChatIcon from '@mui/icons-material/Chat'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { Search } from "@mui/icons-material"
-import ChatItem from "../ChatItem/ChatItem";
-import conversationService from "../../services/conversations.services";
+import ChatItem from "../ChatItem/ChatItem"
 import { SocketContext } from '../../contexts/socket.context'
+import React, { useEffect, useState, useContext } from 'react'
+import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Divider, InputBase, Paper } from "@mui/material"
+import SearchIcon from '@mui/icons-material/Search'
+import conversationService from "../../services/conversations.services"
+
 
 const Inbox = ({ conversations }) => {
-
-
-    const [selectedConversation, setSelectedConversation] = useState(null);
-    const { socket, messages } = useContext(SocketContext)
+    const [selectedConversation, setSelectedConversation] = useState(null)
+    const { socket } = useContext(SocketContext)
 
 
     useEffect(() => {
         if (socket) {
-            socket.on("newMessage", handleMessage);
+            socket.on("newMessage", handleMessage)
         }
 
         return () => {
-            socket && socket.off('newMessage', handleMessage);
+            socket && socket.off('newMessage', handleMessage)
         }
-    }, [socket, selectedConversation])
+    }, [socket,])
 
-    const handleMessage = (message) => {
-        selectedConversation &&
-            setSelectedConversation((prevConversation) => ({
+
+    const handleMessage = (newMessage) => {
+        if (selectedConversation && selectedConversation._id === newMessage.conversation) {
+            setSelectedConversation(prevConversation => ({
                 ...prevConversation,
-                messages: [...prevConversation.messages, message],
+                messages: [...prevConversation.messages, newMessage],
             }));
+        }
+        // i need to update the conversations list to reflect the new message
     }
 
     const handleConversationClick = (conversation) => {
-        const senderId = conversation.sender._id;
-        const receiverId = conversation.receiver._id;
-        const postId = conversation.post?._id;  // Ensure you have this field in your conversation object
-
-        if (!postId) {
-            console.error("Post ID is not defined in the clicked conversation.");
-            return;
-        }
-
-        conversationService
-            .getConversation(senderId, receiverId, postId) // Passing postId as well
-            .then(({ data }) => {
-                setSelectedConversation(data);
+        fetchMessagesForConversation(conversation._id)
+            .then(messages => {
+                setSelectedConversation({
+                    ...conversation,
+                    messages: messages,
+                });
             })
-            .catch(err => console.log(err));
-    };
+            .catch(err => console.error('Error fetching messages:', err));
+    }
 
+    const fetchMessagesForConversation = async (conversationId) => {
+        try {
+            const { data } = await conversationService.getMessagesForConversation(conversationId);
+            return data;
+        } catch (err) {
+            throw err;
+        }
+    }
 
+    console.log("selectedConversation cuando hago el getmessagess", selectedConversation)
     return (
-        <Row>
-            <Col lg={4} md={4} className="conversation-list">
-                {/* Conversation list on the left */}
-                <div className="sidebar-header">
-                    <Avatar />
-                    <div className="sidebar-header-right">
-                        <DonutLargeIcon color="action" />
-                        <ChatIcon color="action" />
-                        <MoreVertIcon color="action" />
-                    </div>
-                </div>
-                <div className="sidebar-search">
-                    <div className="search-container">
-                        <Search color="action" />
-                        <input placeholder="Search" />
-                    </div>
-                </div>
-
+        <div className="inbox-container">
+            <div className="sidebar">
                 <div className="sidebar-list">
                     {!conversations ? (
                         <Loader />
                     ) : (
-                        conversations.map((elm) => (
+                        conversations.map((conversation) => (
                             <ChatItem
-                                key={elm._id}
-                                conversationData={elm}
+                                key={conversation._id}
+                                conversationData={conversation}
                                 onClick={() => {
-                                    handleConversationClick(elm)
+                                    handleConversationClick(conversation)
                                 }}
-                                selected={selectedConversation === elm}
+                                selected={selectedConversation?._id === conversation._id}
                             />
                         ))
-                    )
-                    }
+                    )}
                 </div>
-            </Col>
-            {selectedConversation ?
-                (
-                    <Col lg={8} md={8} className="conversation-panel">
-                        <ConversationDisplay selectedConversation={selectedConversation}
-                            socket={socket} />
-                    </Col>
-                )
-                :
-                (
-                    <>
-                        aqui va una imagen de fondo o algo. en plan welcome to your chat, whatever
-                    </>
+            </div>
+            <div className="chat-panel">
+                {selectedConversation ? (
+                    <ConversationDisplay selectedConversation={selectedConversation} socket={socket} />
+                ) : (
+                    <div className="empty-chat-placeholder">
+                        <p>Check your inbox</p>
+                        <p>If you have read all your messages, keep enjoying Greenlet!</p>
+                    </div>
                 )}
-
-        </Row>
+            </div>
+        </div>
     )
 }
 
-export default Inbox;
+export default Inbox

@@ -21,7 +21,6 @@ class MapsService {
     }
 
     reverseGeocode(latitude, longitude) {
-        console.log("en el reversegeocode", latitude, longitude)
         return this.api.post('/reverse-geocode', { latitude, longitude });
     }
 

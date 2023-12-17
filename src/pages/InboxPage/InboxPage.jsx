@@ -4,7 +4,7 @@ import { AuthContext } from "../../contexts/auth.context"
 import Inbox from "../../components/Inbox/Inbox"
 import { Container } from "react-bootstrap"
 import conversationService from "../../services/conversations.services"
-
+import "./InboxPage.css"
 
 const InboxPage = () => {
 
@@ -16,7 +16,6 @@ const InboxPage = () => {
         conversationService
             .getAllConversationsForUser(loggedUser?._id)
             .then(({ data }) => {
-                console.log("esto es lo que me llega de conversacioens-----------------------------------------------", data)
                 setConversations(data)
             })
             .catch(err => console.log(err))
@@ -26,11 +25,10 @@ const InboxPage = () => {
         loadInbox()
     }, [])
 
+
     return (
         <div className="inboxPage">
-            <Container>
-                <Inbox conversations={conversations} />
-            </Container>
+            <Inbox conversations={conversations} />
         </div>
     )
 }

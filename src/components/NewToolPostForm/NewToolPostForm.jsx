@@ -71,7 +71,6 @@ const NewToolPostForm = ({ previousToolsPostData, setShowMainFormModal }) => {
             .savePost(postData)
             .then(() => {
                 setShowMainFormModal(false);
-                setRefreshFeed(true);
             })
             .catch(err => console.log(err))
 
@@ -111,7 +110,6 @@ const NewToolPostForm = ({ previousToolsPostData, setShowMainFormModal }) => {
         postsService
             .editPost(postData._id, postData)
             .then(() => {
-                refreshPosts()
                 setShowEditModal(false)
             })
             .catch(err => console.log(err))

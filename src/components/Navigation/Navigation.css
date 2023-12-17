@@ -1,10 +1,25 @@
 .navbar {
+    position: fixed !important;
+    /* Add this line */
+    top: 0;
+    /* Add this line */
+    left: 0;
+    /* Add this line */
+    right: 0;
+    /* Add this line */
+    z-index: 10;
+    /* Make sure this z-index is lower than the dropdown z-index */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(236, 89, 89);
-    /* Match Wallapop's navbar color */
+    background-color: rgb(255, 255, 255);
     padding: 10px 20px;
+    box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.2);
+}
+
+.greenlet-icon {
+
+    height: 45px;
 }
 
 .navbar-container {
@@ -12,11 +27,12 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    padding: 0 10px;
 }
 
 
-.navbar-actions svg {
-    margin-left: 20px;
+.navbar-items svg {
+    margin-left: 10px;
     /* Space between icons */
     cursor: pointer;
 }
@@ -52,7 +68,11 @@
 }
 
 .form-control.search-input {
-    width: 100%;
+
+    flex-grow: 1;
+    /* Allow the input to grow */
+    width: 650px;
+
     /* Make it take the full width of its container */
 
     border-radius: 50px;
@@ -63,15 +83,15 @@
 
 /* Style for the 'Upload Plant' button to make it green */
 .nav-link.upload-plant-button {
-    background-color: #4CAF50;
+    background-color: #25bc41;
     /* Green background */
     color: white;
     /* White text */
-    padding: 10px 20px;
+    padding: 12px 12px;
     /* Padding to make it look like a button */
     border: none;
     /* No border */
-    border-radius: 20px;
+    border-radius: 50px;
     /* Rounded borders */
     text-decoration: none;
     /* No underlines on the text */
@@ -86,4 +106,36 @@
 .nav-link.upload-plant-button:hover {
     background-color: #45a049;
     /* Slightly darker green on hover */
+}
+
+
+
+
+
+.navbar-items {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+
+
+.topRightItems {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+
+}
+
+@media (max-width: 999px) {
+    .navbar .some-class-for-links-to-hide {
+        display: none;
+    }
+}
+
+/* Show the footer-navbar when the window width is less than 1000px */
+@media (max-width: 999px) {
+    .footer-navbar {
+        display: flex;
+    }
 }

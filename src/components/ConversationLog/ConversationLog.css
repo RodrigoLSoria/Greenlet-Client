@@ -1,0 +1,16 @@
+.date-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.date-header p {
+    background-color: #e1f3fb;
+    color: #333;
+    font-size: 0.85rem;
+    padding: 4px 12px;
+    border-radius: 12px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    max-width: fit-content;
+}

@@ -1,0 +1,18 @@
+.profilePage-container {
+    padding: 60px 30px;
+}
+
+.profilePage-avatar {
+    border-radius: 50%;
+    width: 50px;
+    /* adjust as needed */
+    height: 50px;
+    /* adjust as needed */
+    margin-right: 10px;
+}
+
+.profilePage-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}

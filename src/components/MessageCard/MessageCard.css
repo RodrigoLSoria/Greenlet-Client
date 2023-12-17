@@ -1,29 +1,43 @@
 .message-card {
-    /* Add your default styles here */
-    padding: 5px;
-    border: 1px solid #ccc;
-    background-color: #000;
+    padding: 10px;
+    border-radius: 16px;
     margin-bottom: 10px;
-
-    /* Smooth transition effect */
+    font-size: 14px;
+    background-color: #f0f0f0;
+    display: inline-block;
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
 }
 
-
+/* Align sender messages to the right */
 div.message-card.sender-message {
-    background-color: green !important;
+    background-color: #99ff4c;
+    /* Background color for sender message */
+    align-self: flex-end;
+    /* Aligns the sender message card to the end (right) */
+    margin-right: 0;
+    border-top-right-radius: 0;
 }
 
+/* Align receiver messages to the left */
 div.message-card.receiver-message {
-    background-color: red !important;
+    background-color: #fff;
+    /* Background color for receiver message */
+    align-self: flex-start;
+    /* Aligns the receiver message card to the start (left) */
+    margin-left: 0;
+    border-top-left-radius: 0;
 }
 
 .message-time {
-    font-size: 12px;
-    /* Adjust the font size as needed */
-    text-align: right;
-    /* Right-align sender time, you can adjust this as needed */
-    color: #888;
-    /* Adjust the color as needed */
-    margin-top: 4px;
-    /* Adjust the margin as needed */
+    display: inline-block;
+    /* Changed from block to inline-block */
+    background-color: #d9d9d9;
+    color: #555;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    /* Removed absolute positioning */
+    white-space: nowrap;
 }

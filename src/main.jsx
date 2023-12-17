@@ -8,36 +8,29 @@ import { LoginModalProvider } from './contexts/loginModal.context'
 import { SignupModalProvider } from './contexts/signupModal.context'
 import { MessageModalProvider } from './contexts/messageModal.context'
 import { SocketProvider } from './contexts/socket.context'
-import { FeedRefreshProvider } from './contexts/postsRefresh.context';
 import { ExchangeStatusProvider } from './contexts/exchangeStatus.context'
-import { SearchProvider } from './contexts/search.Context'
-import { FilterProvider } from './contexts/filter.context';
 import { LocationProvider } from './contexts/location.context'
-
+import { PostsProvider } from './contexts/posts.context'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Router>
     <AuthProviderWrapper>
       <ExchangeStatusProvider>
-        <SearchProvider>
-          <FilterProvider>
-            <LocationProvider>
-              <FeedRefreshProvider>
-                <SocketProvider>
-                  <SignupModalProvider>
-                    <LoginModalProvider>
-                      <MessageModalProvider>
-                        <React.StrictMode>
-                          <App />
-                        </React.StrictMode>
-                      </MessageModalProvider>
-                    </LoginModalProvider>
-                  </SignupModalProvider>
-                </SocketProvider>
-              </FeedRefreshProvider>
-            </LocationProvider>
-          </FilterProvider>
-        </SearchProvider>
+        <PostsProvider>
+          <LocationProvider>
+            <SocketProvider>
+              <SignupModalProvider>
+                <LoginModalProvider>
+                  <MessageModalProvider>
+                    <React.StrictMode>
+                      <App />
+                    </React.StrictMode>
+                  </MessageModalProvider>
+                </LoginModalProvider>
+              </SignupModalProvider>
+            </SocketProvider>
+          </LocationProvider>
+        </PostsProvider>
       </ExchangeStatusProvider>
     </AuthProviderWrapper >
   </Router>

@@ -1,7 +1,8 @@
 import './Footer.css'
 
-const Footer = () => <footer>Todos los derechos reservados</footer>
-
+const Footer = () => {
+    {/* <footer>Todos los derechos reservados</footer> */ }
+}
 
 
 export default Footer

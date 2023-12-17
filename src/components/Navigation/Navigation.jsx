@@ -1,60 +1,105 @@
-import { Nav, Navbar } from "react-bootstrap"
+import { Alert, Nav, Navbar, Modal } from "react-bootstrap"
 import { Link } from "react-router-dom"
-import { useContext, useState } from "react"
-import { Modal } from "react-bootstrap"
-import SignupForm from "../../components/SignupForm/SignupForm"
+import { useContext, useState, useEffect } from "react"
+import SignupForm from "../SignupForm/SignupForm"
 import LoginForm from "../LoginForm/LoginForm"
 import MainForm from "../MainForm/MainForm"
 import { AuthContext } from '../../contexts/auth.context'
 import { useNavigate } from "react-router-dom"
 import { useLoginModalContext } from '../../contexts/loginModal.context'
 import { useSignupModalContext } from '../../contexts/signupModal.context'
-import { useSearchContext } from '../../contexts/search.Context'
-import { useFilterContext } from '../../contexts/filter.context'
-import Feed from "../../components/Feed/Feed"
+import { usePosts } from "../../contexts/posts.context"
 import * as Constants from "../../consts/consts"
 import Offcanvas from 'react-bootstrap/Offcanvas'
 import Carousel from 'react-bootstrap/Carousel'
 import { Button, Container, Dropdown, Form } from "react-bootstrap"
 import "./Navigation.css"
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-
-
-
-
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import MailOutlineIcon from '@mui/icons-material/MailOutline'
+import LocationOnIcon from '@mui/icons-material/LocationOn'
+import setGeolocation from '../../utils/setGeolocation'
+import mapsService from "../../services/maps.services"
+import postsService from "../../services/posts.services"
+import EmailIcon from '@mui/icons-material/Email'
+import FooterNavbar from "../NavigationFooter/NavigationFooter"
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 
 const Navigation = () => {
 
+    const [showOffCanvas, setShowOffCanvas] = useState(false)
+    const { setPosts } = usePosts()
+    const [filteredPosts, setFilteredPosts] = useState([])
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const [location, setLocation] = useState('')
+    const [showMainFormModal, setShowMainFormModal] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [selectedCategories, setSelectedCategories] = useState([])
+    const [selectedPlantTypes, setSelectedPlantTypes] = useState([])
+    const [dateFilter, setDateFilter] = useState('all')
+    const [isNavExpanded, setIsNavExpanded] = useState(false)
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
     const { showLoginModal, setShowLoginModal } = useLoginModalContext()
     const { showSignupModal, setShowSignupModal } = useSignupModalContext()
-    const { searchQuery, setSearchQuery } = useSearchContext()
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-    const {
-        selectedCategories,
-        setSelectedCategories,
-        selectedPlantTypes,
-        setSelectedPlantTypes,
-        dateFilter,
-        setDateFilter
-    } = useFilterContext();
+    const { loggedUser, logout } = useContext(AuthContext)
+    const navigate = useNavigate()
+    const shouldShowFooterNavbar = windowWidth < 1000
 
-    const [showMainFormModal, setShowMainFormModal] = useState(false)
 
     const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
-    };
+        setIsDropdownOpen(!isDropdownOpen)
+    }
 
-    const { loggedUser, logout } = useContext(AuthContext)
-
-    const navigate = useNavigate()
-
-    const handleClose = () => setShowOffCanvas(false);
-    const handleShow = () => setShowOffCanvas(true);
+    const handleClose = () => setShowOffCanvas(false)
+    const handleShow = () => setShowOffCanvas(true)
 
     const handleLogout = () => {
         logout()
         navigate('/')
+    }
+
+    useEffect(() => {
+        loadFeed()
+
+    }, [searchQuery, selectedCategories, selectedPlantTypes, dateFilter])
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth)
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+
+    const loadFeed = () => {
+        setGeolocation(
+            async ({ latitude, longitude }) => {
+
+                try {
+                    // Use mapsService to get the reverse geocode data
+                    const locationData = await mapsService.reverseGeocode(latitude, longitude)
+
+                    setLocation(`${locationData.data.city}, ${locationData.data.country}`)
+
+                    const isFoundCategorySelected = selectedCategories.includes('found')
+
+                    const queryParams = {
+                        searchQuery,
+                        category: selectedCategories,
+                        userLatitude: latitude,
+                        userLongitude: longitude,
+                        plantType: selectedPlantTypes,
+                        dateFilter: isFoundCategorySelected ? '24h' : dateFilter
+                    }
+
+                    postsService
+                        .getFilteredPosts(queryParams)
+                        .then(({ data }) => {
+                            setPosts(data)
+                        })
+                        .catch((err) => console.log(err))
+                } catch (error) {
+                    console.error('Error fetching location:', error)
+                }
+            })
     }
 
     const handleInputChange = (e) => {
@@ -63,30 +108,30 @@ const Navigation = () => {
 
     const handleCategoryToggle = (category) => {
         if (selectedCategories.includes(category)) {
-            setSelectedCategories(selectedCategories.filter(c => c !== category));
+            setSelectedCategories(selectedCategories.filter(c => c !== category))
         } else {
-            setSelectedCategories([...selectedCategories, category]);
+            setSelectedCategories([...selectedCategories, category])
         }
-    };
+    }
 
     const handlePlantTypeToggle = (type) => {
         if (selectedPlantTypes.includes(type)) {
-            setSelectedPlantTypes(selectedPlantTypes.filter(c => c !== type));
+            setSelectedPlantTypes(selectedPlantTypes.filter(c => c !== type))
         } else {
-            setSelectedPlantTypes([...selectedPlantTypes, type]);
+            setSelectedPlantTypes([...selectedPlantTypes, type])
         }
-    };
+    }
 
     const handleDateFilterChange = (newDateFilter) => {
-        setDateFilter(newDateFilter);
-    };
+        setDateFilter(newDateFilter)
+    }
 
     return (
         <>
             <nav className="navbar">
                 <div className="navbar-container">
 
-                    <Link className="nav-link" to="/">{import.meta.env.VITE_APP_NAME}</Link>
+                    <Link className="nav-link" to="/"><img src="../../../public/Greenlet-TwoColours.jpg" alt="Greenlet Icon" className="greenlet-icon" /></Link>
 
                     <div className="searchBar">
                         <input
@@ -97,25 +142,42 @@ const Navigation = () => {
                             className="form-control search-input"
                         />
                     </div>
+                    <div className="topRightItems">
+                        <div className="location">
+                            <LocationOnIcon /> <span>{location}</span>
+                        </div>
 
-                    <div className="navbar-actions">
-                        <FavoriteBorderIcon /> {/* Favorite Icon */}
-                        {/* aqui meter enlace a favoritos del perfil  */}
-                        <MailOutlineIcon /> {/* Mail Icon */}
-                        {/* More actions here */}
+                        {!shouldShowFooterNavbar && (
+                            <div className="navbar-items" id="navbarItems">
+                                {loggedUser ? (
+                                    <>
+                                        <Link to={`/profile/${loggedUser?._id}`} className="footer-icon">
+                                            <SentimentSatisfiedAltIcon />
+                                        </Link>
+                                        <Link to={`/getAllForUser/${loggedUser?._id}`} className="footer-icon">
+                                            <EmailIcon />
+                                        </Link>
+                                        <Link to={`/UserFavourites/${loggedUser._id}`} className='nav-link'><FavoriteBorderIcon /></Link>
+                                        <Link className="nav-link upload-plant-button" to="#"
+                                            onClick={() => setShowMainFormModal(true)}>Upload Plant</Link>
+                                        <span className='nav-link' onClick={handleLogout}>Logout</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link onClick={() => setShowLoginModal(true)} className='nav-link'> <SentimentSatisfiedAltIcon /></Link>
+                                        <EmailIcon onClick={() => setShowLoginModal(true)} />
+                                        <Link onClick={() => setShowLoginModal(true)} className='nav-link'><FavoriteBorderIcon /></Link>
+                                        <Link className="nav-link upload-plant-button" to="#"
+                                            onClick={() => setShowLoginModal(true)}>Upload Plant</Link>
+                                        <Link to="#" onClick={() => setShowLoginModal(true)} className="nav-link">Login</Link>
+
+                                    </>
+
+                                )}
+                            </div>
+                        )}
+
                     </div>
-                    {loggedUser ? (
-                        <div className="user-logged-in">
-                            <button onClick={handleLogout}>Logout</button>
-                        </div>
-                    ) : (
-                        <div className="user-logged-out">
-                            <Link to={`/profile/${loggedUser?._id}`} className='nav-link'>My profile</Link>
-                            <Link to={`/getAllForUser/${loggedUser?._id}`} className='nav-link'>📥</Link>
-                        </div>
-                    )}
-                    <Link className="nav-link upload-plant-button" to="#"
-                        onClick={() => loggedUser ? setShowMainFormModal(true) : setShowLoginModal(true)}>Upload Plant</Link>
                 </div>
                 {isDropdownOpen && (
                     <div className="dropdown-menu">
@@ -202,6 +264,10 @@ const Navigation = () => {
                         <MainForm showMainFormModal={showMainFormModal} setShowMainFormModal={setShowMainFormModal} />
                     </Modal.Body>
                 </Modal>
+            </div>
+
+            <div className="footerNavbar">
+                {shouldShowFooterNavbar && <FooterNavbar setShowMainFormModal={setShowMainFormModal} />}
             </div>
         </>
     )

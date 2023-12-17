@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 
 class UserService {
     constructor() {
@@ -30,7 +30,6 @@ class UserService {
     }
 
     editProfile(user_id, userData) {
-        console.log("este es el data que me llega al edit service", userData)
         return this.api.put(`/editProfile/${user_id}`, userData)
     }
 

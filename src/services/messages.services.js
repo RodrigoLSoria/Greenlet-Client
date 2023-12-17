@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 
 class MessageService {
 
@@ -8,33 +8,25 @@ class MessageService {
         })
 
         this.api.interceptors.request.use((config) => {
-            const storedToken = localStorage.getItem("authToken");
+            const storedToken = localStorage.getItem("authToken")
             if (storedToken) {
                 config.headers = { Authorization: `Bearer ${storedToken}` }
             }
-            return config;
+            return config
         })
     }
 
-    getAllMessagesForUser(user_id) {
-
-        return this.api.get(`/getAllForUser/${user_id}`);
-    }
 
     sendMessage(messageData) {
-        return this.api.post('/sendMessage', messageData);
-    }
-
-    markAsRead(message_id) {
-        return this.api.patch(`/markAsRead/${message_id}`);
+        console.log("sendMessage service", messageData)
+        return this.api.post('/sendMessage', messageData)
     }
 
     deleteMessage(message_id) {
-        return this.api.delete(`/deleteMessage/${message_id}`);
+        return this.api.delete(`/deleteMessage/${message_id}`)
     }
-
 }
 
 const messageService = new MessageService()
 
-export default messageService;
+export default messageService
