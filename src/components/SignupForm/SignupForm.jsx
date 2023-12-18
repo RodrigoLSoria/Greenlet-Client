@@ -39,7 +39,7 @@ const signupform = ({ loadUserDetails, setShowModal, setShowSignupModal, setShow
         authService
             .signup(signupData)
             .then(() => {
-                setShowSignupModal(false);
+                setShowSignupModal(false)
                 setShowLoginModal(true)
             })
             .catch(err => console.log(err))
@@ -78,7 +78,7 @@ const signupform = ({ loadUserDetails, setShowModal, setShowSignupModal, setShow
         userService
             .editProfile(loggedUser._id, signupData)
             .then(() => {
-                loadUserDetails();
+                loadUserDetails()
                 setShowModal(false)
             })
             .catch(err => console.log(err))

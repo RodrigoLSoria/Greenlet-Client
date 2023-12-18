@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { Container, Row, Col, Form, Button, Modal } from "react-bootstrap"
+import { Row, Col, Modal } from "react-bootstrap"
 import { useParams } from "react-router-dom"
 import { AuthContext } from '../../contexts/auth.context'
 import userService from '../../services/user.services'
@@ -9,7 +9,6 @@ import postsService from "../../services/posts.services"
 import PostCard from '../../components/PostCard/PostCard'
 import exchangeService from "../../services/exchange.services"
 import ExchangeCard from "../../components/ExchangeCard/ExchangeCard"
-import { DataArray } from "@mui/icons-material"
 import "./ProfilePage.css"
 
 
@@ -72,7 +71,6 @@ const ProfilePage = () => {
     }
 
     const loadExchangesByStatus = (status) => {
-        console.log("este es el status", status, "y este el id del user", user_id)
         exchangeService
             .getExchangesForUserByStatus(user_id, status)
             .then(({ data }) => {

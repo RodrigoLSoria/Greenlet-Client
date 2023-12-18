@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 
 class AlertService {
 
@@ -8,12 +8,12 @@ class AlertService {
         })
 
         this.api.interceptors.request.use((config) => {
-            const storedToken = localStorage.getItem("authToken");
+            const storedToken = localStorage.getItem("authToken")
             if (storedToken) {
                 config.headers = { Authorization: `Bearer ${storedToken}` }
             }
-            return config;
-        });
+            return config
+        })
     }
 
     getAlertsByOwner(user_id) {

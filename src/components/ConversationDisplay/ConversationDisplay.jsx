@@ -1,16 +1,11 @@
 import './ConversationDisplay.css'
-import { Avatar } from '@mui/material'
-import { Search } from '@mui/icons-material'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon'
 import MessageForm from '../MessageForm/MessageForm'
 import ConversationLog from '../ConversationLog/ConversationLog'
-import { useState, useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { AuthContext } from '../../contexts/auth.context'
-import conversationService from '../../services/conversations.services'
+
 
 const ConversationDisplay = ({ selectedConversation }) => {
-
 
     const { loggedUser } = useContext(AuthContext)
     const otherUser = selectedConversation.participants.find(participant =>
@@ -28,7 +23,6 @@ const ConversationDisplay = ({ selectedConversation }) => {
                 </div>
             </div>
         </div>
-
     )
 }
 

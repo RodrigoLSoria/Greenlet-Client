@@ -25,7 +25,7 @@ class BadgeService {
     }
 
     addBadgeToUser(user_id, badge_id) {
-        return this.api.post(`/addBadgeToUser/${user_id}`, { user_id, badge_id });
+        return this.api.post(`/addBadgeToUser/${user_id}`, { user_id, badge_id })
     }
 
 }

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 
 class ExchangeService {
 
@@ -8,11 +8,11 @@ class ExchangeService {
         })
 
         this.api.interceptors.request.use((config) => {
-            const storedToken = localStorage.getItem("authToken");
+            const storedToken = localStorage.getItem("authToken")
             if (storedToken) {
                 config.headers = { Authorization: `Bearer ${storedToken}` }
             }
-            return config;
+            return config
         })
     }
 
@@ -26,11 +26,11 @@ class ExchangeService {
     }
 
     updateExchangeStatus(exchange_id, status) {
-        return this.api.put(`/updateExchange/${exchange_id}`, { status });
+        return this.api.put(`/updateExchange/${exchange_id}`, { status })
     }
 
     getExchangesForUserByStatus(user_id, status) {
-        return this.api.get(`/getExchangesForUserByStatus/${user_id}/${status}`);
+        return this.api.get(`/getExchangesForUserByStatus/${user_id}/${status}`)
     }
 
 
@@ -38,4 +38,4 @@ class ExchangeService {
 
 const exchangeService = new ExchangeService()
 
-export default exchangeService;
+export default exchangeService

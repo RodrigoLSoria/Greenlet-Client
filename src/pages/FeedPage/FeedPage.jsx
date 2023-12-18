@@ -5,11 +5,11 @@ import Feed from "../../components/Feed/Feed"
 import * as Constants from "../../consts/consts"
 import Offcanvas from 'react-bootstrap/Offcanvas'
 import Carousel from 'react-bootstrap/Carousel'
-import setGeolocation from '../../utils/setGeolocation';
+import setGeolocation from '../../utils/setGeolocation'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import mapsService from "../../services/maps.services"
 import alertsService from "../../services/alerts.services"
-import { usePosts } from '../../contexts/posts.context';
+import { usePosts } from '../../contexts/posts.context'
 import "./FeedPage.css"
 
 const FeedPage = () => {

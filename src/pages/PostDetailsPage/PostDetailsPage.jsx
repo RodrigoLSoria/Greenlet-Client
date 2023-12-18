@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import postsService from "../../services/posts.services"
-import { Link, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import Loader from "../../components/Loader/Loader"
 import "./PostDetailsPage.css"
 import { AuthContext } from "../../contexts/auth.context"
@@ -10,17 +10,14 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import formatDate from '../../utils/setPostDate'
 import FavoriteIcon from '@mui/icons-material/Favorite'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Alert, Container, Modal } from "react-bootstrap"
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import { Alert, Modal } from "react-bootstrap"
 import { CSSTransition } from 'react-transition-group'
 import { useLoginModalContext } from "../../contexts/loginModal.context"
 import { useSignupModalContext } from "../../contexts/signupModal.context"
 import userService from "../../services/user.services"
 import MessageForm from "../../components/MessageForm/MessageForm"
 import NewPostForm from "../../components/NewPostForm/NewPostForm"
-
-
-
 
 
 const PostDetailsPage = () => {
@@ -51,7 +48,7 @@ const PostDetailsPage = () => {
 
     useEffect(() => {
         if (loggedUser) {
-            fetchUserFavorites();
+            fetchUserFavorites()
         }
     }, [loggedUser, post_id])
 
@@ -66,11 +63,11 @@ const PostDetailsPage = () => {
         postsService
             .favouritePost(post_id, loggedUser._id)
             .then(() => {
-                setIsFavorite(true);
+                setIsFavorite(true)
             })
             .catch(err => {
-                console.error('Error favoriting post:', err);
-            });
+                console.error('Error favoriting post:', err)
+            })
     }
 
     // <Card style={{ width: '18rem' }} className={`${postDetails.isClosed ? 'closed-post' : ''}`}>
@@ -79,27 +76,27 @@ const PostDetailsPage = () => {
         postsService
             .unfavouritePost(post_id, loggedUser._id)
             .then(() => {
-                setIsFavorite(false);
+                setIsFavorite(false)
             })
             .catch(err => {
-                console.error('Error unfavoriting post:', err);
-            });
+                console.error('Error unfavoriting post:', err)
+            })
     }
     const fetchUserFavorites = () => {
         userService
             .getUserFavorites(loggedUser._id)
             .then(response => {
-                const favorites = response.data;
+                const favorites = response.data
 
                 if (favorites.some(favorite => favorite._id === post_id)) {
-                    setIsFavorite(true);
+                    setIsFavorite(true)
                 } else {
-                    setIsFavorite(false);
+                    setIsFavorite(false)
                 }
             })
             .catch(error => {
-                console.error('Error fetching user favorites:', error);
-            });
+                console.error('Error fetching user favorites:', error)
+            })
     }
 
 
@@ -138,9 +135,11 @@ const PostDetailsPage = () => {
                                 <div className={`message-icon${loggedUser?._id === postDetails.owner._id ? "hidden" : ""}`}>
                                     {loggedUser ? (
                                         loggedUser._id !== postDetails.owner._id &&
-                                        <EmailIcon onClick={() => setShowMessageModal(true)} />
+                                        <EmailIcon onClick={() => {
+                                            setShowMessageModal(true)
+                                        }} />
                                     ) : (
-                                        <EmailIcon onClick={() => setShowLoginReminder(true)} />
+                                        <EmailIcon onClick={() => setShowLoginModal(true)} />
                                     )}
 
                                     <CSSTransition
@@ -187,11 +186,11 @@ const PostDetailsPage = () => {
                                 <Alert variant="danger" dismissible>
                                     You must
                                     <Alert.Link href="#" onClick={() => {
-                                        setShowLoginModal(true);
+                                        setShowLoginModal(true)
                                         setShowLoginReminder(false)
                                     }}>log in</Alert.Link> to send messages.
                                     If you don't have an account <Alert.Link href="#" onClick={() => {
-                                        setShowSignupModal(true);
+                                        setShowSignupModal(true)
                                         setShowLoginReminder(false)
                                     }}>Sign up.</Alert.Link>
                                 </Alert>

@@ -3,9 +3,11 @@ import { Button, Form } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import authService from "../../services/auth.services"
 import { AuthContext } from "../../contexts/auth.context"
+import './LoginForm.css'
 
 
 const LoginForm = ({ setShowLoginModal, setShowSignupModal }) => {
+
     const [loginData, setLoginData] = useState({
         email: '',
         password: ''
@@ -54,10 +56,16 @@ const LoginForm = ({ setShowLoginModal, setShowSignupModal }) => {
                     name="password" />
             </Form.Group>
 
-            <Button variant="dark" type="submit">
-                Enter
-            </Button>
-            <Link onClick={() => setShowSignupModal(true)}>Sign up if you don't have an account yet!</Link>
+            <div className="text-center">
+                <Button variant="dark" type="submit" className="my-1">
+                    Enter
+                </Button>
+                <div>
+                    <Link onClick={() => setShowSignupModal(true)} className="signup-link">
+                        Sign up if you don't have an account yet.
+                    </Link>
+                </div>
+            </div>
         </Form>
     )
 }

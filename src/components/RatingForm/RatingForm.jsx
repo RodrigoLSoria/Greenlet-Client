@@ -1,16 +1,16 @@
-import React, { useContext, useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import { Rating } from '@mui/material';
-import userService from "../../services/user.services";
-import { AuthContext } from '../../contexts/auth.context';
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import React, { useContext, useState } from 'react'
+import { Modal, Button } from 'react-bootstrap'
+import { Rating } from '@mui/material'
+import userService from "../../services/user.services"
+import { AuthContext } from '../../contexts/auth.context'
+import StarIcon from '@mui/icons-material/Star'
+import StarBorderIcon from '@mui/icons-material/StarBorder'
 
 
 const RatingForm = ({ setShowRatingModal, exchangeData }) => {
-    const [ratingValue, setRatingValue] = useState(0);
-    const [comment, setComment] = useState('');
-    const { loggedUser } = useContext(AuthContext);
+    const [ratingValue, setRatingValue] = useState(0)
+    const [comment, setComment] = useState('')
+    const { loggedUser } = useContext(AuthContext)
     const ratedUserId = exchangeData.givenPost.owner._id
 
     console.log("esto es lo que me llega por exchangedata", exchangeData)
@@ -23,23 +23,22 @@ const RatingForm = ({ setShowRatingModal, exchangeData }) => {
             value: ratingValue,
             comment: comment,
             exchangeId: exchangeData._id,
-        };
-        submitRating(ratedUserId, ratingData);
+        }
+        submitRating(ratedUserId, ratingData)
     }
 
     const submitRating = (ratedUserId, ratingData) => {
         userService.editProfile(ratedUserId, { $push: { ratings: ratingData } })
             .then(response => {
-                console.log('Rating submitted:', response.data);
-                // Here you can manage the rating submission.
-                // For example, update some state, show a success message, or refresh data.
-                setShowRatingModal(false);
+                console.log('Rating submitted:', response.data)
+                // TODO manage the rating submission.
+                // For example, update some state, 
+                setShowRatingModal(false)
             })
             .catch(error => {
-                console.error('Error submitting rating:', error);
-                // Here you can manage the error. For example, show an error message.
-            });
-    };
+                console.error('Error submitting rating:', error)
+            })
+    }
 
     return (
         <div>
@@ -58,7 +57,7 @@ const RatingForm = ({ setShowRatingModal, exchangeData }) => {
             />
             <Button onClick={handleSubmit}>Submit Rating</Button>
         </div>
-    );
+    )
 }
 
 export default RatingForm

@@ -50,9 +50,9 @@ const ChatItem = ({ conversationData, onClick, selected }) => {
                 <div className="item-info">
                     <span className="info">{conversationData.post.title}</span>
                 </div>
-                <div onClick={handleDeleteConversation} className="delete-icon">
+                {/* <div onClick={handleDeleteConversation} className="delete-icon">
                     <DeleteIcon />
-                </div>
+                </div> */}
             </div>
         )
 

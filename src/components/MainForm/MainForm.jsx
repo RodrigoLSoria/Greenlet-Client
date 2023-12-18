@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import NewPostForm from '../NewPostForm/NewPostForm'; // Your existing plant form component
-import NewToolPostForm from '../NewToolPostForm/NewToolPostForm'; // The new tool form component
-import { Button } from 'react-bootstrap';
+import React, { useState } from 'react'
+import NewPostForm from '../NewPostForm/NewPostForm'
+import NewToolPostForm from '../NewToolPostForm/NewToolPostForm'
+import { Button } from 'react-bootstrap'
 
-const MainForm = ({ showMainFormModal, setShowMainFormModal }) => {
-    const [formType, setFormType] = useState(null);
 
+const MainForm = ({ setShowMainFormModal }) => {
+
+    const [formType, setFormType] = useState(null)
+    // TODO stick to the PLANTs, leave the tools for a more advanced stage of the project
     return (
         <div>
             {formType === null &&
@@ -26,7 +28,7 @@ const MainForm = ({ showMainFormModal, setShowMainFormModal }) => {
                     <NewToolPostForm setShowMainFormModal={setShowMainFormModal} />
                 )}
         </div>
-    );
-};
+    )
+}
 
-export default MainForm;
+export default MainForm

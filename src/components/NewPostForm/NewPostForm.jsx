@@ -4,7 +4,7 @@ import postsService from "../../services/posts.services"
 import uploadServices from "../../services/upload.services"
 import { AuthContext } from "../../contexts/auth.context"
 import * as Constants from '../../consts/consts'
-import setGeolocation from '../../utils/setGeolocation';
+import setGeolocation from '../../utils/setGeolocation'
 
 
 const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData }) => {
@@ -49,7 +49,7 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
     const [postData, setPostData] = useState(emptyPostForm)
     const [loadingImage, setLoadingImage] = useState(false)
     const [showCareInstructions, setShowCareInstructions] = useState(false)
-    const [descriptionPlaceholder, setDescriptionPlaceholder] = useState('');
+    const [descriptionPlaceholder, setDescriptionPlaceholder] = useState('')
 
 
     useEffect(() => {
@@ -58,18 +58,18 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
             :
             navigator.geolocation &&
             navigator.geolocation.getCurrentPosition((position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
+                const latitude = position.coords.latitude
+                const longitude = position.coords.longitude
                 setPostData(prevData => ({
                     ...prevData, location: {
                         type: "Point",
                         coordinates: [longitude, latitude],
                     }
-                }));
+                }))
             }, (error) => {
-                console.log("Error occurred.", error);
-            });
-    }, []);
+                console.log("Error occurred.", error)
+            })
+    }, [])
 
     const handleInputChange = e => {
         const { name, value } = e.currentTarget
@@ -79,10 +79,10 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
         })
 
         if (name === 'category' && value === 'found') {
-            setDescriptionPlaceholder("Enter the specific location of the plant you found, including street, neighborhood, or metro stop details.");
+            setDescriptionPlaceholder("Enter the specific location of the plant you found, including street, neighborhood, or metro stop details.")
         } else {
             // Reset placeholder if the category is changed to something else
-            setDescriptionPlaceholder('');
+            setDescriptionPlaceholder('')
         }
     }
 
@@ -92,7 +92,7 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
         postsService
             .savePost(postData)
             .then(() => {
-                setShowMainFormModal(false);
+                setShowMainFormModal(false)
                 checkForAlertMatches(postData)
             })
             .catch(err => console.log(err))
@@ -105,12 +105,12 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
             .then(matches => {
                 if (matches.length > 0) {
                     // Handle the matches as required, e.g., send an email
-                    console.log('Alert matches found:', matches);
+                    console.log('Alert matches found:', matches)
                 } else {
-                    console.log('No alert matches found.');
+                    console.log('No alert matches found.')
                 }
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err))
     }
 
     const handleFileUpload = e => {
@@ -133,15 +133,15 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
     }
 
     const handleCareInstructionsChange = e => {
-        const { name, value } = e.target;
+        const { name, value } = e.target
         setPostData({
             ...postData,
             careInstructions: {
                 ...postData.careInstructions,
                 [name]: value,
             }
-        });
-    };
+        })
+    }
 
     const postUpdating = () => {
         postsService
@@ -208,12 +208,12 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
                 <Form.Group className="mb-3" controlId="formBasicDescription">
                     <Form.Label>Description</Form.Label>
                     <Form.Control
-                        as="textarea"  // Change to textarea
-                        rows={3}       // Set the number of rows
+                        as="textarea"
+                        rows={3}
                         name="description"
                         value={postData.description}
                         onChange={handleInputChange}
-                        placeholder={descriptionPlaceholder} // Add the placeholder here
+                        placeholder={descriptionPlaceholder}
 
                     />
                 </Form.Group>
@@ -228,7 +228,6 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
 
                 {showCareInstructions && (
                     <div>
-                        {/* Example for a dropdown */}
                         <Form.Group className="mb-3" controlId="careInstructionsLight">
                             <Form.Label>Light</Form.Label>
                             <Form.Control
@@ -243,8 +242,6 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
                                 <option value="direct sunlight">Direct Sunlight</option>
                             </Form.Control>
                         </Form.Group>
-
-                        {/* Repeat for other care instruction fields */}
                     </div>
                 )}
 

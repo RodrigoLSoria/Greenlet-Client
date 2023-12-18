@@ -1,16 +1,9 @@
-import { Col, Row } from "react-bootstrap"
 import Loader from "../Loader/Loader"
 import ConversationDisplay from "../ConversationDisplay/ConversationDisplay"
 import "./Inbox.css"
-import DonutLargeIcon from '@mui/icons-material/DonutLarge'
-import ChatIcon from '@mui/icons-material/Chat'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import { Search } from "@mui/icons-material"
 import ChatItem from "../ChatItem/ChatItem"
 import { SocketContext } from '../../contexts/socket.context'
 import React, { useEffect, useState, useContext } from 'react'
-import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Divider, InputBase, Paper } from "@mui/material"
-import SearchIcon from '@mui/icons-material/Search'
 import conversationService from "../../services/conversations.services"
 
 
@@ -35,9 +28,9 @@ const Inbox = ({ conversations }) => {
             setSelectedConversation(prevConversation => ({
                 ...prevConversation,
                 messages: [...prevConversation.messages, newMessage],
-            }));
+            }))
         }
-        // i need to update the conversations list to reflect the new message
+        // TODO: i need to update the conversations list to reflect the new messages
     }
 
     const handleConversationClick = (conversation) => {
@@ -46,21 +39,20 @@ const Inbox = ({ conversations }) => {
                 setSelectedConversation({
                     ...conversation,
                     messages: messages,
-                });
+                })
             })
-            .catch(err => console.error('Error fetching messages:', err));
+            .catch(err => console.error('Error fetching messages:', err))
     }
 
     const fetchMessagesForConversation = async (conversationId) => {
         try {
-            const { data } = await conversationService.getMessagesForConversation(conversationId);
-            return data;
+            const { data } = await conversationService.getMessagesForConversation(conversationId)
+            return data
         } catch (err) {
-            throw err;
+            throw err
         }
     }
 
-    console.log("selectedConversation cuando hago el getmessagess", selectedConversation)
     return (
         <div className="inbox-container">
             <div className="sidebar">

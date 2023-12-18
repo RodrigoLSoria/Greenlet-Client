@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Button, Card } from 'react-bootstrap';
-import * as Constants from '../../consts/consts';
-import postsService from '../../services/posts.services';
-import uploadServices from '../../services/upload.services';
+import React, { useEffect, useState } from 'react'
+import { Form, Button, Card } from 'react-bootstrap'
+import * as Constants from '../../consts/consts'
+import postsService from '../../services/posts.services'
+import uploadServices from '../../services/upload.services'
 
 const NewToolPostForm = ({ previousToolsPostData, setShowMainFormModal }) => {
 
@@ -33,34 +33,34 @@ const NewToolPostForm = ({ previousToolsPostData, setShowMainFormModal }) => {
             :
             navigator.geolocation &&
             navigator.geolocation.getCurrentPosition((position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
+                const latitude = position.coords.latitude
+                const longitude = position.coords.longitude
                 setPostData(prevData => ({
                     ...prevData, location: {
                         type: "Point",
                         coordinates: [longitude, latitude],
                     }
-                }));
+                }))
             }, (error) => {
-                console.log("Error occurred.", error);
-            });
-    }, []);
+                console.log("Error occurred.", error)
+            })
+    }, [])
 
     const handleInputChange = e => {
         const { name, value } = e.currentTarget
-        if (name in postData.equipment) { // Check if the input name is a key in the equipment object
+        if (name in postData.equipment) {
             setPostData({
                 ...postData,
                 equipment: {
                     ...postData.equipment,
                     [name]: value,
                 },
-            });
+            })
         } else {
             setPostData({
                 ...postData,
                 [name]: value,
-            });
+            })
         }
     }
 
@@ -70,7 +70,7 @@ const NewToolPostForm = ({ previousToolsPostData, setShowMainFormModal }) => {
         postsService
             .savePost(postData)
             .then(() => {
-                setShowMainFormModal(false);
+                setShowMainFormModal(false)
             })
             .catch(err => console.log(err))
 

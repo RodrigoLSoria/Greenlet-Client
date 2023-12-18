@@ -1,19 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react'
 import "./SavedPostsPage.css"
 import userService from "../../services/user.services"
-import { AuthContext } from '../../contexts/auth.context';
-import { Col, Row } from "react-bootstrap";
-import PostCard from "../../components/PostCard/PostCard";
-import Loader from "../../components/Loader/Loader";
+import { AuthContext } from '../../contexts/auth.context'
+import { Col, Row } from "react-bootstrap"
+import PostCard from "../../components/PostCard/PostCard"
+import Loader from "../../components/Loader/Loader"
 
 
 const SavedPostsPage = () => {
-    const [favoritePosts, setFavoritePosts] = useState([]);
+    const [favoritePosts, setFavoritePosts] = useState([])
     const { loggedUser } = useContext(AuthContext)
 
     useEffect(() => {
-        fetchUserFavorites();
-    }, []);
+        fetchUserFavorites()
+    }, [])
 
     const fetchUserFavorites = () => {
         userService
@@ -22,8 +22,8 @@ const SavedPostsPage = () => {
                 setFavoritePosts(response.data)
             })
             .catch(error => {
-                console.error('Error fetching user favorites:', error);
-            });
+                console.error('Error fetching user favorites:', error)
+            })
     }
 
     return (
@@ -45,7 +45,7 @@ const SavedPostsPage = () => {
                 }
             </>
         </div>
-    );
-};
+    )
+}
 
-export default SavedPostsPage;
+export default SavedPostsPage

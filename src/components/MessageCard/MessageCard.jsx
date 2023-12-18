@@ -1,10 +1,8 @@
-import { Alert, Card, Col, Modal } from "react-bootstrap"
+import { Card } from "react-bootstrap"
 import './MessageCard.css'
-import { Link } from "react-router-dom"
 import { useContext } from "react"
 import { AuthContext } from "../../contexts/auth.context"
 import formatMessageTime from "../../utils/formatMessageTime"
-import messageService from "../../services/messages.services"
 
 
 const MessageCard = ({ message }) => {
@@ -12,8 +10,6 @@ const MessageCard = ({ message }) => {
     const { loggedUser } = useContext(AuthContext)
 
     const isSender = message.sender._id === loggedUser._id
-
-    console.log("message", message)
 
 
     return (

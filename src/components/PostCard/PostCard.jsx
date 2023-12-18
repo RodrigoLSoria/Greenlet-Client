@@ -1,31 +1,19 @@
-import { Alert, Button, Card, Col, Modal } from "react-bootstrap"
+import { Modal } from "react-bootstrap"
 import './PostCard.css'
-import { Link } from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom";
-import MessageForm from "../MessageForm/MessageForm"
+import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../../contexts/auth.context"
 import postsService from "../../services/posts.services"
 import NewPostForm from "../NewPostForm/NewPostForm"
-import { useLoginModalContext } from '../../contexts/loginModal.context'
-import { useSignupModalContext } from '../../contexts/signupModal.context'
-import EmailIcon from '@mui/icons-material/Email'
-import { useMessageModalContext } from "../../contexts/messageModal.context"
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
-import formatDate from '../../utils/setPostDate'
 import FavoriteIcon from '@mui/icons-material/Favorite'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import userService from "../../services/user.services"
-import { CSSTransition } from 'react-transition-group'
-import PostDetailsPage from "../../pages/PostDetailsPage/PostDetailsPage"
 
 const PostCard = ({ previousPostData, setPosts, }) => {
 
     const { loggedUser } = useContext(AuthContext)
-    const { setShowLoginModal } = useLoginModalContext()
-    const { setShowSignupModal } = useSignupModalContext()
-    const [showLoginReminder, setShowLoginReminder] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
     const [isFavorite, setIsFavorite] = useState(false)
     const navigate = useNavigate()
@@ -33,7 +21,7 @@ const PostCard = ({ previousPostData, setPosts, }) => {
 
     useEffect(() => {
         if (loggedUser) {
-            fetchUserFavorites();
+            fetchUserFavorites()
         }
     }, [loggedUser, previousPostData._id])
 
@@ -48,11 +36,11 @@ const PostCard = ({ previousPostData, setPosts, }) => {
         postsService
             .favouritePost(previousPostData._id, loggedUser._id)
             .then(() => {
-                setIsFavorite(true);
+                setIsFavorite(true)
             })
             .catch(err => {
-                console.error('Error favoriting post:', err);
-            });
+                console.error('Error favoriting post:', err)
+            })
     }
 
     // <Card style={{ width: '18rem' }} className={`${previousPostData.isClosed ? 'closed-post' : ''}`}>
@@ -61,32 +49,31 @@ const PostCard = ({ previousPostData, setPosts, }) => {
         postsService
             .unfavouritePost(previousPostData._id, loggedUser._id)
             .then(() => {
-                setIsFavorite(false);
+                setIsFavorite(false)
             })
             .catch(err => {
-                console.error('Error unfavoriting post:', err);
-            });
+                console.error('Error unfavoriting post:', err)
+            })
     }
     const fetchUserFavorites = () => {
         userService
             .getUserFavorites(loggedUser._id)
             .then(response => {
-                const favorites = response.data;
+                const favorites = response.data
 
-                // Use some() method to check if any favorite has the same _id as previousPostData
                 if (favorites.some(favorite => favorite._id === previousPostData._id)) {
-                    setIsFavorite(true);
+                    setIsFavorite(true)
                 } else {
-                    setIsFavorite(false);
+                    setIsFavorite(false)
                 }
             })
             .catch(error => {
-                console.error('Error fetching user favorites:', error);
-            });
+                console.error('Error fetching user favorites:', error)
+            })
     }
 
     const navigateToPostDetails = () => {
-        navigate(`/postDetails/${previousPostData._id}`);
+        navigate(`/postDetails/${previousPostData._id}`)
     }
 
 
@@ -106,7 +93,7 @@ const PostCard = ({ previousPostData, setPosts, }) => {
                         </div>
                     </div>
                     <div className="post-info">
-                        <h4 className="post-title">{previousPostData.title}</h4>
+                        <p className="post-title">{previousPostData.title}</p>
                         <p className="post-plantType">{previousPostData.plantType} </p>
 
                         <div className="favourite-icon">

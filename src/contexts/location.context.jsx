@@ -1,40 +1,40 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react'
 import setGeolocation from '../utils/setGeolocation'
-import mapsService from '../services/maps.services';
+import mapsService from '../services/maps.services'
 
 
-const LocationContext = createContext();
+const LocationContext = createContext()
 
-export const useLocationContext = () => useContext(LocationContext);
+export const useLocationContext = () => useContext(LocationContext)
 
 export const LocationProvider = ({ children }) => {
-    const [location, setLocation] = useState('');
+    const [location, setLocation] = useState('')
 
     const loadGeolocation = () => {
         setGeolocation(
             (position) => {
-                const { latitude, longitude } = position;
+                const { latitude, longitude } = position
                 console.log("así me llega la position", position)
                 mapsService.reverseGeocode(latitude, longitude)
                     .then(locationData => {
-                        setLocation(`${locationData.data.city}, ${locationData.data.country}`);
+                        setLocation(`${locationData.data.city}, ${locationData.data.country}`)
                     })
-                    .catch(console.error);
+                    .catch(console.error)
             },
             (error) => {
-                console.error('Error fetching geolocation:', error);
+                console.error('Error fetching geolocation:', error)
             }
-        );
-    };
+        )
+    }
 
 
     useEffect(() => {
-        loadGeolocation();
-    }, []);
+        loadGeolocation()
+    }, [])
 
     return (
         <LocationContext.Provider value={{ location, loadGeolocation }}>
             {children}
         </LocationContext.Provider>
-    );
-};
+    )
+}

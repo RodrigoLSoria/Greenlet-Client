@@ -1,20 +1,19 @@
-import { Alert, Button, Modal, Card, Col } from "react-bootstrap"
+import { Button, Modal, Card, Col } from "react-bootstrap"
 import './ExchangeCard.css'
-import { Link } from "react-router-dom"
 import { useContext, useState } from "react"
 import { AuthContext } from "../../contexts/auth.context"
 import formatDate from '../../utils/setPostDate'
 import badgeService from "../../services/badge.services"
-import exchangeService from "../../services/exchange.services";
+import exchangeService from "../../services/exchange.services"
 import postsService from "../../services/posts.services"
 import RatingForm from "../RatingForm/RatingForm"
 
 const ExchangeCard = ({ exchangeData, onExchangeUpdate }) => {
 
     const { loggedUser } = useContext(AuthContext)
-    const [status, setStatus] = useState(exchangeData.status);
+    const [status, setStatus] = useState(exchangeData.status)
     const [isDisabled, setIsDisabled] = useState(false)
-    const [showRatingModal, setShowRatingModal] = useState(false);
+    const [showRatingModal, setShowRatingModal] = useState(false)
 
 
     const handleBadgeUpdate = () => {
@@ -22,13 +21,13 @@ const ExchangeCard = ({ exchangeData, onExchangeUpdate }) => {
             user_id: loggedUser._id,
             plantType: exchangeData.givenPost.plantType,
             count: 1
-        };
+        }
 
         badgeService.updateExchangeCount(loggedUser._id, payload)
             .then(({ data: user }) => {
-                const totalExchanges = user.exchanges.reduce((acc, exchange) => acc + exchange.count, 0);
+                const totalExchanges = user.exchanges.reduce((acc, exchange) => acc + exchange.count, 0)
 
-                return Promise.all([badgeService.getAllBadges(), totalExchanges, user]);
+                return Promise.all([badgeService.getAllBadges(), totalExchanges, user])
             })
             .then(([badges, totalExchanges, user]) => {
                 const eligibleBadges = badges.data.filter(badge => {
@@ -38,30 +37,29 @@ const ExchangeCard = ({ exchangeData, onExchangeUpdate }) => {
                         case 'specificPlantExchanged':
                             const specificPlantExchange = user.exchanges.find(ex => ex.plantType === badge.criteria.plantType)
                             return specificPlantExchange && specificPlantExchange.count === badge.criteria.count && !user.badges.includes(badge._id)
-                        // Add more cases if needed
                     }
-                });
+                })
 
                 const badgePromises = eligibleBadges.map(badge => {
                     return badgeService.addBadgeToUser(loggedUser._id, badge._id)
                         .then(response => {
-                            console.log(`Badge ${badge.name} added:`, response.data);
-                            alert(`Congrats! You have won a new badge: ${badge.name}`);
-                        });
-                });
+                            console.log(`Badge ${badge.name} added:`, response.data)
+                            alert(`Congrats! You have won a new badge: ${badge.name}`)
+                        })
+                })
 
                 return Promise.all([...badgePromises,
                 exchangeService.updateExchangeStatus(exchangeData._id, 'closed'),
-                postsService.closePost(exchangeData.givenPost._id)]);
+                postsService.closePost(exchangeData.givenPost._id)])
             })
             .then(() => {
                 if (onExchangeUpdate) onExchangeUpdate()
-                setStatus('closed');
-                setIsDisabled(true);
+                setStatus('closed')
+                setIsDisabled(true)
             })
             .catch(error => {
-                console.error("Error in badge and exchange updates:", error);
-            });
+                console.error("Error in badge and exchange updates:", error)
+            })
     }
 
     return (
@@ -79,7 +77,7 @@ const ExchangeCard = ({ exchangeData, onExchangeUpdate }) => {
                             <Card.Text>Post by: {exchangeData.givenPost.owner.username}</Card.Text>
                             <Card.Text>Type: {exchangeData.givenPost.plantType}</Card.Text>
                             <Card.Text>Posted: {formatDate(exchangeData.givenPost.createdAt)}</Card.Text>
-                            <Button onClick={() => { handleBadgeUpdate(); setShowRatingModal(true); }} className="btn-btn-dark" disabled={isDisabled}>
+                            <Button onClick={() => { handleBadgeUpdate(); setShowRatingModal(true) }} className="btn-btn-dark" disabled={isDisabled}>
                                 Exchange completed
                             </Button>
                         </Card.Body>

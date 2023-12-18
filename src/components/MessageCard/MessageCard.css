@@ -4,40 +4,42 @@
     margin-bottom: 10px;
     font-size: 14px;
     background-color: #f0f0f0;
-    display: inline-block;
+    /* display: inline-block; */
+    display: flex;
     position: relative;
     width: fit-content;
     max-width: 100%;
 }
 
-/* Align sender messages to the right */
+
 div.message-card.sender-message {
     background-color: #99ff4c;
-    /* Background color for sender message */
     align-self: flex-end;
-    /* Aligns the sender message card to the end (right) */
-    margin-right: 0;
+    margin-left: auto;
     border-top-right-radius: 0;
 }
 
-/* Align receiver messages to the left */
+
+
 div.message-card.receiver-message {
     background-color: #fff;
-    /* Background color for receiver message */
     align-self: flex-start;
-    /* Aligns the receiver message card to the start (left) */
-    margin-left: 0;
     border-top-left-radius: 0;
 }
 
+
 .message-time {
     display: inline-block;
-    /* Changed from block to inline-block */
     background-color: #d9d9d9;
     color: #555;
     padding: 3px 8px;
     border-radius: 10px;
     font-size: 0.75rem;
-    /* Removed absolute positioning */
     white-space: nowrap;
+}
+
+
+.message-container {
+    display: flex;
+    flex-direction: column;
 }

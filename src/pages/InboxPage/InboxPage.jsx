@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from "react"
-import messageService from "../../services/messages.services"
 import { AuthContext } from "../../contexts/auth.context"
 import Inbox from "../../components/Inbox/Inbox"
-import { Container } from "react-bootstrap"
 import conversationService from "../../services/conversations.services"
 import "./InboxPage.css"
 

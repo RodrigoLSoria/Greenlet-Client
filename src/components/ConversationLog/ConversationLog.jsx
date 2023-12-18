@@ -3,32 +3,24 @@ import MessageCard from "../MessageCard/MessageCard"
 import setConversationDate from "../../utils/setConversationDate"
 import { useEffect, useRef, useState } from "react"
 import "./ConversationLog.css"
+import groupMessagesByDate from "../../utils/groupMessagesByDate"
 
 const INITIAL_MESSAGE_COUNT = 20
+
 
 const ConversationLog = ({ messages }) => {
 
     const [visibleMessages, setVisibleMessages] = useState([])
     const containerRef = useRef(null)
+    const messageGroups = groupMessagesByDate(visibleMessages, setConversationDate)
 
-    console.log("messages", messages)
 
     useEffect(() => {
-        const initialMessages = messages.slice(Math.max(messages.length - INITIAL_MESSAGE_COUNT, 0))
+        const initialMessages = messages.slice(0, INITIAL_MESSAGE_COUNT).reverse()
         setVisibleMessages(initialMessages)
 
         if (containerRef.current) {
             containerRef.current.scrollTop = containerRef.current.scrollHeight
-        }
-
-        if (containerRef.current) {
-            containerRef.current.addEventListener('scroll', handleScroll)
-        }
-
-        return () => {
-            if (containerRef.current) {
-                containerRef.current.removeEventListener('scroll', handleScroll)
-            }
         }
     }, [messages])
 
@@ -41,45 +33,26 @@ const ConversationLog = ({ messages }) => {
     const loadMoreMessages = () => {
         const currentCount = visibleMessages.length
         const totalMessages = messages.length
-        const nextMessageCount = Math.min(currentCount + INITIAL_MESSAGE_COUNT, totalMessages)
-        const additionalMessages = messages.slice(Math.max(totalMessages - nextMessageCount, 0), totalMessages - currentCount)
-        setVisibleMessages([...additionalMessages, ...visibleMessages])
-    }
-
-    if (!visibleMessages || !Array.isArray(visibleMessages)) {
-        return <Loader />
-    }
-
-    const messageGroups = []
-    let currentDate = null
-    let currentGroup = []
-
-    for (const message of visibleMessages) {
-        const messageDate = setConversationDate(message?.timestamp)
-        if (messageDate !== currentDate) {
-            currentDate = messageDate
-            if (currentGroup.length > 0) {
-                messageGroups.push(currentGroup)
-            }
-            currentGroup = [message]
-        } else {
-            currentGroup.push(message)
+        if (currentCount < totalMessages) {
+            const additionalMessages = messages.slice(currentCount, currentCount + INITIAL_MESSAGE_COUNT).reverse()
+            setVisibleMessages([...visibleMessages, ...additionalMessages])
         }
     }
 
-    if (currentGroup.length > 0) {
-        messageGroups.push(currentGroup)
+    if (!visibleMessages.length) {
+        return <Loader />
     }
 
+
     return (
-        <div ref={containerRef} style={{ overflow: 'auto', maxHeight: '400px' }}>
-            {messageGroups.map((messageGroup, index) => (
+        <div ref={containerRef} className="chat-panel2">
+            {messageGroups.map((group, index) => (
                 <div key={index}>
                     <div className="date-header">
-                        <p>{setConversationDate(messageGroup[0].timestamp)}</p>
+                        <p>{group.date}</p>
                     </div>
                     <div>
-                        {messageGroup.map((message) => (
+                        {group.messages.map((message) => (
                             <MessageCard
                                 key={message._id}
                                 message={message}

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 
 class MapsService {
 
@@ -10,7 +10,7 @@ class MapsService {
 
         this.api.interceptors.request.use((config) => {
 
-            const storedToken = localStorage.getItem("authToken");
+            const storedToken = localStorage.getItem("authToken")
 
             if (storedToken) {
                 config.headers = { Authorization: `Bearer ${storedToken}` }
@@ -21,7 +21,7 @@ class MapsService {
     }
 
     reverseGeocode(latitude, longitude) {
-        return this.api.post('/reverse-geocode', { latitude, longitude });
+        return this.api.post('/reverse-geocode', { latitude, longitude })
     }
 
 }

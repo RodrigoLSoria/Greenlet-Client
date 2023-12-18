@@ -1,6 +1,6 @@
-import { Col, Row } from "react-bootstrap";
-import PostCard from "../PostCard/PostCard";
-import Loader from "../Loader/Loader";
+import { Col, Row } from "react-bootstrap"
+import PostCard from "../PostCard/PostCard"
+import Loader from "../Loader/Loader"
 
 const Feed = ({ filteredPosts }) => {
 
@@ -21,7 +21,7 @@ const Feed = ({ filteredPosts }) => {
                 </Row>
             }
         </>
-    );
+    )
 }
 
-export default Feed;
+export default Feed

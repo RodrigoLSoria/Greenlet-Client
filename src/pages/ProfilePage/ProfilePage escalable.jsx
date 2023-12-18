@@ -10,11 +10,11 @@ import PostCard from '../../components/PostCard/PostCard'
 import exchangeService from "../../services/exchange.services"
 import ExchangeCard from "../../components/ExchangeCard/ExchangeCard"
 import { DataArray } from "@mui/icons-material"
-import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import InboxIcon from '@mui/icons-material/Inbox';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import InboxIcon from '@mui/icons-material/Inbox'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import PostAddIcon from '@mui/icons-material/PostAdd'
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
 
 
 
@@ -32,7 +32,7 @@ const ProfilePage = () => {
 
     const { loggedUser, logout } = useContext(AuthContext)
 
-    const openPosts = posts.filter(post => !post.isClosed);
+    const openPosts = posts.filter(post => !post.isClosed)
     const closedPosts = posts.filter(post => post.isClosed)
 
 
@@ -42,22 +42,22 @@ const ProfilePage = () => {
         loadUserPosts()
         loadPendingExchanges()
         loadClosedExchanges()
-        loadUserDetails();
-        loadUserPosts();
+        loadUserDetails()
+        loadUserPosts()
 
 
     }, [])
 
     useEffect(() => {
         // Update local wishlist when user data is updated
-        setWishlist(user.wishlist || []);
+        setWishlist(user.wishlist || [])
     }, [user])
 
     useEffect(() => {
         setEditData(prevData => ({
             ...prevData,
             wishlist: user.wishlist || []
-        }));
+        }))
     }, [user])
 
     const [editData, setEditData] = useState({
@@ -87,20 +87,20 @@ const ProfilePage = () => {
 
                 if (status === 'pending') {
                     console.log("hay exchanfes con status pendinggggggg")
-                    setPendingExchanges(data);
+                    setPendingExchanges(data)
                 } else if (status === 'closed') {
-                    setClosedExchanges(data);
+                    setClosedExchanges(data)
                 }
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err))
     }
 
     const loadPendingExchanges = () => {
-        loadExchangesByStatus('pending');
+        loadExchangesByStatus('pending')
     }
 
     const loadClosedExchanges = () => {
-        loadExchangesByStatus('closed');
+        loadExchangesByStatus('closed')
     }
 
 
@@ -115,23 +115,23 @@ const ProfilePage = () => {
     }
 
     const handleWishlistSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         try {
-            const updatedWishlist = [...editData.wishlist, wishlistItem];
-            const updatedData = { ...editData, wishlist: updatedWishlist };
+            const updatedWishlist = [...editData.wishlist, wishlistItem]
+            const updatedData = { ...editData, wishlist: updatedWishlist }
 
-            await userService.editProfile(user._id, updatedData);
-            loadUserDetails();
-            setShowModal(false);
-            setWishlistItem('');
+            await userService.editProfile(user._id, updatedData)
+            loadUserDetails()
+            setShowModal(false)
+            setWishlistItem('')
         } catch (error) {
-            console.error("Error updating wishlist: ", error);
+            console.error("Error updating wishlist: ", error)
         }
     }
 
     const handleWishlistChange = (e) => {
-        setWishlistItem(e.target.value);
-    };
+        setWishlistItem(e.target.value)
+    }
 
 
 
