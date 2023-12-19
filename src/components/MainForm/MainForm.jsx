@@ -25,7 +25,8 @@ const MainForm = ({ setShowMainFormModal }) => {
                 )}
             {
                 formType === 'tools' && (
-                    <NewToolPostForm setShowMainFormModal={setShowMainFormModal} />
+                    // <NewToolPostForm setShowMainFormModal={setShowMainFormModal} />
+                    <p>Feature Coming Soon!</p>
                 )}
         </div>
     )

@@ -1,21 +1,16 @@
-import { Alert, Nav, Navbar, Modal } from "react-bootstrap"
-import { Link } from "react-router-dom"
 import { useContext, useState, useEffect } from "react"
 import SignupForm from "../SignupForm/SignupForm"
 import LoginForm from "../LoginForm/LoginForm"
 import MainForm from "../MainForm/MainForm"
 import { AuthContext } from '../../contexts/auth.context'
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation, Link } from "react-router-dom"
 import { useLoginModalContext } from '../../contexts/loginModal.context'
 import { useSignupModalContext } from '../../contexts/signupModal.context'
 import { usePosts } from "../../contexts/posts.context"
 import * as Constants from "../../consts/consts"
-import Offcanvas from 'react-bootstrap/Offcanvas'
-import Carousel from 'react-bootstrap/Carousel'
-import { Button, Container, Dropdown, Form } from "react-bootstrap"
+import { Button, Modal } from "react-bootstrap"
 import "./Navigation.css"
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import MailOutlineIcon from '@mui/icons-material/MailOutline'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import setGeolocation from '../../utils/setGeolocation'
 import mapsService from "../../services/maps.services"
@@ -26,31 +21,26 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 
 const Navigation = () => {
 
-    const [showOffCanvas, setShowOffCanvas] = useState(false)
     const { setPosts } = usePosts()
-    const [filteredPosts, setFilteredPosts] = useState([])
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
     const [location, setLocation] = useState('')
     const [showMainFormModal, setShowMainFormModal] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedCategories, setSelectedCategories] = useState([])
     const [selectedPlantTypes, setSelectedPlantTypes] = useState([])
     const [dateFilter, setDateFilter] = useState('all')
-    const [isNavExpanded, setIsNavExpanded] = useState(false)
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
     const { showLoginModal, setShowLoginModal } = useLoginModalContext()
     const { showSignupModal, setShowSignupModal } = useSignupModalContext()
     const { loggedUser, logout } = useContext(AuthContext)
     const navigate = useNavigate()
+    const pageLocation = useLocation()
     const shouldShowFooterNavbar = windowWidth < 1000
+    const isFeedPage = pageLocation.pathname === '/'
 
+    const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+    const [showDateFilterDropdown, setShowDateFilterDropdown] = useState(false)
+    const [showPlantTypeModal, setShowPlantTypeModal] = useState(false)
 
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen)
-    }
-
-    const handleClose = () => setShowOffCanvas(false)
-    const handleShow = () => setShowOffCanvas(true)
 
     const handleLogout = () => {
         logout()
@@ -74,7 +64,6 @@ const Navigation = () => {
             async ({ latitude, longitude }) => {
 
                 try {
-                    // Use mapsService to get the reverse geocode data
                     const locationData = await mapsService.reverseGeocode(latitude, longitude)
 
                     setLocation(`${locationData.data.city}, ${locationData.data.country}`)
@@ -126,8 +115,23 @@ const Navigation = () => {
         setDateFilter(newDateFilter)
     }
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault()
+            navigate(`/?search=${encodeURIComponent(searchQuery)}`)
+        }
+    }
+
+    const handlePlantTypeModalToggle = () => {
+        setShowPlantTypeModal(!showPlantTypeModal)
+    }
+
+    const handleSelect = (type) => {
+        handlePlantTypeToggle(type);
+    };
+
     return (
-        <>
+        <div>
             <nav className="navbar">
                 <div className="navbar-container">
 
@@ -138,6 +142,7 @@ const Navigation = () => {
                             type="text"
                             value={searchQuery}
                             onChange={handleInputChange}
+                            onKeyPress={handleKeyPress}
                             placeholder='Search in all categories...'
                             className="form-control search-input"
                         />
@@ -179,56 +184,77 @@ const Navigation = () => {
 
                     </div>
                 </div>
-                {isDropdownOpen && (
-                    <div className="dropdown-menu">
-                        <Dropdown>
-                            <Dropdown.Toggle variant="success" id="dropdown-category">
+                <hr className="navbar-divider" />
+
+                {isFeedPage && (
+                    <div>
+                        <div className="custom-dropdown">
+                            <button
+                                onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                                className="dropdown-toggle"
+                            >
                                 Category
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                {Constants.POST_CATEGORIES.map((category) => (
-                                    <Dropdown.Item
-                                        key={category}
-                                        onClick={() => handleCategoryToggle(category)}
-                                        active={selectedCategories.includes(category)}
-                                    >
-                                        {category}
-                                    </Dropdown.Item>
-                                ))}
-                            </Dropdown.Menu>
-                        </Dropdown>
+                            </button>
+                            {showCategoryDropdown && (
+                                <div className="dropdown-menu">
+                                    {Constants.POST_CATEGORIES.map((category) => (
+                                        <a
+                                            key={category}
+                                            href="#!"
+                                            onClick={() => handleCategoryToggle(category)}
+                                            className={`dropdown-item ${selectedCategories.includes(category) ? 'active' : ''}`}
+                                        >
+                                            {category}
+                                        </a>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
 
-                        {/* Dropdown for plant type filters */}
-                        <Dropdown>
-                            <Dropdown.Toggle variant="success" id="dropdown-plant-type">
-                                Plant Type
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                {Constants.PLANT_TYPES.map((type) => (
-                                    <Dropdown.Item
-                                        key={type}
-                                        onClick={() => handlePlantTypeToggle(type)}
-                                        active={selectedPlantTypes.includes(type)}
-                                    >
-                                        {type}
-                                    </Dropdown.Item>
-                                ))}
-                            </Dropdown.Menu>
-                        </Dropdown>
+                        <div className="custom-dropdown">
+                            <button
+                                onClick={handlePlantTypeModalToggle}
+                                className="dropdown-toggle"
+                            >
+                                Plant Types
+                            </button>
 
-                        {/* Dropdown for date filters */}
-                        <Dropdown>
-                            <Dropdown.Toggle variant="success" id="dropdown-date-filter">
+                            <Modal show={showPlantTypeModal} onHide={handlePlantTypeModalToggle} size="lg">
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Plant Types</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <div className="grid-container">
+                                        {Constants.PLANT_TYPES.map((type, index) => (
+                                            <Button
+                                                key={index}
+                                                variant={selectedPlantTypes.includes(type) ? 'success' : 'outline-secondary'}
+                                                className="grid-item"
+                                                onClick={() => handleSelect(type)}
+                                            >
+                                                {type}
+                                            </Button>
+                                        ))}
+                                    </div>
+                                </Modal.Body>
+                            </Modal>
+                        </div>
+                        <div className="custom-dropdown">
+                            <button
+                                onClick={() => setShowDateFilterDropdown(!showDateFilterDropdown)}
+                                className="dropdown-toggle"
+                            >
                                 Posted
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                <Dropdown.Item onClick={() => handleDateFilterChange('24h')}>Last 24 Hours</Dropdown.Item>
-                                <Dropdown.Item onClick={() => handleDateFilterChange('7d')}>Last Week</Dropdown.Item>
-                                <Dropdown.Item onClick={() => handleDateFilterChange('30d')}>Last Month</Dropdown.Item>
-                                <Dropdown.Item onClick={() => handleDateFilterChange('all')}>All</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-
+                            </button>
+                            {showDateFilterDropdown && (
+                                <div className="dropdown-menu">
+                                    <a href="#!" onClick={() => handleDateFilterChange('24h')} className="dropdown-item">Last 24 Hours</a>
+                                    <a href="#!" onClick={() => handleDateFilterChange('7d')} className="dropdown-item">Last Week</a>
+                                    <a href="#!" onClick={() => handleDateFilterChange('30d')} className="dropdown-item">Last Month</a>
+                                    <a href="#!" onClick={() => handleDateFilterChange('all')} className="dropdown-item">All</a>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
             </nav>
@@ -269,7 +295,7 @@ const Navigation = () => {
             <div className="footerNavbar">
                 {shouldShowFooterNavbar && <FooterNavbar setShowMainFormModal={setShowMainFormModal} />}
             </div>
-        </>
+        </div>
     )
 }
 

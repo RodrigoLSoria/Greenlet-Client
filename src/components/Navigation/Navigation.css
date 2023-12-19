@@ -30,25 +30,8 @@
     cursor: pointer;
 }
 
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-}
-
-.navbar .dropdown {
-    display: none;
-    position: absolute;
-    background-color: white;
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-    z-index: 1;
-}
-
-.navbar .navbar-item:hover .dropdown {
-    display: block;
+.navbar {
+    z-index: 1050;
 }
 
 .form-control.search-input {
@@ -126,5 +109,136 @@
 @media (max-width: 999px) {
     .footer-navbar {
         display: flex;
+    }
+}
+
+/* ----------------------------------------------------------------
+ */
+
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    position: absolute;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    display: none;
+}
+
+.custom-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    color: #333;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown-item.active {
+    background-color: #ddd;
+}
+
+/* ........................................................ */
+
+/* Style for the dropdown toggle buttons */
+.custom-dropdown button.dropdown-toggle {
+    background-color: white;
+    /* White background */
+    color: #333;
+    /* Dark text color */
+    padding: 8px 20px;
+    /* Padding inside the button */
+    border: 1px solid #ddd;
+    /* Light border */
+    border-radius: 20px;
+    /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* Box shadow */
+    cursor: pointer;
+    /* Cursor indicates clickable item */
+    margin-right: 10px;
+    /* Space between buttons */
+    transition: background-color 0.3s;
+    /* Smooth transition for hover effect */
+}
+
+/* Hover effect */
+.custom-dropdown button.dropdown-toggle:hover {
+    background-color: #f8f8f8;
+    /* Light gray background on hover */
+}
+
+/* Style for the dropdown menu */
+.custom-dropdown .dropdown-menu {
+    border-radius: 5px;
+    /* Slightly rounded corners for the menu */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* Box shadow */
+}
+
+/* Style for the dropdown items */
+.custom-dropdown .dropdown-menu .dropdown-item {
+    border-radius: 5px;
+    /* Slightly rounded corners for the items */
+    transition: background-color 0.2s;
+    /* Smooth transition for hover effect */
+}
+
+/* Hover effect for dropdown items */
+.custom-dropdown .dropdown-menu .dropdown-item:hover {
+    background-color: #f0f0f0;
+    /* Light gray background on hover */
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    /* creates 5 columns */
+    gap: 10px;
+    /* space between grid items */
+}
+
+.grid-item {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.grid-item:hover {
+    background-color: #f0f0f0;
+    /* color when hovered */
+}
+
+/* You can customize the 'selected' state as you like */
+.grid-item.btn-success {
+    background-color: green;
+    border-color: green;
+}
+
+.grid-item.btn-outline-secondary {
+    border-color: #6c757d;
+}
+
+/* Adjust the breakpoint as needed for responsiveness */
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+        /* 3 columns for smaller screens */
     }
 }

@@ -10,14 +10,17 @@ import PostCard from '../../components/PostCard/PostCard'
 import exchangeService from "../../services/exchange.services"
 import ExchangeCard from "../../components/ExchangeCard/ExchangeCard"
 import "./ProfilePage.css"
-
+import UserExchanges from "../../components/UserExchanges/UserExchanges"
+import UserPosts from "../../components/UserPosts/UserPosts"
+import UserProfile from "../../components/UserProfile/UserProfile"
+import SavedPostsPage from "../SavedPostsPage/SavedPostsPage"
+import UserBadges from "../../components/UserBadges/UserBadges"
 
 const ProfilePage = () => {
     const { user_id } = useParams()
 
     const [user, setUser] = useState({})
     const [posts, setPosts] = useState([])
-    // const [favourites, setFavourites] = useState([])
     const [pendingExchanges, setPendingExchanges] = useState([])
     const [closedExchanges, setClosedExchanges] = useState([])
     const [showModal, setShowModal] = useState(false)
@@ -29,7 +32,12 @@ const ProfilePage = () => {
     const openPosts = posts.filter(post => !post.isClosed)
     const closedPosts = posts.filter(post => post.isClosed)
 
+    const getMemberSinceYear = (dateString) => {
+        return new Date(dateString).getFullYear();
+    }
 
+
+    console.log("así me llega el user a la profile page", user)
     useEffect(() => {
         loadUserDetails()
         loadUserPosts()
@@ -76,7 +84,6 @@ const ProfilePage = () => {
             .then(({ data }) => {
 
                 if (status === 'pending') {
-                    console.log("hay exchanfes con status pendinggggggg")
                     setPendingExchanges(data)
                 } else if (status === 'closed') {
                     setClosedExchanges(data)
@@ -86,6 +93,7 @@ const ProfilePage = () => {
     }
 
     const loadPendingExchanges = () => {
+        console.log("loadPendingExchanges", pendingExchanges)
         loadExchangesByStatus('pending')
     }
 
@@ -123,6 +131,31 @@ const ProfilePage = () => {
         setWishlistItem(e.target.value)
     }
 
+    const [activeSection, setActiveSection] = useState('profile'); // State to track the active section
+
+    // Function to handle clicking on a sidebar item
+    const handleSidebarClick = (section) => {
+        setActiveSection(section);
+    };
+
+    const renderActiveSection = () => {
+        switch (activeSection) {
+            case 'myPosts':
+                return <UserPosts posts={posts} />;
+            case 'pendingExchanges':
+                return <UserExchanges exchanges={pendingExchanges} />;
+            case 'myFavourites':
+                return <SavedPostsPage />;
+            case 'myBadges':
+                return <UserBadges badges={user.badges} />;
+            default:
+                return null;
+        }
+    }
+
+    const memberSinceYear = user.createdAt ? getMemberSinceYear(user.createdAt) : null;
+    const exchangeCount = user.exchanges ? user.exchanges.length : 0;
+
 
     return (
 
@@ -132,107 +165,29 @@ const ProfilePage = () => {
             :
 
             <div className="profilePage-container">
-                <div className="profilePage-header">
-                    <img src={user.avatar} className="profilePage-avatar" />
-                    <div className="profilePage-userInfo">
-                        <h2>{user.username}</h2>
+                <div className="profile-sidebar">
+                    <div className="user-details">
+                        <img src={user.avatar} alt={`${user.username}'s avatar`} className="user-avatar" />
+                        <h2 className="user-name">{user.username}</h2>
+                        <p className="member-since">Member since: {memberSinceYear}</p>
+                        <p className="exchanges-count">Exchanges: {exchangeCount}</p>
+                        <hr />
                     </div>
-
-                    {/* <Button variant="dark" onClick={handleDeleteUser}>Delete profile</Button>
-                    <Button variant="dark" onClick={() => setShowModal(true)}>Edit profile</Button> */}
-
+                    <div className="sidebar-item" onClick={() => handleSidebarClick('myPosts')}>
+                        My Posts
+                    </div>
+                    <div className="sidebar-item" onClick={() => handleSidebarClick('pendingExchanges')}>
+                        Pending Exchanges
+                    </div>
+                    <div className="sidebar-item" onClick={() => handleSidebarClick('myFavourites')}>
+                        Favourites
+                    </div>
+                    <div className="sidebar-item" onClick={() => handleSidebarClick('myBadges')}>
+                        Badges
+                    </div>
                 </div>
-                <hr />
-                {/* <h2>My Badges</h2>
-                <Row>
-                    {user.badges?.map(badge => (
-                        <Col key={badge._id} md={4}>
-                            <h2>{badge.name}</h2>
-                            <img src={badge.imageUrl} style={{ width: '100%' }} />
-                        </Col>
-                    ))}
-                </Row>
-                <h2>My Wishlist</h2>
-
-                <ul>
-                    {wishlist.map((item, index) => (
-                        <li key={index}>{item}</li>
-                    ))}
-                </ul> */}
-
-
-                {/* <Form onSubmit={handleWishlistSubmit}>
-                    <Form.Group className="mb-3" controlId="wishlistForm">
-                        <Form.Label>Wishlist</Form.Label>
-                        <Row>
-                            <Col>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Add to wishlist"
-                                    value={wishlistItem}
-                                    onChange={handleWishlistChange}
-                                />
-                            </Col>
-                            <Col md="auto">
-                                <Button type="submit">Add</Button>
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                </Form> */}
-
-                <div className="pendingExchanges">
-                    <h4>Pending Exchanges</h4>
-                    <hr />
-                    {
-                        !pendingExchanges ? (
-                            <Row>
-                                {pendingExchanges.map(exchange => (
-                                    <Col key={exchange._id} md={4}>
-                                        <ExchangeCard exchangeData={exchange} />
-                                    </Col>
-                                ))}
-                            </Row>
-                        ) : (
-                            <p>No pending exchanges at the moment.</p>
-                        )
-                    }
-                </div>
-
-                <div className="openPosts">
-                    <h4>My Posts</h4>
-                    <hr />
-                    {
-                        openPosts ? (
-                            <Row>
-                                {openPosts.map(post => (
-                                    <Col key={post._id} md={4}>
-                                        <PostCard previousPostData={post} />
-                                    </Col>
-                                ))}
-                            </Row>
-                        ) : (
-                            <p>No open posts at the moment.</p>
-                        )
-                    }
-
-                </div>
-
-                <div className="closedPosts">
-                    <h4>My Closed Posts</h4>
-                    <hr />
-                    {
-                        closedPosts ? (
-                            <Row>
-                                {closedPosts.map(post => (
-                                    <Col key={post._id} md={4}>
-                                        <PostCard previousPostData={post} />
-                                    </Col>
-                                ))}
-                            </Row>
-                        ) : (
-                            <p>No closed posts at the moment.</p>
-                        )
-                    }
+                <div className="profile-content">
+                    {renderActiveSection()}
                 </div>
 
                 <Modal show={showModal} onHide={() => { setShowModal(false) }}>

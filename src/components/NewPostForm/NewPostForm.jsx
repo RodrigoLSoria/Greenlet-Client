@@ -7,7 +7,7 @@ import * as Constants from '../../consts/consts'
 import setGeolocation from '../../utils/setGeolocation'
 
 
-const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData }) => {
+const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData, onPostUpdate }) => {
 
 
     const emptyPostForm = {
@@ -81,7 +81,6 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
         if (name === 'category' && value === 'found') {
             setDescriptionPlaceholder("Enter the specific location of the plant you found, including street, neighborhood, or metro stop details.")
         } else {
-            // Reset placeholder if the category is changed to something else
             setDescriptionPlaceholder('')
         }
     }
@@ -104,7 +103,6 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
             .checkForAlertMatches(newPost)
             .then(matches => {
                 if (matches.length > 0) {
-                    // Handle the matches as required, e.g., send an email
                     console.log('Alert matches found:', matches)
                 } else {
                     console.log('No alert matches found.')
@@ -157,6 +155,7 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
         postsService
             .editPost(postData._id, postData)
             .then(() => {
+                onPostUpdate()
                 setShowEditModal(false)
             })
             .catch(err => console.log(err))
@@ -220,7 +219,7 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData 
                 <Form.Group className="mb-3" controlId="addCareInstructions">
                     <Form.Check
                         type="checkbox"
-                        label="Do you want to add caring instruction for the future owner?"
+                        label="Do you want to add caring instructions for the future owner?"
                         onChange={() => setShowCareInstructions(!showCareInstructions)}
                         checked={showCareInstructions}
                     />

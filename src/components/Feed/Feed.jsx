@@ -5,14 +5,15 @@ import Loader from "../Loader/Loader"
 const Feed = ({ filteredPosts }) => {
 
 
+
     return (
         <>
             {!filteredPosts ?
                 <Loader />
                 :
-                <Row>
+                <Row className="justify-content-start">
                     {filteredPosts.map((elm) => (
-                        <Col key={elm._id} xs={4} sm={4} md={3} xl={3}>
+                        <Col key={elm._id} xs={6} sm={4} md={4} xl={3} className="mb-4">
                             <PostCard
                                 previousPostData={elm}
                             />

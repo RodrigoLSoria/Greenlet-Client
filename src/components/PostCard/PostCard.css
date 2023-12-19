@@ -33,24 +33,6 @@
     pointer-events: none;
 }
 
-.message-icon {
-    pointer-events: auto;
-    background-color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 36px;
-    height: 36px;
-    box-sizing: border-box;
-}
-
-.message-icon.hidden {
-    background-color: transparent;
-    pointer-events: none;
-    opacity: 0;
-}
-
 .favourite-icon {
     pointer-events: auto;
     background-color: white;
@@ -63,40 +45,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
-
-
-.edit-delete-icons {
-    background-color: white;
-    border-radius: 8%;
-    padding: 5px;
-    position: absolute;
-    top: 19px;
-    right: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 57px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-}
-
-.edit-delete-icons.hidden {
-    background-color: transparent;
-    pointer-events: none;
-    opacity: 0;
-}
-
-.post-image-container:hover .edit-delete-icons:not(.hidden) {
-    opacity: 1;
-}
-
-.edit-icon,
-.delete-icon {
-    margin-bottom: 5px;
 }
 
 .post-info {
@@ -164,15 +112,4 @@
         padding: 0px;
     }
 
-    .message-icon {
-        pointer-events: auto;
-        background-color: white;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 32px;
-        height: 32px;
-        box-sizing: border-box;
-    }
 }

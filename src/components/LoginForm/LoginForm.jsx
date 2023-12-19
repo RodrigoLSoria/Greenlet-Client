@@ -37,6 +37,7 @@ const LoginForm = ({ setShowLoginModal, setShowSignupModal }) => {
             .catch(err => console.log(err))
 
     }
+
     return (
         <Form onSubmit={handleFormSubmit}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -47,6 +48,7 @@ const LoginForm = ({ setShowLoginModal, setShowSignupModal }) => {
                     onChange={handleInputChange}
                     name="email" />
             </Form.Group>
+
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control

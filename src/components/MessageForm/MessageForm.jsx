@@ -18,22 +18,12 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
     const { setShowMessageModal } = useMessageModalContext()
     const { exchangeStatus, updateExchangeStatus } = useExchangeStatusContext()
 
-    const [messages, setMessages] = useState([])
     const [isButtonDisabled, setIsButtonDisabled] = useState(false)
     const [content, setContent] = useState('')
 
 
     const isOwner = loggedUser?._id === selectedConversation?.post.owner
     const post = selectedConversation ? selectedConversation.post._id : postId
-
-
-    const handleInputChange = e => {
-        const { name, value } = e.target
-        setMessageData({
-            ...messageData,
-            [name]: value,
-        })
-    }
 
 
     const handleMessageSubmit = async (e) => {
@@ -114,7 +104,8 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
             <form onSubmit={handleMessageSubmit} className="message-form-grid">
                 {selectedConversation && isOwner && (
                     <div className="message-form-button">
-                        <button type="button" onClick={handleConfirmExchange} disabled={isButtonDisabled}>
+                        <button type="button" onClick={handleConfirmExchange}
+                            disabled={isButtonDisabled}>
                             Confirm Exchange/Gift
                         </button>
                     </div>
@@ -131,7 +122,8 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
                             placeholder="Type your message..."
                         />
                     </div>
-                    <div className="send-button" onClick={handleMessageSubmit} style={{ cursor: 'pointer' }}>
+                    <div className="send-button" onClick={handleMessageSubmit}
+                        style={{ cursor: 'pointer' }}>
                         <SendIcon />
                     </div>
                 </div>

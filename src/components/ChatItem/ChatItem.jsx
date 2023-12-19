@@ -8,7 +8,7 @@ import { useExchangeStatusContext } from '../../contexts/exchangeStatus.context'
 import conversationService from '../../services/conversations.services'
 
 
-const ChatItem = ({ conversationData, onClick, selected }) => {
+const ChatItem = ({ conversationData, onClick }) => {
 
     const { loggedUser } = useContext(AuthContext)
     const { exchangeStatus } = useExchangeStatusContext()

@@ -32,11 +32,16 @@ const PostDetailsPage = () => {
     const [showLoginReminder, setShowLoginReminder] = useState(false)
     const [showMessageForm, setShowMessageForm] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
+    const [postUpdated, setPostUpdated] = useState(false)
 
 
     useEffect(() => {
+        if (postUpdated) {
+            loadPostDetails()
+            setPostUpdated(false)
+        }
         loadPostDetails()
-    }, [post_id])
+    }, [postUpdated])
 
     const loadPostDetails = () => {
         postsService
@@ -70,7 +75,6 @@ const PostDetailsPage = () => {
             })
     }
 
-    // <Card style={{ width: '18rem' }} className={`${postDetails.isClosed ? 'closed-post' : ''}`}>
 
     const handleUnfavoritePost = () => {
         postsService
@@ -97,6 +101,10 @@ const PostDetailsPage = () => {
             .catch(error => {
                 console.error('Error fetching user favorites:', error)
             })
+    }
+
+    const onPostUpdate = () => {
+        setPostUpdated(true)
     }
 
 
@@ -198,9 +206,13 @@ const PostDetailsPage = () => {
                         )}
 
                         <div className="MessageModal">
-                            <Modal show={showMessageModal} onHide={() => setShowMessageModal(false)}>
-                                <Modal.Body>
-                                    <MessageForm postOwnerId={postDetails.owner._id} postId={post_id} setShowMessageModal={setShowMessageModal} />
+                            <Modal show={showMessageModal} onHide={() => setShowMessageModal(false)} size="lg">
+                                <Modal.Header closeButton>
+                                    <Modal.Title>{postDetails.title}</Modal.Title>
+                                </Modal.Header><Modal.Body>
+                                    <MessageForm postOwnerId={postDetails.owner._id}
+                                        postId={post_id}
+                                        setShowMessageModal={setShowMessageModal} />
                                 </Modal.Body>
                             </Modal>
                         </div>
@@ -211,7 +223,8 @@ const PostDetailsPage = () => {
                                     <Modal.Title>Edit Post</Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    <NewPostForm setShowEditModal={setShowEditModal} previousPostData={postDetails} />
+                                    <NewPostForm setShowEditModal={setShowEditModal} previousPostData={postDetails}
+                                        onPostUpdate={onPostUpdate} />
                                 </Modal.Body>
                             </Modal>
                         </div>

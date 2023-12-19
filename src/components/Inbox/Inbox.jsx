@@ -16,7 +16,6 @@ const Inbox = ({ conversations }) => {
         if (socket) {
             socket.on("newMessage", handleMessage)
         }
-
         return () => {
             socket && socket.off('newMessage', handleMessage)
         }

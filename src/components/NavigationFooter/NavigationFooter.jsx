@@ -18,7 +18,7 @@ import MainForm from '../MainForm/MainForm'
 
 const FooterNavbar = () => {
 
-    const { loggedUser, logout } = useContext(AuthContext)
+    const { loggedUser } = useContext(AuthContext)
     const [showMainFormModal, setShowMainFormModal] = useState(false)
     const { showLoginModal, setShowLoginModal } = useLoginModalContext()
     const { showSignupModal, setShowSignupModal } = useSignupModalContext()
