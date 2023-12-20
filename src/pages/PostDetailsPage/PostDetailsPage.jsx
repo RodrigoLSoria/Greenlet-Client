@@ -18,6 +18,7 @@ import { useSignupModalContext } from "../../contexts/signupModal.context"
 import userService from "../../services/user.services"
 import MessageForm from "../../components/MessageForm/MessageForm"
 import NewPostForm from "../../components/NewPostForm/NewPostForm"
+import { useNavigate } from 'react-router-dom'
 
 
 const PostDetailsPage = () => {
@@ -33,6 +34,7 @@ const PostDetailsPage = () => {
     const [showMessageForm, setShowMessageForm] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
     const [postUpdated, setPostUpdated] = useState(false)
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -60,7 +62,7 @@ const PostDetailsPage = () => {
     const handleDeletePost = () => {
         postsService
             .deletePost(post_id)
-            .then(() => setPosts())
+            .then(() => navigate('/'))
             .catch(err => console.log(err))
     }
 

@@ -33,7 +33,7 @@ const ProfilePage = () => {
     const closedPosts = posts.filter(post => post.isClosed)
 
     const getMemberSinceYear = (dateString) => {
-        return new Date(dateString).getFullYear();
+        return new Date(dateString).getFullYear()
     }
 
 
@@ -131,30 +131,29 @@ const ProfilePage = () => {
         setWishlistItem(e.target.value)
     }
 
-    const [activeSection, setActiveSection] = useState('profile'); // State to track the active section
+    const [activeSection, setActiveSection] = useState('profile')
 
-    // Function to handle clicking on a sidebar item
     const handleSidebarClick = (section) => {
-        setActiveSection(section);
-    };
+        setActiveSection(section)
+    }
 
     const renderActiveSection = () => {
         switch (activeSection) {
             case 'myPosts':
-                return <UserPosts posts={posts} />;
+                return <UserPosts posts={posts} />
             case 'pendingExchanges':
-                return <UserExchanges exchanges={pendingExchanges} />;
+                return <UserExchanges exchanges={pendingExchanges} />
             case 'myFavourites':
-                return <SavedPostsPage />;
+                return <SavedPostsPage />
             case 'myBadges':
-                return <UserBadges badges={user.badges} />;
+                return <UserBadges badges={user.badges} />
             default:
-                return null;
+                return null
         }
     }
 
-    const memberSinceYear = user.createdAt ? getMemberSinceYear(user.createdAt) : null;
-    const exchangeCount = user.exchanges ? user.exchanges.length : 0;
+    const memberSinceYear = user.createdAt ? getMemberSinceYear(user.createdAt) : null
+    const exchangeCount = user.exchanges ? user.exchanges.length : 0
 
 
     return (

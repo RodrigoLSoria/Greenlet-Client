@@ -6,8 +6,6 @@
     padding: 120px 20px;
 }
 
-
-
 .postDetails-card {
     border-radius: 10px;
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
@@ -100,7 +98,6 @@
     padding: 0;
 }
 
-
 .edit-delete-icons {
     background-color: white;
     border-radius: 8%;
@@ -114,19 +111,7 @@
     justify-content: center;
     width: 36px;
     height: 57px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-}
-
-.edit-delete-icons.hidden {
-    background-color: transparent;
-    pointer-events: none;
-    opacity: 0;
-}
-
-.postDetails-image-container:hover .edit-delete-icons:not(.hidden) {
-    opacity: 1;
+    pointer-events: auto;
 }
 
 .edit-icon,

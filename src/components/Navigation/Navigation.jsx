@@ -12,6 +12,7 @@ import { Button, Modal } from "react-bootstrap"
 import "./Navigation.css"
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
+import HandshakeIcon from '@mui/icons-material/Handshake'
 import setGeolocation from '../../utils/setGeolocation'
 import mapsService from "../../services/maps.services"
 import postsService from "../../services/posts.services"
@@ -119,6 +120,7 @@ const Navigation = () => {
         if (event.key === 'Enter') {
             event.preventDefault()
             navigate(`/?search=${encodeURIComponent(searchQuery)}`)
+            setSearchQuery('')
         }
     }
 
@@ -127,15 +129,23 @@ const Navigation = () => {
     }
 
     const handleSelect = (type) => {
-        handlePlantTypeToggle(type);
-    };
+        handlePlantTypeToggle(type)
+    }
+
+    const clearFilters = () => {
+        setSearchQuery('')
+        setSelectedCategories([])
+        setSelectedPlantTypes([])
+        setDateFilter('all')
+        loadFeed()
+    }
 
     return (
         <div>
             <nav className="navbar">
                 <div className="navbar-container">
 
-                    <Link className="nav-link" to="/"><img src="../../../public/Greenlet-TwoColours.jpg" alt="Greenlet Icon" className="greenlet-icon" /></Link>
+                    <Link className="nav-link" to="/"><img src="../../../Greenlet-TwoColours.jpg" alt="Greenlet Icon" className="greenlet-icon" /></Link>
 
                     <div className="searchBar">
                         <input
@@ -232,6 +242,7 @@ const Navigation = () => {
                                                 className="grid-item"
                                                 onClick={() => handleSelect(type)}
                                             >
+                                                <img src={Constants.PLANT_TYPE_LOGOS[type]} alt={type} />
                                                 {type}
                                             </Button>
                                         ))}
@@ -254,6 +265,11 @@ const Navigation = () => {
                                     <a href="#!" onClick={() => handleDateFilterChange('all')} className="dropdown-item">All</a>
                                 </div>
                             )}
+                        </div>
+                        <div className="custom-dropdown">
+                            <button className="clear-filters-button" onClick={clearFilters}>
+                                Clear Filters
+                            </button>
                         </div>
                     </div>
                 )}

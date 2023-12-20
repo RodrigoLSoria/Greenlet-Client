@@ -4,48 +4,48 @@ import setConversationDate from "../../utils/setConversationDate"
 import { useEffect, useRef, useState } from "react"
 import "./ConversationLog.css"
 import groupMessagesByDate from "../../utils/groupMessagesByDate"
+import { SocketContext } from '../../contexts/socket.context'
+import { useContext } from 'react'
 
-const INITIAL_MESSAGE_COUNT = 20
-
-
-const ConversationLog = ({ messages }) => {
+const ConversationLog = ({ messages, conversationId }) => {
 
     const [visibleMessages, setVisibleMessages] = useState([])
     const containerRef = useRef(null)
-    const messageGroups = groupMessagesByDate(visibleMessages, setConversationDate)
-
+    const { socket } = useContext(SocketContext)
 
     useEffect(() => {
-        const initialMessages = messages.slice(0, INITIAL_MESSAGE_COUNT).reverse()
-        setVisibleMessages(initialMessages)
+        setVisibleMessages([...messages].reverse())
+    }, [messages])
 
+    useEffect(() => {
+        const handleNewMessage = (newMessage) => {
+            if (newMessage.conversation === conversationId) {
+                setVisibleMessages(prevMessages => [...prevMessages, newMessage])
+            }
+        }
+
+        if (socket) {
+            socket.on('newMessage', handleNewMessage)
+        }
+
+        return () => {
+            if (socket) {
+                socket.off('newMessage', handleNewMessage)
+            }
+        }
+    }, [socket, conversationId])
+
+    const messageGroups = groupMessagesByDate(visibleMessages, setConversationDate)
+
+    useEffect(() => {
         if (containerRef.current) {
             containerRef.current.scrollTop = containerRef.current.scrollHeight
         }
-    }, [messages])
-
-    const handleScroll = () => {
-        if (containerRef.current.scrollTop === 0) {
-            loadMoreMessages()
-        }
-    }
-
-    const loadMoreMessages = () => {
-        const currentCount = visibleMessages.length
-        const totalMessages = messages.length
-        if (currentCount < totalMessages) {
-            const additionalMessages = messages.slice(currentCount, currentCount + INITIAL_MESSAGE_COUNT).reverse()
-            setVisibleMessages([...visibleMessages, ...additionalMessages])
-        }
-    }
-
-    if (!visibleMessages.length) {
-        return <Loader />
-    }
+    }, [visibleMessages])
 
 
     return (
-        <div ref={containerRef} className="chat-panel2">
+        <div ref={containerRef} className="chat-panel2" >
             {messageGroups.map((group, index) => (
                 <div key={index}>
                     <div className="date-header">

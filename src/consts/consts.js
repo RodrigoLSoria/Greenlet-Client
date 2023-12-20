@@ -28,6 +28,34 @@ export const PLANT_TYPES = [
     'Carnivorous Plants'
 ]
 
+export const PLANT_TYPE_LOGOS = {
+    Roses: "jpg",
+    Cacti: "jpg",
+    Palms: "jpg",
+    Ferns: "jpg",
+    Orchids: "jpg",
+    Bamboo: "jpg",
+    Violets: "jpg",
+    Lilies: "jpg",
+    Daisies: "jpg",
+    Sunflowers: "jpg",
+    Tulips: "jpg",
+    Bonsais: "jpg",
+    "Fruit Trees": "jpg",
+    Ivies: "jpg",
+    Succulents: "jpg",
+    "Shade Plants": "jpg",
+    "Indoor Plants": "jpg",
+    "Aquatic Plants": "jpg",
+    "Medicinal Plants": "jpg",
+    Herbs: "jpg",
+    "Ornamental Trees": "jpg",
+    "Climbing Plants": "jpg",
+    Grass: "jpg",
+    "Air Plants": "jpg",
+    "Carnivorous Plants": "jpg"
+}
+
 export const EQUIPMENT_CONDITION = ['new', 'like new', 'used', 'well-worn']
 
 export const EQUIPMENT_TYPES = {

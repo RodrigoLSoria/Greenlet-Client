@@ -14,7 +14,6 @@ export const LocationProvider = ({ children }) => {
         setGeolocation(
             (position) => {
                 const { latitude, longitude } = position
-                console.log("así me llega la position", position)
                 mapsService.reverseGeocode(latitude, longitude)
                     .then(locationData => {
                         setLocation(`${locationData.data.city}, ${locationData.data.country}`)

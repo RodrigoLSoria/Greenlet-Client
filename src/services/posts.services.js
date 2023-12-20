@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 
 class PostService {
 
@@ -8,12 +8,12 @@ class PostService {
         })
 
         this.api.interceptors.request.use((config) => {
-            const storedToken = localStorage.getItem("authToken");
+            const storedToken = localStorage.getItem("authToken")
             if (storedToken) {
                 config.headers = { Authorization: `Bearer ${storedToken}` }
             }
-            return config;
-        });
+            return config
+        })
 
     }
 
@@ -60,7 +60,7 @@ class PostService {
     }
 
     closePost(post_id) {
-        return this.api.put(`/closePost/${post_id}`);
+        return this.api.put(`/closePost/${post_id}`)
     }
 }
 

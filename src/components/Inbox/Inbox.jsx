@@ -29,7 +29,6 @@ const Inbox = ({ conversations }) => {
                 messages: [...prevConversation.messages, newMessage],
             }))
         }
-        // TODO: i need to update the conversations list to reflect the new messages
     }
 
     const handleConversationClick = (conversation) => {

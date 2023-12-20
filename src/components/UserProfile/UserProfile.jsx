@@ -3,7 +3,7 @@ import "./UserProfile.css"
 
 const UserProfile = ({ user }) => {
     const exchangeCount = user.exchanges?.length
-    const memberSinceYear = new Date(user.createdAt).getFullYear();
+    const memberSinceYear = new Date(user.createdAt).getFullYear()
 
     return (
         <div className="user-profile">

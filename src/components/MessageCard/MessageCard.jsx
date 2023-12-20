@@ -8,7 +8,7 @@ import formatMessageTime from "../../utils/formatMessageTime"
 const MessageCard = ({ message }) => {
 
     const { loggedUser } = useContext(AuthContext)
-    const isSender = message.sender._id === loggedUser._id
+    const isSender = (message.sender._id ? message.sender._id : message.sender) === loggedUser._id
 
 
     return (
