@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 
 export const SocketContext = createContext()
 
-const SOCKET_SERVER_URL = 'http://localhost:5005'
+const SOCKET_SERVER_URL = 'https://greenlet.netlify.app'
 
 export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null)
