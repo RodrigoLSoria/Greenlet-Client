@@ -242,7 +242,8 @@ const Navigation = () => {
                                                 className="grid-item"
                                                 onClick={() => handleSelect(type)}
                                             >
-                                                <img src={Constants.PLANT_TYPE_LOGOS[type]} alt={type} />
+                                                <img src={Constants.PLANT_TYPE_LOGOS[type]} alt={type}
+                                                    style={{ width: '100px', height: '100px' }} />
                                                 {type}
                                             </Button>
                                         ))}
