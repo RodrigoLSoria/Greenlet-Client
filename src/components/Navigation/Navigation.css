@@ -127,6 +127,13 @@
     cursor: pointer;
 }
 
+.clear-filters-button {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+    cursor: pointer;
+}
+
 .dropdown-menu {
     position: absolute;
     background-color: #fff;
@@ -135,6 +142,8 @@
     z-index: 1;
     display: none;
 }
+
+
 
 .custom-dropdown:hover .dropdown-menu {
     display: block;
@@ -177,6 +186,28 @@
     /* Space between buttons */
     transition: background-color 0.3s;
     /* Smooth transition for hover effect */
+}
+
+.clear-filters-button {
+    background-color: white;
+    /* White background */
+    color: #333;
+    /* Dark text color */
+    padding: 8px 20px;
+    /* Padding inside the button */
+    border: 1px solid #ddd;
+    /* Light border */
+    border-radius: 20px;
+    /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* Box shadow */
+    cursor: pointer;
+    /* Cursor indicates clickable item */
+    margin-right: 10px;
+    /* Space between buttons */
+    transition: background-color 0.3s;
+    /* Smooth transition for hover effect */
+
 }
 
 /* Hover effect */
