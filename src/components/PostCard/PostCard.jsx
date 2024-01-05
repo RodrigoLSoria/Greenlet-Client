@@ -6,12 +6,15 @@ import postsService from "../../services/posts.services"
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import userService from "../../services/user.services"
+import { useLoginModalContext } from "../../contexts/loginModal.context"
+
 
 
 const PostCard = ({ previousPostData }) => {
 
     const { loggedUser } = useContext(AuthContext)
     const [isFavorite, setIsFavorite] = useState(false)
+    const { setShowLoginModal } = useLoginModalContext()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -22,7 +25,7 @@ const PostCard = ({ previousPostData }) => {
 
     const handleFavoritePost = () => {
         postsService
-            .favouritePost(previousPostData._id, loggedUser._id)
+            .favouritePost(previousPostData?._id, loggedUser?._id)
             .then(() => {
                 setIsFavorite(true)
             })
@@ -33,7 +36,7 @@ const PostCard = ({ previousPostData }) => {
 
     const handleUnfavoritePost = () => {
         postsService
-            .unfavouritePost(previousPostData._id, loggedUser._id)
+            .unfavouritePost(previousPostData?._id, loggedUser._id)
             .then(() => {
                 setIsFavorite(false)
             })
@@ -61,8 +64,8 @@ const PostCard = ({ previousPostData }) => {
 
     return (
         <>
-            <div className="post-card" >
-                <div className="post-image-container" >
+            <div className="post-card">
+                <div className="post-image-container">
                     <Link to={`/postDetails/${previousPostData._id}`}><img className="post-image"
                         src={previousPostData.image}
                         alt={previousPostData.title} /></Link>
@@ -71,12 +74,16 @@ const PostCard = ({ previousPostData }) => {
                         <p className="post-plantType">{previousPostData.plantType} </p>
 
                         <div className="favourite-icon">
-                            {loggedUser?._id !== previousPostData.owner._id && (
-                                isFavorite ? (
-                                    <FavoriteIcon onClick={handleUnfavoritePost} />
-                                ) : (
-                                    <FavoriteBorderIcon onClick={handleFavoritePost} />
+                            {loggedUser ? (
+                                loggedUser._id !== previousPostData.owner._id && (
+                                    isFavorite ? (
+                                        <FavoriteIcon onClick={handleUnfavoritePost} />
+                                    ) : (
+                                        <FavoriteBorderIcon onClick={handleFavoritePost} />
+                                    )
                                 )
+                            ) : (
+                                <FavoriteBorderIcon onClick={() => setShowLoginModal(true)} />
                             )}
                         </div>
 

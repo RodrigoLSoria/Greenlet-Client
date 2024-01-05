@@ -143,24 +143,26 @@ const Navigation = () => {
     return (
         <div>
             <nav className="navbar">
-                <div className="navbar-container">
+                <div className="navbar-container-top">
+                    <Link className="nav-link" to="/">
+                        <picture>
+                            <source srcSet="Logo.png" media="(max-width: 768px)" />
+                            <img src="Icon.png" alt="Greenlet Icon" className="greenlet-icon" />
+                        </picture>
+                    </Link>
 
-                    <Link className="nav-link" to="/"><img src="../../../Greenlet-TwoColours.jpg" alt="Greenlet Icon" className="greenlet-icon" /></Link>
-
-                    <div className="searchBar">
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={handleInputChange}
-                            onKeyPress={handleKeyPress}
-                            placeholder='Search in all categories...'
-                            className="form-control search-input"
-                        />
-                    </div>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={handleInputChange}
+                        onKeyPress={handleKeyPress}
+                        placeholder='Search in all categories...'
+                        className="form-control search-input"
+                    />
                     <div className="topRightItems">
-                        <div className="location">
+                        {/* <div className="location">
                             <LocationOnIcon /> <span>{location}</span>
-                        </div>
+                        </div> */}
 
                         {!shouldShowFooterNavbar && (
                             <div className="navbar-items" id="navbarItems">
@@ -194,86 +196,86 @@ const Navigation = () => {
 
                     </div>
                 </div>
-                <hr className="navbar-divider" />
+                <div className="navbar-container-bottom">
 
-                {isFeedPage && (
-                    <div>
-                        <div className="custom-dropdown">
-                            <button
-                                onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-                                className="dropdown-toggle"
-                            >
-                                Category
-                            </button>
-                            {showCategoryDropdown && (
-                                <div className="dropdown-menu">
-                                    {Constants.POST_CATEGORIES.map((category) => (
-                                        <a
-                                            key={category}
-                                            href="#!"
-                                            onClick={() => handleCategoryToggle(category)}
-                                            className={`dropdown-item ${selectedCategories.includes(category) ? 'active' : ''}`}
-                                        >
-                                            {category}
-                                        </a>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="custom-dropdown">
-                            <button
-                                onClick={handlePlantTypeModalToggle}
-                                className="dropdown-toggle"
-                            >
-                                Plant Types
-                            </button>
-
-                            <Modal show={showPlantTypeModal} onHide={handlePlantTypeModalToggle} size="lg">
-                                <Modal.Header closeButton>
-                                    <Modal.Title>Plant Types</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <div className="grid-container">
-                                        {Constants.PLANT_TYPES.map((type, index) => (
-                                            <Button
-                                                key={index}
-                                                variant={selectedPlantTypes.includes(type) ? 'success' : 'outline-secondary'}
-                                                className="grid-item"
-                                                onClick={() => handleSelect(type)}
+                    {isFeedPage && (
+                        <div className="filtering-items">
+                            <div className="custom-dropdown">
+                                <button
+                                    onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                                    className="dropdown-toggle"
+                                >
+                                    Category
+                                </button>
+                                {showCategoryDropdown && (
+                                    <div className="dropdown-menu">
+                                        {Constants.POST_CATEGORIES.map((category) => (
+                                            <a
+                                                key={category}
+                                                href="#!"
+                                                onClick={() => handleCategoryToggle(category)}
+                                                className={`dropdown-item ${selectedCategories.includes(category) ? 'active' : ''}`}
                                             >
-                                                <img src={Constants.PLANT_TYPE_LOGOS[type]} alt={type}
-                                                    style={{ width: '100px', height: '100px' }} />
-                                                {type}
-                                            </Button>
+                                                {category}
+                                            </a>
                                         ))}
                                     </div>
-                                </Modal.Body>
-                            </Modal>
+                                )}
+                            </div>
+
+                            <div className="custom-dropdown">
+                                <button
+                                    onClick={handlePlantTypeModalToggle}
+                                    className="dropdown-toggle"
+                                >
+                                    Plant Types
+                                </button>
+
+                                <Modal show={showPlantTypeModal} onHide={handlePlantTypeModalToggle} size="lg">
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>Plant Types</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        <div className="grid-container">
+                                            {Constants.PLANT_TYPES.map((type, index) => (
+                                                <Button
+                                                    key={index}
+                                                    variant={selectedPlantTypes.includes(type) ? 'success' : 'outline-secondary'}
+                                                    className="grid-item"
+                                                    onClick={() => handleSelect(type)}
+                                                >
+                                                    <img src={Constants.PLANT_TYPE_LOGOS[type]} alt={type} />
+                                                    {type}
+                                                </Button>
+                                            ))}
+                                        </div>
+                                    </Modal.Body>
+                                </Modal>
+                            </div>
+                            <div className="custom-dropdown">
+                                <button
+                                    onClick={() => setShowDateFilterDropdown(!showDateFilterDropdown)}
+                                    className="dropdown-toggle"
+                                >
+                                    Posted
+                                </button>
+                                {showDateFilterDropdown && (
+                                    <div className="dropdown-menu">
+                                        <a href="#!" onClick={() => handleDateFilterChange('24h')} className="dropdown-item">Last 24 Hours</a>
+                                        <a href="#!" onClick={() => handleDateFilterChange('7d')} className="dropdown-item">Last Week</a>
+                                        <a href="#!" onClick={() => handleDateFilterChange('30d')} className="dropdown-item">Last Month</a>
+                                        <a href="#!" onClick={() => handleDateFilterChange('all')} className="dropdown-item">All</a>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="custom-dropdown">
+                                <button className="clear-filters-button" onClick={clearFilters}>
+                                    Clear Filters
+                                </button>
+                            </div>
                         </div>
-                        <div className="custom-dropdown">
-                            <button
-                                onClick={() => setShowDateFilterDropdown(!showDateFilterDropdown)}
-                                className="dropdown-toggle"
-                            >
-                                Posted
-                            </button>
-                            {showDateFilterDropdown && (
-                                <div className="dropdown-menu">
-                                    <a href="#!" onClick={() => handleDateFilterChange('24h')} className="dropdown-item">Last 24 Hours</a>
-                                    <a href="#!" onClick={() => handleDateFilterChange('7d')} className="dropdown-item">Last Week</a>
-                                    <a href="#!" onClick={() => handleDateFilterChange('30d')} className="dropdown-item">Last Month</a>
-                                    <a href="#!" onClick={() => handleDateFilterChange('all')} className="dropdown-item">All</a>
-                                </div>
-                            )}
-                        </div>
-                        <div className="custom-dropdown">
-                            <button className="clear-filters-button" onClick={clearFilters}>
-                                Clear Filters
-                            </button>
-                        </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </nav>
 
             <div className="SignupModal">

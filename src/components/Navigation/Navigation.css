@@ -10,19 +10,41 @@
     background-color: rgb(255, 255, 255);
     padding: 10px 20px;
     box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.2);
+    flex-direction: column;
 }
 
-.greenlet-icon {
-
-    height: 45px;
-}
-
-.navbar-container {
+.navbar-container-top {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     width: 100%;
     padding: 0 10px;
+}
+
+.navbar-container-bottom {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 10px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.filtering-items {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.greenlet-icon {
+    height: 35px;
+    padding-right: 10px;
+
+}
+
+.button-active {
+    background-color: #4CAF50;
+    color: white;
 }
 
 .navbar-items svg {
@@ -35,14 +57,13 @@
 }
 
 .form-control.search-input {
-
     flex-grow: 1;
     width: 650px;
-
-
     border-radius: 50px;
     padding: 10px 20px;
+
 }
+
 
 .nav-link.upload-plant-button {
     background-color: #25bc41;
@@ -74,6 +95,8 @@
 }
 
 @media (max-width: 1300px) {
+
+
     .topRightItems {
         flex-direction: column;
     }
@@ -91,7 +114,6 @@
 
     .form-control.search-input {
         width: auto;
-        margin-bottom: 10px;
     }
 
     .navbar-items svg {
@@ -104,6 +126,10 @@
         display: none;
     }
 
+    .navbar-container-top {
+        padding-bottom: 10px;
+    }
+
 }
 
 @media (max-width: 999px) {
@@ -112,8 +138,6 @@
     }
 }
 
-/* ----------------------------------------------------------------
- */
 
 .custom-dropdown {
     position: relative;
@@ -164,99 +188,78 @@
     background-color: #ddd;
 }
 
-/* ........................................................ */
 
-/* Style for the dropdown toggle buttons */
 .custom-dropdown button.dropdown-toggle {
     background-color: white;
-    /* White background */
     color: #333;
-    /* Dark text color */
     padding: 8px 20px;
-    /* Padding inside the button */
     border: 1px solid #ddd;
-    /* Light border */
     border-radius: 20px;
-    /* Rounded corners */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    /* Box shadow */
     cursor: pointer;
-    /* Cursor indicates clickable item */
     margin-right: 10px;
-    /* Space between buttons */
     transition: background-color 0.3s;
-    /* Smooth transition for hover effect */
 }
 
 .clear-filters-button {
     background-color: white;
-    /* White background */
     color: #333;
-    /* Dark text color */
     padding: 8px 20px;
-    /* Padding inside the button */
     border: 1px solid #ddd;
-    /* Light border */
     border-radius: 20px;
-    /* Rounded corners */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    /* Box shadow */
     cursor: pointer;
-    /* Cursor indicates clickable item */
     margin-right: 10px;
-    /* Space between buttons */
     transition: background-color 0.3s;
-    /* Smooth transition for hover effect */
 
 }
 
-/* Hover effect */
 .custom-dropdown button.dropdown-toggle:hover {
     background-color: #f8f8f8;
-    /* Light gray background on hover */
 }
 
-/* Style for the dropdown menu */
 .custom-dropdown .dropdown-menu {
     border-radius: 5px;
-    /* Slightly rounded corners for the menu */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    /* Box shadow */
 }
 
-/* Style for the dropdown items */
 .custom-dropdown .dropdown-menu .dropdown-item {
     border-radius: 5px;
-    /* Slightly rounded corners for the items */
     transition: background-color 0.2s;
-    /* Smooth transition for hover effect */
 }
 
-/* Hover effect for dropdown items */
 .custom-dropdown .dropdown-menu .dropdown-item:hover {
     background-color: #f0f0f0;
-    /* Light gray background on hover */
+}
+
+.clear-filters-button:hover {
+    background-color: #f8f8f8;
 }
 
 .grid-container {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    /* creates 5 columns */
     gap: 10px;
-    /* space between grid items */
 }
 
 .grid-item {
-    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
+    margin-bottom: 10px;
+
+}
+
+.grid-item img {
+    max-width: 100%;
+    height: auto;
 }
 
 .grid-item:hover {
     background-color: #f0f0f0;
-    /* color when hovered */
 }
 
-/* You can customize the 'selected' state as you like */
 .grid-item.btn-success {
     background-color: green;
     border-color: green;
@@ -266,10 +269,53 @@
     border-color: #6c757d;
 }
 
-/* Adjust the breakpoint as needed for responsiveness */
-@media (max-width: 768px) {
+@media (max-width: 991px) {
     .grid-container {
-        grid-template-columns: repeat(3, 1fr);
-        /* 3 columns for smaller screens */
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .grid-item {
+        max-width: 80px;
+        padding: 5px;
+    }
+
+    .grid-item img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .grid-item button {
+        font-size: 8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-container {
+        display: block;
+    }
+
+    .grid-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .grid-item img {
+        width: 30px;
+        height: auto;
+        margin-right: 10px;
+    }
+
+    .grid-item button {
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .grid-item button span {
+        font-size: 0.8em;
+        text-align: left;
+        display: block;
     }
 }
