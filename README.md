@@ -1,6 +1,6 @@
 # Greenlet - Plant Exchange Platform
 
-Personal project to further experiment and practice with HTML | CSS | ReactJS | ExpressJS | MongoDB | NodeJS
+Personal project developed with HTML | CSS | ReactJS | ExpressJS | MongoDB | NodeJS
 
 Linked with server repository : https://github.com/RodrigoLSoria/Greenlet-Server
 
