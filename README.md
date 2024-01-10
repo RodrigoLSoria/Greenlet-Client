@@ -2,7 +2,11 @@
 
 Personal project developed with HTML | CSS | ReactJS | ExpressJS | MongoDB | NodeJS
 
-Linked with server repository : https://github.com/RodrigoLSoria/Greenlet-Server
+
+## Credentials
+-User: rodrigo@greenlet.com
+-Password: 1234
+
 
 Deployed URL : https://greenlet.netlify.app/
 
@@ -23,4 +27,4 @@ Deployed URL : https://greenlet.netlify.app/
 - **Authentication**: Robust user authentication for a secure experience
 
 
-
+Linked with server repository : https://github.com/RodrigoLSoria/Greenlet-Server
