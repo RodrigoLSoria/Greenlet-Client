@@ -30,9 +30,11 @@ const SavedPostsPage = () => {
         <div className='savedPosts-container'>
             <h4>Favourite Posts</h4>
             <>
-                {!favoritePosts ?
+                {!favoritePosts ? (
                     <Loader />
-                    :
+                ) : favoritePosts.length === 0 ? (
+                    <p>You don't have any saved posts yet, <a href="/">keep exploring </a> and find posts you are interested in! </p>
+                ) : (
                     <Row>
                         {favoritePosts.map((elm) => (
                             <Col key={elm._id} xs={4} sm={4} md={3} xl={3}>
@@ -42,7 +44,7 @@ const SavedPostsPage = () => {
                             </Col>
                         ))}
                     </Row>
-                }
+                )}
             </>
         </div>
     )

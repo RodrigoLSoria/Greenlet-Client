@@ -45,10 +45,10 @@ const ChatItem = ({ conversationData, onClick }) => {
                 {exchangeStatus === 'PENDING' && (
                     <div className="pending-chip">PENDING</div>
                 )}
-                <Avatar src={conversationData.post.image} />
+                <Avatar src={conversationData.post?.image} />
 
                 <div className="item-info">
-                    <span className="info">{conversationData.post.title}</span>
+                    <span className="info">{conversationData.post?.title}</span>
                 </div>
                 {/* <div onClick={handleDeleteConversation} className="delete-icon">
                     <DeleteIcon />

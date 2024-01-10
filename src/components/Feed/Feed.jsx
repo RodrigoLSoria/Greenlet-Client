@@ -13,7 +13,7 @@ const Feed = ({ filteredPosts }) => {
                 :
                 <Row className="justify-content-start">
                     {filteredPosts.map((elm) => (
-                        <Col key={elm._id} xs={6} sm={4} md={4} xl={3} className="mb-4">
+                        <Col key={elm._id} xs={12} sm={6} md={6} lg={6} xl={4} className="mb-4">
                             <PostCard
                                 previousPostData={elm}
                             />

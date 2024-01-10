@@ -5,9 +5,10 @@ import uploadServices from "../../services/upload.services"
 import { AuthContext } from "../../contexts/auth.context"
 import * as Constants from '../../consts/consts'
 import setGeolocation from '../../utils/setGeolocation'
+import "./NewPostForm.css"
 
 
-const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData, onPostUpdate }) => {
+const NewPostForm = ({ setShowNewPostFormModal, setShowEditModal, previousPostData, onPostUpdate }) => {
 
 
     const emptyPostForm = {
@@ -45,11 +46,32 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData,
         }
     }
 
+
+
     const { loggedUser } = useContext(AuthContext)
     const [postData, setPostData] = useState(emptyPostForm)
     const [loadingImage, setLoadingImage] = useState(false)
     const [showCareInstructions, setShowCareInstructions] = useState(false)
     const [descriptionPlaceholder, setDescriptionPlaceholder] = useState('')
+    const [instructionVisibility, setInstructionVisibility] = useState({
+        location: false,
+        light: false,
+        wateringFrequency: false,
+        temperature: false,
+        humidity: false,
+        soilType: false,
+        potting: false,
+        fertilizingFrequency: false,
+        pruning: false,
+        repotting: false,
+        pestManagement: false,
+        dormancy: false,
+        propagation: false,
+        wateringMethod: false,
+        toxicity: false,
+        specialNeeds: false,
+        otherNotes: false
+    })
 
 
     useEffect(() => {
@@ -91,7 +113,7 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData,
         postsService
             .savePost(postData)
             .then(() => {
-                setShowMainFormModal(false)
+                setShowNewPostFormModal(false)
                 checkForAlertMatches(postData)
             })
             .catch(err => console.log(err))
@@ -130,16 +152,27 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData,
             })
     }
 
-    const handleCareInstructionsChange = e => {
-        const { name, value } = e.target
-        setPostData({
-            ...postData,
-            careInstructions: {
-                ...postData.careInstructions,
-                [name]: value,
-            }
-        })
-    }
+    const handleCareInstructionsChange = (e) => {
+        const { name, checked, type } = e.target;
+        if (type === 'checkbox') {
+            setPostData(prevData => ({
+                ...prevData,
+                careInstructions: {
+                    ...prevData.careInstructions,
+                    [name]: checked,
+                }
+            }));
+        } else {
+            const { value } = e.target;
+            setPostData(prevData => ({
+                ...prevData,
+                careInstructions: {
+                    ...prevData.careInstructions,
+                    [name]: value,
+                }
+            }));
+        }
+    };
 
     const postUpdating = () => {
         postsService
@@ -161,6 +194,12 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData,
             .catch(err => console.log(err))
     }
 
+    const toggleInstructionVisibility = (key) => {
+        setInstructionVisibility(prevState => ({
+            ...prevState,
+            [key]: !prevState[key]
+        }));
+    };
 
 
     return (
@@ -219,40 +258,236 @@ const NewPostForm = ({ setShowMainFormModal, setShowEditModal, previousPostData,
                 <Form.Group className="mb-3" controlId="addCareInstructions">
                     <Form.Check
                         type="checkbox"
-                        label="Do you want to add caring instructions for the future owner?"
+                        label="Want to add caring instructions for the future owner?"
                         onChange={() => setShowCareInstructions(!showCareInstructions)}
                         checked={showCareInstructions}
                     />
                 </Form.Group>
 
                 {showCareInstructions && (
-                    <div>
-                        <Form.Group className="mb-3" controlId="careInstructionsLight">
-                            <Form.Label>Light</Form.Label>
-                            <Form.Control
-                                as="select"
-                                onChange={handleCareInstructionsChange}
-                                name="light"
-                                value={postData.careInstructions.light}
-                            >
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                                <option value="direct sunlight">Direct Sunlight</option>
-                            </Form.Control>
-                        </Form.Group>
-                    </div>
+                    <div className="care-instrucctions-container">
+                        <hr />
+                        <h4>Care Instrucctions</h4>
+                        <p>You can choose from the below list:</p>
+                        <div className="d-flex flex-wrap">
+                            {Object.keys(instructionVisibility).map((key) => (
+                                <div key={key} className="checkbox-button">
+                                    <button
+                                        id={`toggle-${key}`}
+                                        type="button"
+                                        className={`btn ${instructionVisibility[key] ? 'btn-primary' : 'btn-outline-primary'}`}
+                                        onClick={() => toggleInstructionVisibility(key)}
+                                        aria-pressed={instructionVisibility[key]}
+                                    >
+                                        {`${key.charAt(0).toUpperCase() + key.slice(1)}`}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                        <hr />
+
+                        {instructionVisibility.location && (
+                            <Form.Group className="mb-3" controlId="careInstructionsLocation">
+                                <Form.Label>Location</Form.Label>
+                                <Form.Control as="select" onChange={handleCareInstructionsChange} name="location" value={postData.careInstructions.location}>
+                                    <option value="interior">Interior</option>
+                                    <option value="exterior">Exterior</option>
+                                    <option value="both">Both</option>
+                                </Form.Control>
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.light && (
+                            <Form.Group className="mb-3" controlId="careInstructionsLight">
+                                <Form.Label>Light</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    onChange={handleCareInstructionsChange}
+                                    name="light"
+                                    value={postData.careInstructions.light}
+                                >
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="direct sunlight">Direct Sunlight</option>
+                                </Form.Control>
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.wateringFrequency && (
+                            <Form.Group className="mb-3" controlId="careInstructionsWateringFrequency">
+                                <Form.Label>Watering Frequency (days)</Form.Label>
+                                <Form.Control type="number" onChange={handleCareInstructionsChange} name="wateringFrequency" value={postData.careInstructions.wateringFrequency} />
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.temperature && (
+                            <Form.Group className="mb-3">
+                                <Form.Group className="mb-3" controlId="careInstructionsIndoorTemperature">
+                                    <Form.Label>Indoor Temperature</Form.Label>
+                                    <Form.Control as="select" onChange={handleCareInstructionsChange} name="temperature[indoor]" value={postData.careInstructions.temperature.indoor}>
+                                        <option value="cold">Cold</option>
+                                        <option value="temperate">Temperate</option>
+                                        <option value="warm">Warm</option>
+                                    </Form.Control>
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="careInstructionsOutdoorTemperature">
+                                    <Form.Label>Outdoor Temperature</Form.Label>
+                                    <Form.Control as="select" onChange={handleCareInstructionsChange} name="temperature[outdoor]" value={postData.careInstructions.temperature.outdoor}>
+                                        <option value="cold">Cold</option>
+                                        <option value="temperate">Temperate</option>
+                                        <option value="warm">Warm</option>
+                                        <option value="hardiness zones">Hardiness Zones</option>
+                                    </Form.Control>
+                                </Form.Group>
+                            </Form.Group>
+                        )}
+
+
+                        {instructionVisibility.humidity && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Humidity</Form.Label>
+                                <Form.Control as="select" onChange={handleCareInstructionsChange} name="humidity" value={postData.careInstructions.humidity}>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </Form.Control>
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.soilType && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Soil Type</Form.Label>
+                                <Form.Control as="select" onChange={handleCareInstructionsChange} name="soilType" value={postData.careInstructions.soilType}>
+                                    <option value="sandy">Sandy</option>
+                                    <option value="loamy">Loamy</option>
+                                    <option value="clayey">Clayey</option>
+                                    <option value="peaty">Peaty</option>
+                                    <option value="chalky">Chalky</option>
+                                    <option value="silty">Silty</option>
+                                </Form.Control>
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.potting && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Potting</Form.Label>
+                                <Form.Check
+                                    type="checkbox"
+                                    label="Potting needed"
+                                    onChange={handleCareInstructionsChange}
+                                    name="potting"
+                                    checked={postData.careInstructions.potting}
+                                />
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.fertilizingFrequency && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Fertilizing Frequency (times per year)</Form.Label>
+                                <Form.Control type="number" onChange={handleCareInstructionsChange} name="fertilizingFrequency" value={postData.careInstructions.fertilizingFrequency} />
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.pruning && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Pruning</Form.Label>
+                                <Form.Check
+                                    type="checkbox"
+                                    label="Pruning needed"
+                                    onChange={handleCareInstructionsChange}
+                                    name="pruning"
+                                    checked={postData.careInstructions.pruning}
+                                />
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.repotting && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Repotting</Form.Label>
+                                <Form.Check
+                                    type="checkbox"
+                                    label="Repotting needed"
+                                    onChange={handleCareInstructionsChange}
+                                    name="repotting"
+                                    checked={postData.careInstructions.repotting}
+                                />
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.pestManagement && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Pest Management</Form.Label>
+                                <Form.Control type="text" onChange={handleCareInstructionsChange} name="pestManagement" value={postData.careInstructions.pestManagement} />
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.dormancy && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Dormancy</Form.Label>
+                                <Form.Check
+                                    type="checkbox"
+                                    label="Dormancy period observed"
+                                    onChange={handleCareInstructionsChange}
+                                    name="dormancy"
+                                    checked={postData.careInstructions.dormancy}
+                                />
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.propagation && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Propagation</Form.Label>
+                                <Form.Control type="text" onChange={handleCareInstructionsChange} name="propagation" value={postData.careInstructions.propagation} />
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.wateringMethod && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Watering Method</Form.Label>
+                                <Form.Control as="select" onChange={handleCareInstructionsChange} name="wateringMethod" value={postData.careInstructions.wateringMethod}>
+                                    <option value="top-watering">Top-Watering</option>
+                                    <option value="bottom-watering">Bottom-Watering</option>
+                                    <option value="misting">Misting</option>
+                                    <option value="soak and dry">Soak and Dry</option>
+                                </Form.Control>
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.toxicity && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Toxicity</Form.Label>
+                                <Form.Control as="select" onChange={handleCareInstructionsChange} name="toxicity" value={postData.careInstructions.toxicity}>
+                                    <option value="non-toxic">Non-Toxic</option>
+                                    <option value="toxic">Toxic</option>
+                                </Form.Control>
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.specialNeeds && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Special Needs</Form.Label>
+                                <Form.Control type="text" onChange={handleCareInstructionsChange} name="specialNeeds" value={postData.careInstructions.specialNeeds} />
+                            </Form.Group>
+                        )}
+
+                        {instructionVisibility.otherNotes && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Other Notes</Form.Label>
+                                <Form.Control type="text" onChange={handleCareInstructionsChange} name="otherNotes" value={postData.careInstructions.otherNotes} />
+                            </Form.Group>
+                        )}
+                    </div >
                 )}
 
-
                 <div className="d-grid">
-                    <Button variant="primary" type="submit">
+                    <Button onClick={() => setShowNewPostFormModal(false)} variant="primary" type="submit">
                         Post
                     </Button>
-                    <button onClick={() => setShowMainFormModal(false)}>Close Modal</button>
                 </div>
-            </Form>
-        </div>
+            </Form >
+        </div >
     )
 }
 

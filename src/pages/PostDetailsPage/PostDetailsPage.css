@@ -84,6 +84,7 @@
     opacity: 0;
 }
 
+
 .favourite-icon {
     pointer-events: auto;
     background-color: white;
@@ -112,6 +113,10 @@
     width: 36px;
     height: 57px;
     pointer-events: auto;
+}
+
+.edit-delete-icons.hidden {
+    display: none;
 }
 
 .edit-icon,

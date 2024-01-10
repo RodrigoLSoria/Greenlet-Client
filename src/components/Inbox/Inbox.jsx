@@ -77,7 +77,7 @@ const Inbox = ({ conversations }) => {
                 ) : (
                     <div className="empty-chat-placeholder">
                         <p>Check your inbox</p>
-                        <p>If you have read all your messages, keep enjoying Greenlet!</p>
+                        <p>If you have read all your messages, <a href="/">keep enjoying Greenlet!</a></p>
                     </div>
                 )}
             </div>

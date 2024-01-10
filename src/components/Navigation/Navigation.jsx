@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react"
 import SignupForm from "../SignupForm/SignupForm"
 import LoginForm from "../LoginForm/LoginForm"
-import MainForm from "../MainForm/MainForm"
+import NewPostForm from "../NewPostForm/NewPostForm"
 import { AuthContext } from '../../contexts/auth.context'
 import { useNavigate, useLocation, Link } from "react-router-dom"
 import { useLoginModalContext } from '../../contexts/loginModal.context'
@@ -11,36 +11,45 @@ import * as Constants from "../../consts/consts"
 import { Button, Modal } from "react-bootstrap"
 import "./Navigation.css"
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import LocationOnIcon from '@mui/icons-material/LocationOn'
-import HandshakeIcon from '@mui/icons-material/Handshake'
 import setGeolocation from '../../utils/setGeolocation'
 import mapsService from "../../services/maps.services"
 import postsService from "../../services/posts.services"
 import EmailIcon from '@mui/icons-material/Email'
 import FooterNavbar from "../NavigationFooter/NavigationFooter"
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
+import { useLoadScript } from "@react-google-maps/api"
+import Maps from "../Maps/Maps"
+import LocationOnIcon from '@mui/icons-material/LocationOn'
 
 const Navigation = () => {
 
-    const { setPosts } = usePosts()
     const [location, setLocation] = useState('')
-    const [showMainFormModal, setShowMainFormModal] = useState(false)
+    const [showNewPostFormModal, setShowNewPostFormModal] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedCategories, setSelectedCategories] = useState([])
     const [selectedPlantTypes, setSelectedPlantTypes] = useState([])
     const [dateFilter, setDateFilter] = useState('all')
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-    const { showLoginModal, setShowLoginModal } = useLoginModalContext()
-    const { showSignupModal, setShowSignupModal } = useSignupModalContext()
-    const { loggedUser, logout } = useContext(AuthContext)
-    const navigate = useNavigate()
-    const pageLocation = useLocation()
-    const shouldShowFooterNavbar = windowWidth < 1000
-    const isFeedPage = pageLocation.pathname === '/'
-
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
     const [showDateFilterDropdown, setShowDateFilterDropdown] = useState(false)
     const [showPlantTypeModal, setShowPlantTypeModal] = useState(false)
+    const [showLocationModal, setShowLocationModal] = useState(false)
+    const [center, setCenter] = useState({ lat: 0, lng: 0 })
+    const [radius, setRadius] = useState(5000)
+
+    const { showLoginModal, setShowLoginModal } = useLoginModalContext()
+    const { showSignupModal, setShowSignupModal } = useSignupModalContext()
+    const { loggedUser, logout } = useContext(AuthContext)
+
+    const { setPosts } = usePosts()
+    const navigate = useNavigate()
+    const pageLocation = useLocation()
+
+    const shouldShowFooterNavbar = windowWidth < 1000
+    const isFeedPage = pageLocation.pathname === '/'
+
+
+
 
 
     const handleLogout = () => {
@@ -51,7 +60,37 @@ const Navigation = () => {
     useEffect(() => {
         loadFeed()
 
-    }, [searchQuery, selectedCategories, selectedPlantTypes, dateFilter])
+    }, [searchQuery, selectedCategories, selectedPlantTypes, dateFilter, radius])
+
+    useEffect(() => {
+        const onSuccess = (position) => {
+            const { latitude, longitude } = position.coords
+            setCenter({ lat: latitude, lng: longitude })
+            setRadius(radius)
+
+            mapsService.reverseGeocode(latitude, longitude)
+                .then(response => {
+                    const { city, country } = response.data
+                    setLocation(`${city}, ${country}`)
+                    loadFeed({ lat: latitude, lng: longitude })
+                })
+                .catch(error => {
+                    console.error('Error getting location details:', error)
+                    setLocation('Unknown location')
+                })
+        }
+
+        const onError = () => {
+            console.error('Error getting user location')
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(onSuccess, onError)
+        } else {
+            onError()
+        }
+    }, [])
+
 
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth)
@@ -60,37 +99,81 @@ const Navigation = () => {
     }, [])
 
 
-    const loadFeed = () => {
-        setGeolocation(
-            async ({ latitude, longitude }) => {
+    const loadFeed = (location = {}) => {
+        const latitude = location.lat || center.lat
+        const longitude = location.lng || center.lng
+        const queryParams = {
+            searchQuery,
+            category: selectedCategories,
+            userLatitude: latitude,
+            userLongitude: longitude,
+            plantType: selectedPlantTypes,
+            dateFilter: dateFilter,
+            radius: radius
+        }
 
-                try {
-                    const locationData = await mapsService.reverseGeocode(latitude, longitude)
+        if (radius !== null) {
+            queryParams.radius = radius;
+        }
 
-                    setLocation(`${locationData.data.city}, ${locationData.data.country}`)
-
-                    const isFoundCategorySelected = selectedCategories.includes('found')
-
-                    const queryParams = {
-                        searchQuery,
-                        category: selectedCategories,
-                        userLatitude: latitude,
-                        userLongitude: longitude,
-                        plantType: selectedPlantTypes,
-                        dateFilter: isFoundCategorySelected ? '24h' : dateFilter
-                    }
-
-                    postsService
-                        .getFilteredPosts(queryParams)
-                        .then(({ data }) => {
-                            setPosts(data)
-                        })
-                        .catch((err) => console.log(err))
-                } catch (error) {
-                    console.error('Error fetching location:', error)
-                }
+        postsService
+            .getFilteredPosts(queryParams)
+            .then(({ data }) => {
+                setPosts(data)
             })
+            .catch((err) => console.log(err))
     }
+
+
+    const onPlaceSelected = (place) => {
+        const { lat, lng } = place
+        setCenter({ lat, lng })
+
+        mapsService.reverseGeocode(lat, lng)
+            .then(response => {
+                const { city, country } = response.data
+                const distance = radius / 1000
+                setLocation(`${distance}km, ${city}, ${country}`)
+            })
+            .catch(error => {
+                console.error('Error in reverse geocoding:', error)
+            })
+
+        loadFeed({ lat, lng })
+    }
+
+
+    const handleRadiusChange = (newRadius) => {
+        setRadius(newRadius)
+        if (newRadius !== 'No limit') {
+            mapsService.reverseGeocode(center.lat, center.lng)
+                .then(response => {
+                    const { city, country } = response.data
+                    setLocation(`${newRadius / 1000}km, ${city}, ${country}`)
+                })
+                .catch(error => {
+                    console.error('Error in reverse geocoding:', error)
+                    setLocation(`${newRadius / 1000}km, Unknown location`)
+                })
+        } else {
+            mapsService.reverseGeocode(center.lat, center.lng)
+                .then(response => {
+                    const { city, country } = response.data
+                    setLocation(`No limit, ${city}, ${country}`)
+                })
+                .catch(error => {
+                    console.error('Error in reverse geocoding:', error)
+                    setLocation(`No limit, Unknown location`)
+                })
+        }
+    }
+
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    })
+
+    if (loadError) return "Error loading maps"
+    if (!isLoaded) return "Loading Maps"
 
     const handleInputChange = (e) => {
         setSearchQuery(e.target.value)
@@ -128,18 +211,23 @@ const Navigation = () => {
         setShowPlantTypeModal(!showPlantTypeModal)
     }
 
+    const handleLocationModalToggle = () => {
+        setShowLocationModal(!showLocationModal)
+    }
+
     const handleSelect = (type) => {
         handlePlantTypeToggle(type)
     }
 
     const clearFilters = () => {
-        setSearchQuery('')
-        setSelectedCategories([])
-        setSelectedPlantTypes([])
-        setDateFilter('all')
-        loadFeed()
+        setSearchQuery('');
+        setSelectedCategories([]);
+        setSelectedPlantTypes([]);
+        setDateFilter('all');
+        loadFeed();
+        setRadius(5000);
     }
-
+    console.log("selectedPlantTypes.length > 0 ", selectedPlantTypes.length > 0)
     return (
         <div>
             <nav className="navbar">
@@ -147,7 +235,7 @@ const Navigation = () => {
                     <Link className="nav-link" to="/">
                         <picture>
                             <source srcSet="Logo.png" media="(max-width: 768px)" />
-                            <img src="Icon.png" alt="Greenlet Icon" className="greenlet-icon" />
+                            <img src="https://res.cloudinary.com/depxadgb3/image/upload/v1704907058/Icon_lkdlwb.png" alt="Greenlet Icon" className="greenlet-icon" />
                         </picture>
                     </Link>
 
@@ -160,9 +248,6 @@ const Navigation = () => {
                         className="form-control search-input"
                     />
                     <div className="topRightItems">
-                        {/* <div className="location">
-                            <LocationOnIcon /> <span>{location}</span>
-                        </div> */}
 
                         {!shouldShowFooterNavbar && (
                             <div className="navbar-items" id="navbarItems">
@@ -176,7 +261,7 @@ const Navigation = () => {
                                         </Link>
                                         <Link to={`/UserFavourites/${loggedUser._id}`} className='nav-link'><FavoriteBorderIcon /></Link>
                                         <Link className="nav-link upload-plant-button" to="#"
-                                            onClick={() => setShowMainFormModal(true)}>Upload Plant</Link>
+                                            onClick={() => setShowNewPostFormModal(true)}>Upload Plant</Link>
                                         <span className='nav-link' onClick={handleLogout}>Logout</span>
                                     </>
                                 ) : (
@@ -202,22 +287,41 @@ const Navigation = () => {
                         <div className="filtering-items">
                             <div className="custom-dropdown">
                                 <button
+                                    onClick={handleLocationModalToggle}
+                                    className={`dropdown-toggle ${radius !== null ? 'button-active' : ''}`}
+                                >
+                                    <LocationOnIcon /> {location}
+                                </button>
+                                <Modal show={showLocationModal} onHide={handleLocationModalToggle} size="lg">
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>Where?</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        <div className="location-filter">
+                                            <Maps initialCenter={center} radius={radius} onRadiusChange={handleRadiusChange} onPlaceSelected={onPlaceSelected} />
+                                        </div>
+                                    </Modal.Body>
+                                </Modal>
+                            </div>
+
+                            <div className="custom-dropdown">
+                                <button
                                     onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-                                    className="dropdown-toggle"
+                                    className={`dropdown-toggle ${selectedCategories.length > 0 ? 'button-active' : ''}`}
                                 >
                                     Category
                                 </button>
                                 {showCategoryDropdown && (
                                     <div className="dropdown-menu">
                                         {Constants.POST_CATEGORIES.map((category) => (
-                                            <a
+                                            <Button
                                                 key={category}
-                                                href="#!"
+                                                variant={selectedCategories.includes(category) ? 'success' : 'outline-secondary'}
+                                                className={`dropdown-item ${selectedCategories.includes(category) ? 'btn-success' : ''}`}
                                                 onClick={() => handleCategoryToggle(category)}
-                                                className={`dropdown-item ${selectedCategories.includes(category) ? 'active' : ''}`}
                                             >
                                                 {category}
-                                            </a>
+                                            </Button>
                                         ))}
                                     </div>
                                 )}
@@ -226,7 +330,7 @@ const Navigation = () => {
                             <div className="custom-dropdown">
                                 <button
                                     onClick={handlePlantTypeModalToggle}
-                                    className="dropdown-toggle"
+                                    className={`dropdown-toggle ${selectedPlantTypes.length > 0 ? 'button-active' : ''}`}
                                 >
                                     Plant Types
                                 </button>
@@ -252,19 +356,19 @@ const Navigation = () => {
                                     </Modal.Body>
                                 </Modal>
                             </div>
-                            <div className="custom-dropdown">
+                            <div className="custom-dropdown date-filter-dropdown">
                                 <button
                                     onClick={() => setShowDateFilterDropdown(!showDateFilterDropdown)}
-                                    className="dropdown-toggle"
+                                    className={`dropdown-toggle ${dateFilter !== 'all' ? 'button-active' : ''}`}
                                 >
                                     Posted
                                 </button>
                                 {showDateFilterDropdown && (
                                     <div className="dropdown-menu">
-                                        <a href="#!" onClick={() => handleDateFilterChange('24h')} className="dropdown-item">Last 24 Hours</a>
-                                        <a href="#!" onClick={() => handleDateFilterChange('7d')} className="dropdown-item">Last Week</a>
-                                        <a href="#!" onClick={() => handleDateFilterChange('30d')} className="dropdown-item">Last Month</a>
-                                        <a href="#!" onClick={() => handleDateFilterChange('all')} className="dropdown-item">All</a>
+                                        <a href="#!" onClick={() => handleDateFilterChange('24h')} className={`dropdown-item ${dateFilter === '24h' ? 'btn-success' : 'btn-outline-secondary'}`}>Last 24 Hours</a>
+                                        <a href="#!" onClick={() => handleDateFilterChange('7d')} className={`dropdown-item ${dateFilter === '7d' ? 'btn-success' : 'btn-outline-secondary'}`}>Last Week</a>
+                                        <a href="#!" onClick={() => handleDateFilterChange('30d')} className={`dropdown-item ${dateFilter === '30d' ? 'btn-success' : 'btn-outline-secondary'}`}>Last Month</a>
+                                        <a href="#!" onClick={() => handleDateFilterChange('all')} className={`dropdown-item ${dateFilter === 'all' ? 'btn-success' : 'btn-outline-secondary'}`}>All</a>
                                     </div>
                                 )}
                             </div>
@@ -301,18 +405,18 @@ const Navigation = () => {
             </div>
 
             <div className="PostModal">
-                <Modal show={showMainFormModal} onHide={() => setShowMainFormModal(false)}>
+                <Modal show={showNewPostFormModal} onHide={() => setShowNewPostFormModal(false)}>
                     <Modal.Header closeButton>
                         <Modal.Title>Post</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <MainForm showMainFormModal={showMainFormModal} setShowMainFormModal={setShowMainFormModal} />
+                        <NewPostForm showNewPostFormModal={showNewPostFormModal} setShowNewPostFormModal={setShowNewPostFormModal} />
                     </Modal.Body>
                 </Modal>
             </div>
 
             <div className="footerNavbar">
-                {shouldShowFooterNavbar && <FooterNavbar setShowMainFormModal={setShowMainFormModal} />}
+                {shouldShowFooterNavbar && <FooterNavbar setShowNewPostFormModal={setShowNewPostFormModal} />}
             </div>
         </div>
     )

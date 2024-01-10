@@ -9,19 +9,19 @@ const UserPosts = ({ posts }) => {
         <div className='userPosts-container'>
             <h4>My Posts</h4>
             <>
-                {!posts ?
+                {!posts ? (
                     <Loader />
-                    :
+                ) : posts.length === 0 ? (
+                    <p>Create a new post and share your plant journey with the community!</p>
+                ) : (
                     <Row>
                         {posts.map((post) => (
-                            <Col key={post._id} xs={4} sm={4} md={3} xl={3}>
-                                <PostCard
-                                    key={post._id} previousPostData={post}
-                                />
+                            <Col key={post._id} xs={12} sm={6} md={4} xl={4}>
+                                <PostCard key={post._id} previousPostData={post} />
                             </Col>
                         ))}
                     </Row>
-                }
+                )}
             </>
         </div>
     )
