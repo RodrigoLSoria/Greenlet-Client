@@ -5,7 +5,7 @@ import ChatItem from "../ChatItem/ChatItem"
 import { SocketContext } from '../../contexts/socket.context'
 import React, { useEffect, useState, useContext } from 'react'
 import conversationService from "../../services/conversations.services"
-
+import { Modal } from "react-bootstrap"
 
 const Inbox = ({ conversations }) => {
     const [selectedConversation, setSelectedConversation] = useState(null)
@@ -34,18 +34,20 @@ const Inbox = ({ conversations }) => {
     }
 
     const handleConversationClick = (conversation) => {
+        setSelectedConversation(null); // Clear previous conversation
         if (conversation.exchangeStatus === 'closed') {
             setShowExchangeCompleteModal(true);
         } else {
-            fetchMessagesForConversation(conversation._id)
-                .then(messages => {
-                    setSelectedConversation({
-                        ...conversation,
-                        messages: messages,
-                    })
-                })
-                .catch(err => console.error('Error fetching messages:', err))
+            setShowExchangeCompleteModal(false);
         }
+        fetchMessagesForConversation(conversation._id)
+            .then(messages => {
+                setSelectedConversation({
+                    ...conversation,
+                    messages: messages,
+                });
+            })
+            .catch(err => console.error('Error fetching messages:', err));
     }
 
     const fetchMessagesForConversation = async (conversationId) => {
@@ -78,24 +80,33 @@ const Inbox = ({ conversations }) => {
                 </div>
             </div>
             <div className="chat-panel">
-                {selectedConversation ? (
-                    <>
-                        <ConversationDisplay selectedConversation={selectedConversation} socket={socket} />
-                        {showExchangeCompleteModal && (
-                            <div className="exchange-complete-modal">
-                                <p>You successfully completed this exchange!</p>
-                                <button onClick={() => setShowExchangeCompleteModal(false)}>Close</button>
-                            </div>
-                        )}
-                    </>
-                ) : (
+                {selectedConversation && (
+                    <ConversationDisplay selectedConversation={selectedConversation} socket={socket} />
+                )}
+
+                {!selectedConversation && !showExchangeCompleteModal && (
                     <div className="empty-chat-placeholder">
                         <p>Check your inbox</p>
                         <p>If you have read all your messages, <a href="/">keep enjoying Greenlet!</a></p>
                     </div>
                 )}
             </div>
+
+            <Modal show={showExchangeCompleteModal} onHide={() => setShowExchangeCompleteModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Exchange Completed!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>You successfully completed this exchange.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button className="btn btn-secondary" onClick={() => setShowExchangeCompleteModal(false)}>
+                        Close
+                    </button>
+                </Modal.Footer>
+            </Modal>
         </div>
+
     )
 }
 
