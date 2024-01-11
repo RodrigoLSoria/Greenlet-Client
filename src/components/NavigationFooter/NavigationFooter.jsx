@@ -12,14 +12,14 @@ import { useSignupModalContext } from '../../contexts/signupModal.context'
 import { Modal } from "react-bootstrap"
 import SignupForm from '../SignupForm/SignupForm'
 import LoginForm from '../LoginForm/LoginForm'
-import MainForm from '../MainForm/MainForm'
+import NewPostForm from '../NewPostForm/NewPostForm'
 
 
 
 const FooterNavbar = () => {
 
     const { loggedUser } = useContext(AuthContext)
-    const [showMainFormModal, setShowMainFormModal] = useState(false)
+    const [showNewPostFormModal, setShowNewPostFormModal] = useState(false)
     const { showLoginModal, setShowLoginModal } = useLoginModalContext()
     const { showSignupModal, setShowSignupModal } = useSignupModalContext()
 
@@ -38,7 +38,7 @@ const FooterNavbar = () => {
                                 <FavoriteIcon />
                                 <span>Favourites</span>
                             </Link>
-                            <div className="footer-icon" onClick={() => setShowMainFormModal(true)}>
+                            <div className="footer-icon" onClick={() => setShowNewPostFormModal(true)}>
                                 <AddCircleIcon />
                                 <span>Upload</span>
                             </div>
@@ -104,12 +104,12 @@ const FooterNavbar = () => {
             </div>
 
             <div className="PostModal">
-                <Modal show={showMainFormModal} onHide={() => setShowMainFormModal(false)}>
+                <Modal show={showNewPostFormModal} onHide={() => setShowNewPostFormModal(false)}>
                     <Modal.Header closeButton>
                         <Modal.Title>Post</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <MainForm showMainFormModal={showMainFormModal} setShowMainFormModal={setShowMainFormModal} />
+                        <NewPostForm showNewPostFormModal={showNewPostFormModal} setShowNewPostFormModal={setShowNewPostFormModal} />
                     </Modal.Body>
                 </Modal>
             </div>

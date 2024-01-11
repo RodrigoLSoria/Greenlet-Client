@@ -5,6 +5,7 @@ import userService from "../../services/user.services"
 import { AuthContext } from '../../contexts/auth.context'
 import StarIcon from '@mui/icons-material/Star'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
+import "./RatingForm.css"
 
 
 const RatingForm = ({ setShowRatingModal, exchangeData }) => {
@@ -41,15 +42,17 @@ const RatingForm = ({ setShowRatingModal, exchangeData }) => {
     }
 
     return (
-        <div>
-            <Rating
-                name="rating"
-                value={ratingValue}
-                onChange={(event, newValue) => setRatingValue(newValue)}
-                precision={0.5}
-                icon={<StarIcon fontSize="inherit" />}
-                emptyIcon={<StarBorderIcon fontSize="inherit" />}
-            />
+        <div className="rating-form-container">
+            <div className="rating-stars">
+                <Rating
+                    name="rating"
+                    value={ratingValue}
+                    onChange={(event, newValue) => setRatingValue(newValue)}
+                    precision={0.5}
+                    icon={<StarIcon fontSize="inherit" />}
+                    emptyIcon={<StarBorderIcon fontSize="inherit" />}
+                />
+            </div>
             <textarea
                 placeholder="Leave a comment (optional)"
                 value={comment}

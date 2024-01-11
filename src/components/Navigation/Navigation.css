@@ -48,7 +48,7 @@
 }
 
 .navbar-items svg {
-    margin-left: 10px;
+    margin-left: 7px;
     cursor: pointer;
 }
 
@@ -79,6 +79,14 @@
 
 .nav-link.upload-plant-button:hover {
     background-color: #45a049;
+}
+
+.logoutIcon {
+    padding-left: 7px;
+    background: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
 }
 
 .navbar-items {
@@ -297,6 +305,31 @@
 
 .grid-item.btn-outline-secondary {
     border-color: #6c757d;
+}
+
+.user-options {
+    position: relative;
+}
+
+.user-options-dropdown {
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.user-option {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    color: #333;
+    cursor: pointer;
+}
+
+.user-option:hover {
+    background-color: #f1f1f1;
 }
 
 @media (max-width: 991px) {

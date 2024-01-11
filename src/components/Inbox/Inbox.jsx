@@ -9,6 +9,8 @@ import conversationService from "../../services/conversations.services"
 
 const Inbox = ({ conversations }) => {
     const [selectedConversation, setSelectedConversation] = useState(null)
+    const [showExchangeCompleteModal, setShowExchangeCompleteModal] = useState(false);
+
     const { socket } = useContext(SocketContext)
 
 
@@ -32,14 +34,18 @@ const Inbox = ({ conversations }) => {
     }
 
     const handleConversationClick = (conversation) => {
-        fetchMessagesForConversation(conversation._id)
-            .then(messages => {
-                setSelectedConversation({
-                    ...conversation,
-                    messages: messages,
+        if (conversation.exchangeStatus === 'closed') {
+            setShowExchangeCompleteModal(true);
+        } else {
+            fetchMessagesForConversation(conversation._id)
+                .then(messages => {
+                    setSelectedConversation({
+                        ...conversation,
+                        messages: messages,
+                    })
                 })
-            })
-            .catch(err => console.error('Error fetching messages:', err))
+                .catch(err => console.error('Error fetching messages:', err))
+        }
     }
 
     const fetchMessagesForConversation = async (conversationId) => {
@@ -73,7 +79,15 @@ const Inbox = ({ conversations }) => {
             </div>
             <div className="chat-panel">
                 {selectedConversation ? (
-                    <ConversationDisplay selectedConversation={selectedConversation} socket={socket} />
+                    <>
+                        <ConversationDisplay selectedConversation={selectedConversation} socket={socket} />
+                        {showExchangeCompleteModal && (
+                            <div className="exchange-complete-modal">
+                                <p>You successfully completed this exchange!</p>
+                                <button onClick={() => setShowExchangeCompleteModal(false)}>Close</button>
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <div className="empty-chat-placeholder">
                         <p>Check your inbox</p>

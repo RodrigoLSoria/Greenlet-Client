@@ -8,7 +8,7 @@ import exchangeService from "../../services/exchange.services"
 import postsService from "../../services/posts.services"
 import RatingForm from "../RatingForm/RatingForm"
 
-const ExchangeCard = ({ exchangeData, onExchangeUpdate }) => {
+const ExchangeCard = ({ exchangeData }) => {
 
     const { loggedUser } = useContext(AuthContext)
     const [status, setStatus] = useState(exchangeData.status)
@@ -74,9 +74,10 @@ const ExchangeCard = ({ exchangeData, onExchangeUpdate }) => {
                         <Card.Body>
                             <Card.Title>{exchangeData.givenPost.title}</Card.Title>
                             <Card.Text>STATUS: {exchangeData.status}</Card.Text>
-                            <Card.Text>Post by: {exchangeData.givenPost.owner.username}</Card.Text>
                             <Card.Text>Type: {exchangeData.givenPost.plantType}</Card.Text>
                             <Card.Text>Posted: {formatDate(exchangeData.givenPost.createdAt)}</Card.Text>
+                            <hr />
+                            <p>Did you complete the exchange?:</p>
                             <Button onClick={() => { handleBadgeUpdate(); setShowRatingModal(true) }} className="btn-btn-dark" disabled={isDisabled}>
                                 Exchange completed
                             </Button>
@@ -88,9 +89,10 @@ const ExchangeCard = ({ exchangeData, onExchangeUpdate }) => {
             <div className="RatingModal">
                 <Modal show={showRatingModal} onHide={() => setShowRatingModal(false)}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Rating</Modal.Title>
+                        <Modal.Title>You succesfully completed a plant exchange!</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        Now that the transaction is completed you can rate the exchange here:
                         <RatingForm
                             setShowRatingModal={setShowRatingModal}
                             exchangeData={exchangeData}

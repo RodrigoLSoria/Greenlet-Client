@@ -6,7 +6,6 @@ import conversationService from "../../services/conversations.services"
 import { useMessageModalContext } from '../../contexts/messageModal.context'
 import { SocketContext } from '../../contexts/socket.context'
 import exchangeService from '../../services/exchange.services'
-import { useExchangeStatusContext } from '../../contexts/exchangeStatus.context'
 import SendIcon from '@mui/icons-material/Send'
 
 
@@ -16,14 +15,17 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
     const { loggedUser } = useContext(AuthContext)
     const { socket } = useContext(SocketContext)
     const { setShowMessageModal } = useMessageModalContext()
-    const { exchangeStatus, updateExchangeStatus } = useExchangeStatusContext()
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(false)
     const [content, setContent] = useState('')
 
-
     const isOwner = loggedUser?._id === selectedConversation?.post.owner
-    const post = selectedConversation ? selectedConversation.post._id : postId
+    const post = selectedConversation ? selectedConversation?.post._id : postId
+    const showConfirmExchangeButton = selectedConversation?.exchangeStatus === 'none' && isOwner
+    const showCancelExchangeButton = selectedConversation?.exchangeStatus === 'pending' && isOwner
+
+
+
 
 
     const handleMessageSubmit = async (e) => {
@@ -44,6 +46,8 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
                 content: content,
                 conversation: conversationId,
             }
+
+            console.log("messagedata", messageData)
 
             const { data: newMessage } = await
                 messageService
@@ -72,41 +76,50 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
     }
 
 
-    const handleConfirmExchange = () => {
-        setIsButtonDisabled(true)
-        handleSaveExchange()
-        updateExchangeStatus('PENDING')
-        console.log("Exchange confirmed!")
-    }
+    const handleConfirmExchange = async () => {
+        setIsButtonDisabled(true);
 
+        // Define the receiver as the other participant in the conversation
+        const receiverId = selectedConversation.participants.find(p => p !== loggedUser._id);
 
-    const handleSaveExchange = () => {
+        console.log("este es el receiverid", receiverId)
+
+        // Create the exchange data
         const exchangeData = {
-            giver: loggedUser?._id,
-            receiver: receiver,
+            giver: loggedUser._id,
+            receiver: receiverId,
             givenPost: post,
+        };
+
+        try {
+            // Save the exchange in the backend
+            const response = await exchangeService.saveExchange(exchangeData);
+            console.log("Exchange saved!", response.data);
+        } catch (error) {
+            console.error("Failed to save exchange!", error);
+        } finally {
+            setIsButtonDisabled(false);
         }
-
-        exchangeService
-            .saveExchange(exchangeData)
-            .then(response => {
-                console.log("Exchange saved!", response.data)
-            })
-            .catch(error => {
-                console.error("Failed to save exchange!", error)
-            })
-    }
-
+    };
 
     return (
         <div className="MessageForm">
 
             <form onSubmit={handleMessageSubmit} className="message-form-grid">
-                {selectedConversation && isOwner && (
+                {showConfirmExchangeButton && (
                     <div className="message-form-button">
                         <button type="button" onClick={handleConfirmExchange}
                             disabled={isButtonDisabled}>
                             Confirm Exchange/Gift
+                        </button>
+                    </div>
+                )}
+                {showCancelExchangeButton && (
+                    <div className="message-form-button">
+                        <button type="button" onClick={handleCancelExchange}
+                            className="cancel-button"
+                            disabled={isButtonDisabled}>
+                            Cancel Exchange/Gift
                         </button>
                     </div>
                 )}

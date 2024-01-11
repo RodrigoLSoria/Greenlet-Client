@@ -37,7 +37,6 @@ const ProfilePage = () => {
     }
 
 
-    console.log("así me llega el user a la profile page", user)
     useEffect(() => {
         loadUserDetails()
         loadUserPosts()

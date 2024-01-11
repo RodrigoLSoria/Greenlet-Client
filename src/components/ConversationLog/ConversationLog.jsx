@@ -17,6 +17,8 @@ const ConversationLog = ({ messages, conversationId }) => {
         setVisibleMessages([...messages].reverse())
     }, [messages])
 
+
+
     useEffect(() => {
         const handleNewMessage = (newMessage) => {
             if (newMessage.conversation === conversationId) {

@@ -6,7 +6,7 @@ import { Row, Col } from "react-bootstrap"
 
 const UserExchanges = ({ exchanges }) => {
 
-
+    console.log(exchanges)
     return (
         < div className='user-badges' >
             <h4>My pending exchanges</h4>
@@ -16,7 +16,7 @@ const UserExchanges = ({ exchanges }) => {
                     <Row>
                         {exchanges.map((exchange) => (
                             <Col key={exchange._id} xs={4} sm={4} md={3} xl={3}>
-                                <ExchangeCard key={exchange._id} previousExchangeData={exchange} onExchangeUpdate={onExchangeUpdate} />
+                                <ExchangeCard key={exchange._id} exchangeData={exchange} />
                             </Col>
                         ))}
                     </Row>

@@ -44,7 +44,7 @@ export const PLANT_TYPE_LOGOS = {
     "Fruit Trees": "https://res.cloudinary.com/depxadgb3/image/upload/v1703202368/IMG_6737-1_rvodym.png",
     Ivies: "https://res.cloudinary.com/depxadgb3/image/upload/v1703202374/Foggy_y44l8a.png",
     Succulents: "https://res.cloudinary.com/depxadgb3/image/upload/v1703202373/IMG_6732-1ggb_b4rwb2.png",
-    "Shade Plants": "",
+    "Shade Plants": "https://res.cloudinary.com/depxadgb3/image/upload/v1704996057/IMG_6845_cg08pk.png",
     "Indoor Plants": "https://res.cloudinary.com/depxadgb3/image/upload/v1703202374/Ee_gfctcx.png",
     "Aquatic Plants": "https://res.cloudinary.com/depxadgb3/image/upload/v1703202372/IMG_6728-1_siwfaq.png",
     "Medicinal Plants": "https://res.cloudinary.com/depxadgb3/image/upload/v1703202372/IMG_6709-1hth_np8kdv.png",

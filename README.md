@@ -7,6 +7,9 @@ Personal project developed with HTML | CSS | ReactJS | ExpressJS | MongoDB | Nod
 -User: rodrigo@greenlet.com
 -Password: 1234
 
+-User: marta93@greenlet.com
+-Password: 1234
+
 
 Deployed URL : https://greenlet.netlify.app/
 

@@ -20,6 +20,8 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 import { useLoadScript } from "@react-google-maps/api"
 import Maps from "../Maps/Maps"
 import LocationOnIcon from '@mui/icons-material/LocationOn'
+import LogoutIcon from '@mui/icons-material/Logout'
+import { useRef } from "react"
 
 const Navigation = () => {
 
@@ -36,6 +38,8 @@ const Navigation = () => {
     const [showLocationModal, setShowLocationModal] = useState(false)
     const [center, setCenter] = useState({ lat: 0, lng: 0 })
     const [radius, setRadius] = useState(5000)
+    const [showUserOptions, setShowUserOptions] = useState(false)
+
 
     const { showLoginModal, setShowLoginModal } = useLoginModalContext()
     const { showSignupModal, setShowSignupModal } = useSignupModalContext()
@@ -48,9 +52,24 @@ const Navigation = () => {
     const shouldShowFooterNavbar = windowWidth < 1000
     const isFeedPage = pageLocation.pathname === '/'
 
+    const userOptionsRef = useRef(null);
 
+    useEffect(() => {
+        // Function to handle clicking outside of the dropdown to close it
+        const handleClickOutside = (event) => {
+            if (userOptionsRef.current && !userOptionsRef.current.contains(event.target)) {
+                setShowUserOptions(false);
+            }
+        };
 
+        // Add event listener when the component mounts
+        document.addEventListener("mousedown", handleClickOutside);
 
+        // Remove event listener on cleanup
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [userOptionsRef]);
 
     const handleLogout = () => {
         logout()
@@ -226,7 +245,11 @@ const Navigation = () => {
         loadFeed();
         setRadius(5000);
     }
-    console.log("selectedPlantTypes.length > 0 ", selectedPlantTypes.length > 0)
+
+    const toggleUserOptions = () => {
+        setShowUserOptions(!showUserOptions);
+    }
+
     return (
         <div>
             <nav className="navbar">
@@ -246,12 +269,16 @@ const Navigation = () => {
                         placeholder='Search in all categories...'
                         className="form-control search-input"
                     />
+
+
                     <div className="topRightItems">
 
                         {!shouldShowFooterNavbar && (
                             <div className="navbar-items" id="navbarItems">
                                 {loggedUser ? (
                                     <>
+                                        <Link className="nav-link upload-plant-button" to="#"
+                                            onClick={() => setShowNewPostFormModal(true)}>Upload Plant</Link>
                                         <Link to={`/profile/${loggedUser?._id}`} className="footer-icon">
                                             <SentimentSatisfiedAltIcon />
                                         </Link>
@@ -259,25 +286,42 @@ const Navigation = () => {
                                             <EmailIcon />
                                         </Link>
                                         <Link to={`/UserFavourites/${loggedUser._id}`} className='nav-link'><FavoriteBorderIcon /></Link>
-                                        <Link className="nav-link upload-plant-button" to="#"
-                                            onClick={() => setShowNewPostFormModal(true)}>Upload Plant</Link>
-                                        <span className='nav-link' onClick={handleLogout}>Logout</span>
+
                                     </>
                                 ) : (
                                     <>
+                                        <Link className="nav-link upload-plant-button" to="#"
+                                            onClick={() => setShowLoginModal(true)}>Upload Plant</Link>
                                         <Link onClick={() => setShowLoginModal(true)} className='nav-link'> <SentimentSatisfiedAltIcon /></Link>
                                         <EmailIcon onClick={() => setShowLoginModal(true)} />
                                         <Link onClick={() => setShowLoginModal(true)} className='nav-link'><FavoriteBorderIcon /></Link>
-                                        <Link className="nav-link upload-plant-button" to="#"
-                                            onClick={() => setShowLoginModal(true)}>Upload Plant</Link>
-                                        <Link to="#" onClick={() => setShowLoginModal(true)} className="nav-link">Login</Link>
+
 
                                     </>
 
                                 )}
+
                             </div>
                         )}
 
+
+                    </div>
+                    <div className="user-options" ref={userOptionsRef}>
+                        <button onClick={toggleUserOptions} className='logoutIcon'>
+                            <LogoutIcon />
+                        </button>
+                        {showUserOptions && (
+                            <div className="user-options-dropdown">
+                                {loggedUser ? (
+                                    <div onClick={handleLogout} className="user-option">Logout</div>
+                                ) : (
+                                    <>
+                                        <div onClick={() => setShowLoginModal(true)} className="user-option">Login</div>
+                                        <div onClick={() => setShowSignupModal(true)} className="user-option">Signup</div>
+                                    </>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
                 {isFeedPage && (
