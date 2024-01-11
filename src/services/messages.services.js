@@ -18,7 +18,6 @@ class MessageService {
 
 
     sendMessage(messageData) {
-        console.log("sendMessage service", messageData)
         return this.api.post('/sendMessage', messageData)
     }
 

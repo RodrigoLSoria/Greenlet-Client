@@ -21,7 +21,6 @@ class ConversationService {
     }
 
     getOrCreateConversation(user1_id, user2_id, post_id) {
-        console.log("getOrCreateConversation", user1_id, user2_id, post_id)
         return this.api.get(`/findOrCreate/${user1_id}/${user2_id}/${post_id}`)
     }
 
