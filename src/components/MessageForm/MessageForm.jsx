@@ -47,7 +47,6 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
                 conversation: conversationId,
             }
 
-            console.log("messagedata", messageData)
 
             const { data: newMessage } = await
                 messageService
@@ -79,12 +78,10 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
     const handleConfirmExchange = async () => {
         setIsButtonDisabled(true);
 
-        // Define the receiver as the other participant in the conversation
         const receiverId = selectedConversation.participants.find(p => p !== loggedUser._id);
 
         console.log("este es el receiverid", receiverId)
 
-        // Create the exchange data
         const exchangeData = {
             giver: loggedUser._id,
             receiver: receiverId,
@@ -92,7 +89,6 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
         };
 
         try {
-            // Save the exchange in the backend
             const response = await exchangeService.saveExchange(exchangeData);
             console.log("Exchange saved!", response.data);
         } catch (error) {
@@ -114,7 +110,7 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
                         </button>
                     </div>
                 )}
-                {showCancelExchangeButton && (
+                {/* {showCancelExchangeButton && (
                     <div className="message-form-button">
                         <button type="button" onClick={handleCancelExchange}
                             className="cancel-button"
@@ -122,7 +118,7 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
                             Cancel Exchange/Gift
                         </button>
                     </div>
-                )}
+                )} */}
                 <div className="input-group">
                     <div className="message-input-container">
                         <input
