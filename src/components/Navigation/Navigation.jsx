@@ -172,8 +172,7 @@ const Navigation = () => {
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     })
 
-    if (loadError) return "Error loading maps"
-    if (!isLoaded) return "Loading Maps"
+
 
     const handleInputChange = (e) => {
         setSearchQuery(e.target.value)
@@ -281,9 +280,8 @@ const Navigation = () => {
 
                     </div>
                 </div>
-                <div className="navbar-container-bottom">
-
-                    {isFeedPage && (
+                {isFeedPage && (
+                    <div className="navbar-container-bottom">
                         <div className="filtering-items">
                             <div className="custom-dropdown">
                                 <button
@@ -378,8 +376,8 @@ const Navigation = () => {
                                 </button>
                             </div>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </nav>
 
             <div className="SignupModal">
