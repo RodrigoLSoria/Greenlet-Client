@@ -1,5 +1,6 @@
 import './MessageForm.css'
 import React, { useContext, useState } from "react"
+import Confetti from 'react-confetti'
 import messageService from "../../services/messages.services"
 import { AuthContext } from "../../contexts/auth.context"
 import conversationService from "../../services/conversations.services"
@@ -7,18 +8,22 @@ import { useMessageModalContext } from '../../contexts/messageModal.context'
 import { SocketContext } from '../../contexts/socket.context'
 import exchangeService from '../../services/exchange.services'
 import SendIcon from '@mui/icons-material/Send'
-
-
+import { Modal, Button } from 'react-bootstrap'
+import { useConfetti } from '../../contexts/confetti.context'
+import { Link } from 'react-router-dom'
 
 const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, updateConversationExchangeStatus }) => {
 
     const { loggedUser } = useContext(AuthContext)
     const { socket } = useContext(SocketContext)
     const { setShowMessageModal } = useMessageModalContext()
+    const { setShowConfetti } = useConfetti();
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(false)
     const [content, setContent] = useState('')
     const [isExchangeConfirmed, setIsExchangeConfirmed] = useState(false)
+    const [showModal, setShowModal] = useState(false)
+
 
 
     const isOwner = loggedUser?._id === selectedConversation?.post.owner
@@ -27,7 +32,7 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
     const showCancelExchangeButton = selectedConversation?.exchangeStatus === 'pending' && isOwner
 
 
-
+    console.log("lets check the selectedconversation data", selectedConversation)
 
 
     const handleMessageSubmit = async (e) => {
@@ -82,7 +87,6 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
 
         const receiverId = selectedConversation.participants.find(p => p !== loggedUser._id)
 
-        console.log("este es el receiverid", receiverId)
 
         const exchangeData = {
             giver: loggedUser._id,
@@ -94,6 +98,9 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
             const response = await exchangeService.saveExchange(exchangeData)
             updateConversationExchangeStatus(selectedConversation._id, 'pending')
             setIsExchangeConfirmed(true)
+            setShowModal(true)
+            setShowConfetti(true)
+            setTimeout(() => setShowConfetti(false), 8000)
 
         } catch (error) {
         } finally {
@@ -102,18 +109,19 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
     }
 
     return (
-        <div className="MessageForm">
+        <>
+            <div className="MessageForm">
 
-            <form onSubmit={handleMessageSubmit} className="message-form-grid">
-                {showConfirmExchangeButton && !isExchangeConfirmed && (
-                    <div className="message-form-button">
-                        <button type="button" onClick={handleConfirmExchange}
-                            disabled={isButtonDisabled}>
-                            Confirm Exchange/Gift
-                        </button>
-                    </div>
-                )}
-                {/* {showCancelExchangeButton && (
+                <form onSubmit={handleMessageSubmit} className="message-form-grid">
+                    {showConfirmExchangeButton && !isExchangeConfirmed && (
+                        <div className="message-form-button">
+                            <button type="button" onClick={handleConfirmExchange}
+                                disabled={isButtonDisabled}>
+                                Confirm Exchange/Gift
+                            </button>
+                        </div>
+                    )}
+                    {/* {showCancelExchangeButton && (
                     <div className="message-form-button">
                         <button type="button" onClick={handleCancelExchange}
                             className="cancel-button"
@@ -122,25 +130,46 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
                         </button>
                     </div>
                 )} */}
-                <div className="input-group">
-                    <div className="message-input-container">
-                        <input
-                            type="text"
-                            className="form-control message-textarea"
-                            name="content"
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            onKeyPress={handleTextareaKeyPress}
-                            placeholder="Type your message..."
-                        />
+                    <div className="input-group">
+                        <div className="message-input-container">
+                            <input
+                                type="text"
+                                className="form-control message-textarea"
+                                name="content"
+                                value={content}
+                                onChange={(e) => setContent(e.target.value)}
+                                onKeyPress={handleTextareaKeyPress}
+                                placeholder="Type your message..."
+                            />
+                        </div>
+                        <div className="send-button" onClick={handleMessageSubmit}
+                            style={{ cursor: 'pointer' }}>
+                            <SendIcon />
+                        </div>
                     </div>
-                    <div className="send-button" onClick={handleMessageSubmit}
-                        style={{ cursor: 'pointer' }}>
-                        <SendIcon />
-                    </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+
+
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Exchange Confirmed!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Awesome! You've set up an exchange for <strong>"{selectedConversation?.post?.title}"</strong>
+                    with <strong>{selectedConversation?.participants.find(p => p._id !== loggedUser._id)?.username}</strong>.
+                    Now it's time to deliver the plant and make someone's day! Once you've done so,
+                    swing by <a href={`/profile/${loggedUser._id}?section=exchanges`}>your Exchanges</a>
+                    to wrap things up and rate your swap!
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
     )
 }
 export default MessageForm

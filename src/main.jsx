@@ -10,6 +10,8 @@ import { MessageModalProvider } from './contexts/messageModal.context'
 import { SocketProvider } from './contexts/socket.context'
 import { LocationProvider } from './contexts/location.context'
 import { PostsProvider } from './contexts/posts.context'
+import { ConfettiProvider } from './contexts/confetti.context'
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Router>
@@ -20,9 +22,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <SignupModalProvider>
               <LoginModalProvider>
                 <MessageModalProvider>
-                  <React.StrictMode>
-                    <App />
-                  </React.StrictMode>
+                  <ConfettiProvider>
+                    <React.StrictMode>
+                      <App />
+                    </React.StrictMode>
+                  </ConfettiProvider>
                 </MessageModalProvider>
               </LoginModalProvider>
             </SignupModalProvider>

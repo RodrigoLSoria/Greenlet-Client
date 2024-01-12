@@ -57,6 +57,6 @@
 }
 
 .conversation-item.closed {
-    opacity: 0.8;
-    background-color: rgba(128, 128, 128, 0.2) !important;
+    opacity: 0.6;
+    background-color: #d3d3d3;
 }

@@ -37,6 +37,10 @@ class UserService {
         return this.api.get(`/Favorites/${user_id}`)
     }
 
+    addRating(ratedUserId, ratingData) {
+        console.log("esto al service", ratingData)
+        return this.api.put(`/addRating/${ratedUserId}`, ratingData)
+    }
 
 }
 

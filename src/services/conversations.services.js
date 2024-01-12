@@ -17,6 +17,7 @@ class ConversationService {
     }
 
     getAllConversationsForUser(user_id) {
+        console.log("el user id", user_id)
         return this.api.get(`/getAllConversationsForUser/${user_id}`)
     }
 

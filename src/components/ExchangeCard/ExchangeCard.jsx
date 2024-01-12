@@ -1,4 +1,3 @@
-import { Button, Modal, Card, Col } from "react-bootstrap"
 import './ExchangeCard.css'
 import { useContext, useState } from "react"
 import { AuthContext } from "../../contexts/auth.context"
@@ -6,17 +5,14 @@ import formatDate from '../../utils/setPostDate'
 import badgeService from "../../services/badge.services"
 import exchangeService from "../../services/exchange.services"
 import postsService from "../../services/posts.services"
-import RatingForm from "../RatingForm/RatingForm"
 
-const ExchangeCard = ({ exchangeData }) => {
+const ExchangeCard = ({ exchangeData, onExchangeUpdate, handleShowRatingModal }) => {
 
     const { loggedUser } = useContext(AuthContext)
-    const [status, setStatus] = useState(exchangeData.status)
     const [isDisabled, setIsDisabled] = useState(false)
-    const [showRatingModal, setShowRatingModal] = useState(false)
-
 
     const handleBadgeUpdate = () => {
+        handleShowRatingModal(exchangeData)
         const payload = {
             user_id: loggedUser._id,
             plantType: exchangeData.givenPost.plantType,
@@ -53,8 +49,7 @@ const ExchangeCard = ({ exchangeData }) => {
                 postsService.closePost(exchangeData.givenPost._id)])
             })
             .then(() => {
-                if (onExchangeUpdate) onExchangeUpdate()
-                setStatus('closed')
+                onExchangeUpdate(exchangeData._id);
                 setIsDisabled(true)
             })
             .catch(error => {
@@ -63,44 +58,25 @@ const ExchangeCard = ({ exchangeData }) => {
     }
 
     return (
-        <>
-            <Col lg={{ span: 3 }} md={{ span: 6 }}>
-                <article>
-                    <Card style={{
-                        width: '18rem', opacity: status === 'closed' ? 0.6 : 1,
-                        pointerEvents: status === 'closed' ? 'none' : 'auto'
-                    }}>
-                        <Card.Img variant="top" src={exchangeData.givenPost.image} />
-                        <Card.Body>
-                            <Card.Title>{exchangeData.givenPost.title}</Card.Title>
-                            <Card.Text>STATUS: {exchangeData.status}</Card.Text>
-                            <Card.Text>Type: {exchangeData.givenPost.plantType}</Card.Text>
-                            <Card.Text>Posted: {formatDate(exchangeData.givenPost.createdAt)}</Card.Text>
-                            <hr />
-                            <p>Did you complete the exchange?:</p>
-                            <Button onClick={() => { handleBadgeUpdate(); setShowRatingModal(true) }} className="btn-btn-dark" disabled={isDisabled}>
-                                Exchange completed
-                            </Button>
-                        </Card.Body>
-                    </Card>
-                </article>
-            </Col>
-
-            <div className="RatingModal">
-                <Modal show={showRatingModal} onHide={() => setShowRatingModal(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>You succesfully completed a plant exchange!</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        Now that the transaction is completed you can rate the exchange here:
-                        <RatingForm
-                            setShowRatingModal={setShowRatingModal}
-                            exchangeData={exchangeData}
-                        />
-                    </Modal.Body>
-                </Modal>
+        <div className="exchange-card">
+            <div className="exchange-image-container">
+                <img className="exchange-image"
+                    src={exchangeData.givenPost.image}
+                    alt={exchangeData.givenPost.title} />
             </div>
-        </>
+            <div className="exchange-info">
+                <p className="exchange-title">{exchangeData.givenPost.title}</p>
+                <p className="exchange-plantType">Posted: {formatDate(exchangeData.givenPost.createdAt)}</p>
+                <p className="exchange-plantType">{exchangeData.givenPost.plantType}</p>
+                <hr />
+                <p>Did you complete the exchange?</p>
+                <button onClick={handleBadgeUpdate}
+                    disabled={isDisabled}
+                    className="exchange-button">
+                    Yes!
+                </button>
+            </div>
+        </div>
     )
 }
 

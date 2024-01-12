@@ -12,7 +12,7 @@ const RatingForm = ({ setShowRatingModal, exchangeData }) => {
     const [ratingValue, setRatingValue] = useState(0)
     const [comment, setComment] = useState('')
     const { loggedUser } = useContext(AuthContext)
-    const ratedUserId = exchangeData.givenPost.owner._id
+    const ratedUserId = exchangeData.receiver._id
 
     console.log("esto es lo que me llega por exchangedata", exchangeData)
     //te quedas aqui, comprobando si el echangaedata owner id es undefinded o no y porque te da este error en consola = 
@@ -29,11 +29,9 @@ const RatingForm = ({ setShowRatingModal, exchangeData }) => {
     }
 
     const submitRating = (ratedUserId, ratingData) => {
-        userService.editProfile(ratedUserId, { $push: { ratings: ratingData } })
+        userService.addRating(ratedUserId, ratingData)
             .then(response => {
                 console.log('Rating submitted:', response.data)
-                // TODO manage the rating submission.
-                // For example, update some state, 
                 setShowRatingModal(false)
             })
             .catch(error => {

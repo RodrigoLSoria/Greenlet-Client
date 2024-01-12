@@ -16,14 +16,16 @@ const ChatItem = ({ conversationData, onClick }) => {
     const handleMouseEnter = () => { setHoveredConversation(true) }
     const handleMouseLeave = () => { setHoveredConversation(false) }
 
-    useEffect(() => {
-    }, [conversationData.exchangeStatus])
-
-
     const exchangeStatus = conversationData.exchangeStatus
 
     const otherUser = conversationData.participants.find(participant =>
         participant._id !== loggedUser?._id)
+
+
+    useEffect(() => {
+    }, [conversationData.exchangeStatus])
+
+
 
     const handleDeleteConversation = async () => {
         try {
@@ -35,12 +37,15 @@ const ChatItem = ({ conversationData, onClick }) => {
 
     let statusChipClass = ""
     let statusChipText = ""
+    let itemClass = 'conversation-item'
+
     if (exchangeStatus === 'pending') {
-        statusChipClass = "pending-chip"
-        statusChipText = "PENDING"
+        statusChipClass = 'pending-chip'
+        statusChipText = 'PENDING'
     } else if (exchangeStatus === 'closed') {
-        statusChipClass = "closed-chip"
-        statusChipText = "CLOSED"
+        statusChipClass = 'closed-chip'
+        statusChipText = 'CLOSED'
+        itemClass += ' closed'
     }
 
     return (
@@ -49,7 +54,7 @@ const ChatItem = ({ conversationData, onClick }) => {
         ) : (
             <div role="gridcell"
                 aria-colindex="2"
-                className={`conversation-item ${HoveredConversation ? 'hovered' : ''}`}
+                className={`${itemClass}`}
                 onClick={() => onClick(conversationData)}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
