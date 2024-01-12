@@ -7,12 +7,18 @@ import React, { useEffect, useState, useContext } from 'react'
 import conversationService from "../../services/conversations.services"
 import { Modal } from "react-bootstrap"
 
-const Inbox = ({ conversations }) => {
+const Inbox = ({ conversations, setConversations }) => {
     const [selectedConversation, setSelectedConversation] = useState(null)
-    const [showExchangeCompleteModal, setShowExchangeCompleteModal] = useState(false);
+    const [showExchangeCompleteModal, setShowExchangeCompleteModal] = useState(false)
+
+    const updateConversationExchangeStatus = (conversationId, newStatus) => {
+        const updatedConversations = conversations.map(conversation =>
+            conversation._id === conversationId ? { ...conversation, exchangeStatus: newStatus } : conversation
+        )
+        setConversations(updatedConversations)
+    }
 
     const { socket } = useContext(SocketContext)
-
 
     useEffect(() => {
         if (socket) {
@@ -34,20 +40,20 @@ const Inbox = ({ conversations }) => {
     }
 
     const handleConversationClick = (conversation) => {
-        setSelectedConversation(null); // Clear previous conversation
+        setSelectedConversation(null)
         if (conversation.exchangeStatus === 'closed') {
-            setShowExchangeCompleteModal(true);
+            setShowExchangeCompleteModal(true)
         } else {
-            setShowExchangeCompleteModal(false);
+            setShowExchangeCompleteModal(false)
         }
         fetchMessagesForConversation(conversation._id)
             .then(messages => {
                 setSelectedConversation({
                     ...conversation,
                     messages: messages,
-                });
+                })
             })
-            .catch(err => console.error('Error fetching messages:', err));
+            .catch(err => console.error('Error fetching messages:', err))
     }
 
     const fetchMessagesForConversation = async (conversationId) => {
@@ -81,7 +87,9 @@ const Inbox = ({ conversations }) => {
             </div>
             <div className="chat-panel">
                 {selectedConversation && (
-                    <ConversationDisplay selectedConversation={selectedConversation} socket={socket} />
+                    <ConversationDisplay selectedConversation={selectedConversation}
+                        updateConversationExchangeStatus={updateConversationExchangeStatus}
+                    />
                 )}
 
                 {!selectedConversation && !showExchangeCompleteModal && (

@@ -26,7 +26,7 @@ const InboxPage = () => {
 
     return (
         <div className="inboxPage">
-            <Inbox conversations={conversations} />
+            <Inbox conversations={conversations} setConversations={setConversations} />
         </div>
     )
 }

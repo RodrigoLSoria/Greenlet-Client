@@ -2,7 +2,7 @@ import { Avatar } from '@mui/material'
 import { Delete as DeleteIcon } from '@mui/icons-material'
 import './ChatItem.css'
 import Loader from '../Loader/Loader'
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '../../contexts/auth.context'
 import conversationService from '../../services/conversations.services'
 
@@ -16,6 +16,8 @@ const ChatItem = ({ conversationData, onClick }) => {
     const handleMouseEnter = () => { setHoveredConversation(true) }
     const handleMouseLeave = () => { setHoveredConversation(false) }
 
+    useEffect(() => {
+    }, [conversationData.exchangeStatus])
 
 
     const exchangeStatus = conversationData.exchangeStatus
@@ -31,14 +33,14 @@ const ChatItem = ({ conversationData, onClick }) => {
         }
     }
 
-    let statusChipClass = "";
-    let statusChipText = "";
+    let statusChipClass = ""
+    let statusChipText = ""
     if (exchangeStatus === 'pending') {
-        statusChipClass = "pending-chip";
-        statusChipText = "PENDING";
+        statusChipClass = "pending-chip"
+        statusChipText = "PENDING"
     } else if (exchangeStatus === 'closed') {
-        statusChipClass = "closed-chip";
-        statusChipText = "CLOSED";
+        statusChipClass = "closed-chip"
+        statusChipText = "CLOSED"
     }
 
     return (

@@ -10,7 +10,7 @@ import SendIcon from '@mui/icons-material/Send'
 
 
 
-const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }) => {
+const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, updateConversationExchangeStatus }) => {
 
     const { loggedUser } = useContext(AuthContext)
     const { socket } = useContext(SocketContext)
@@ -18,6 +18,8 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(false)
     const [content, setContent] = useState('')
+    const [isExchangeConfirmed, setIsExchangeConfirmed] = useState(false)
+
 
     const isOwner = loggedUser?._id === selectedConversation?.post.owner
     const post = selectedConversation ? selectedConversation?.post._id : postId
@@ -76,9 +78,9 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
 
 
     const handleConfirmExchange = async () => {
-        setIsButtonDisabled(true);
+        setIsButtonDisabled(true)
 
-        const receiverId = selectedConversation.participants.find(p => p !== loggedUser._id);
+        const receiverId = selectedConversation.participants.find(p => p !== loggedUser._id)
 
         console.log("este es el receiverid", receiverId)
 
@@ -86,23 +88,24 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage }
             giver: loggedUser._id,
             receiver: receiverId,
             givenPost: post,
-        };
+        }
 
         try {
-            const response = await exchangeService.saveExchange(exchangeData);
-            console.log("Exchange saved!", response.data);
+            const response = await exchangeService.saveExchange(exchangeData)
+            updateConversationExchangeStatus(selectedConversation._id, 'pending')
+            setIsExchangeConfirmed(true)
+
         } catch (error) {
-            console.error("Failed to save exchange!", error);
         } finally {
-            setIsButtonDisabled(false);
+            setIsButtonDisabled(false)
         }
-    };
+    }
 
     return (
         <div className="MessageForm">
 
             <form onSubmit={handleMessageSubmit} className="message-form-grid">
-                {showConfirmExchangeButton && (
+                {showConfirmExchangeButton && !isExchangeConfirmed && (
                     <div className="message-form-button">
                         <button type="button" onClick={handleConfirmExchange}
                             disabled={isButtonDisabled}>
