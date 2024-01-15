@@ -1,5 +1,5 @@
 import './MessageForm.css'
-import React, { useContext, useState } from "react"
+import React, { useContext, useState, useEffect } from "react"
 import Confetti from 'react-confetti'
 import messageService from "../../services/messages.services"
 import { AuthContext } from "../../contexts/auth.context"
@@ -13,16 +13,16 @@ import { useConfetti } from '../../contexts/confetti.context'
 import { Link } from 'react-router-dom'
 
 const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, updateConversationExchangeStatus }) => {
-
     const { loggedUser } = useContext(AuthContext)
     const { socket } = useContext(SocketContext)
     const { setShowMessageModal } = useMessageModalContext()
-    const { setShowConfetti } = useConfetti();
+    const { setShowConfetti } = useConfetti()
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(false)
     const [content, setContent] = useState('')
     const [isExchangeConfirmed, setIsExchangeConfirmed] = useState(false)
     const [showModal, setShowModal] = useState(false)
+    const [exchangeId, setExchangeId] = useState(null)
 
 
 
@@ -30,6 +30,8 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
     const post = selectedConversation ? selectedConversation?.post._id : postId
     const showConfirmExchangeButton = selectedConversation?.exchangeStatus === 'none' && isOwner
     const showCancelExchangeButton = selectedConversation?.exchangeStatus === 'pending' && isOwner
+
+
 
     const handleMessageSubmit = async (e) => {
         e.preventDefault()
@@ -92,6 +94,7 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
 
         try {
             const response = await exchangeService.saveExchange(exchangeData)
+            setExchangeId(response.data._id)
             updateConversationExchangeStatus(selectedConversation._id, 'pending')
             setIsExchangeConfirmed(true)
             setShowModal(true)
@@ -104,6 +107,27 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
         }
     }
 
+    const handleCancelExchange = async () => {
+        if (!exchangeId) {
+            console.error("Exchange ID is not set.");
+            return;
+        }
+
+        setIsButtonDisabled(true);
+
+        try {
+            await exchangeService.updateExchange(exchangeId, 'none');
+            updateConversationExchangeStatus(selectedConversation._id, 'none');
+        } catch (error) {
+            console.error('Error canceling the exchange:', error);
+        } finally {
+            setIsButtonDisabled(false);
+        }
+    }
+
+    useEffect(() => {
+        console.log("Current exchangeId:", exchangeId);
+    }, [exchangeId])
     return (
         <>
             <div className="MessageForm">
@@ -118,14 +142,14 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
                         </div>
                     )}
                     {/* {showCancelExchangeButton && (
-                    <div className="message-form-button">
-                        <button type="button" onClick={handleCancelExchange}
-                            className="cancel-button"
-                            disabled={isButtonDisabled}>
-                            Cancel Exchange/Gift
-                        </button>
-                    </div>
-                )} */}
+                        <div className="message-form-button">
+                            <button type="button" onClick={handleCancelExchange}
+                                className="cancel-button"
+                                disabled={isButtonDisabled}>
+                                Cancel Exchange/Gift
+                            </button>
+                        </div>
+                    )} */}
                     <div className="input-group">
                         <div className="message-input-container">
                             <input
@@ -136,6 +160,7 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
                                 onChange={(e) => setContent(e.target.value)}
                                 onKeyPress={handleTextareaKeyPress}
                                 placeholder="Type your message..."
+                                autoComplete="off"
                             />
                         </div>
                         <div className="send-button" onClick={handleMessageSubmit}

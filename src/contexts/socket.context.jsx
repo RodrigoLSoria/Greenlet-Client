@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 
 export const SocketContext = createContext()
 
-const SOCKET_SERVER_URL = 'https://server-greenlet.fly.dev'
+const SOCKET_SERVER_URL = 'http://localhost:5005' || 'https://server-greenlet.fly.dev'
 
 export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null)
@@ -23,7 +23,6 @@ export const SocketProvider = ({ children }) => {
     }, [])
 
     const receiveMessage = (messageData) => {
-        console.log("receiveMessage in the socket context", messageData)
         setMessages((prevMessages) => [...prevMessages, messageData])
     }
 

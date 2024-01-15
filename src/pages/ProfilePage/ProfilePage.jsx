@@ -101,7 +101,6 @@ const ProfilePage = () => {
     }
 
     const loadPendingExchanges = () => {
-        console.log("loadPendingExchanges", pendingExchanges)
         loadExchangesByStatus('pending')
     }
 

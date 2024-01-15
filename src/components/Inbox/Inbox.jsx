@@ -22,28 +22,23 @@ const Inbox = ({ conversations, setConversations }) => {
     const { socket } = useContext(SocketContext)
 
     useEffect(() => {
-        const handleNewMessage = (newMessage) => {
-            setConversations(prevConversations => {
-                return prevConversations.map(convo => {
-                    if (convo._id === newMessage.conversation) {
-                        return { ...convo, messages: [...convo.messages, newMessage] }
-                    }
-                    return convo
-                })
-            })
-        }
-
         if (socket) {
-            socket.on("newMessage", handleNewMessage)
+            socket.on("newMessage", handleMessage)
         }
-
         return () => {
-            if (socket) {
-                socket.off("newMessage", handleNewMessage)
-            }
+            socket && socket.off('newMessage', handleMessage)
         }
-    }, [socket, setConversations])
+    }, [socket,])
 
+
+    const handleMessage = (newMessage) => {
+        if (selectedConversation && selectedConversation._id === newMessage.conversation) {
+            setSelectedConversation(prevConversation => ({
+                ...prevConversation,
+                messages: [...prevConversation.messages, newMessage],
+            }))
+        }
+    }
 
     const handleConversationClick = (conversation) => {
         setSelectedConversation(null)
