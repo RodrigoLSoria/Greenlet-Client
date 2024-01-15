@@ -8,6 +8,7 @@ import conversationService from "../../services/conversations.services"
 import { Modal } from "react-bootstrap"
 
 const Inbox = ({ conversations, setConversations }) => {
+
     const [selectedConversation, setSelectedConversation] = useState(null)
     const [showExchangeCompleteModal, setShowExchangeCompleteModal] = useState(false)
 
