@@ -19,6 +19,7 @@ export const SocketProvider = ({ children }) => {
     }, [])
 
     const receiveMessage = (messageData) => {
+        console.log("receiveMessage in the socket context", messageData)
         setMessages((prevMessages) => [...prevMessages, messageData])
     }
 

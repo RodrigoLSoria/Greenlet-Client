@@ -26,15 +26,11 @@ const ConversationLog = ({ messages, conversationId }) => {
                 setVisibleMessages(prevMessages => [newMessage, ...prevMessages])
             }
         }
+        socket.on('newMessage', handleNewMessage)
 
-        if (socket) {
-            socket.on('newMessage', handleNewMessage)
-        }
 
         return () => {
-            if (socket) {
-                socket.off('newMessage', handleNewMessage)
-            }
+            socket.off('newMessage', handleNewMessage)
         }
     }, [socket, conversationId])
 
