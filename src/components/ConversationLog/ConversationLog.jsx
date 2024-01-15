@@ -13,10 +13,12 @@ const ConversationLog = ({ messages, conversationId }) => {
     const containerRef = useRef(null)
     const { socket } = useContext(SocketContext)
 
-    useEffect(() => {
-        setVisibleMessages([...messages].reverse())
-    }, [messages])
 
+    useEffect(() => {
+        if (Array.isArray(messages)) {
+            setVisibleMessages([...messages].reverse())
+        }
+    }, [messages])
 
 
     useEffect(() => {

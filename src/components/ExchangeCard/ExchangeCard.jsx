@@ -45,7 +45,7 @@ const ExchangeCard = ({ exchangeData, onExchangeUpdate, handleShowRatingModal })
                 })
 
                 return Promise.all([...badgePromises,
-                exchangeService.updateExchangeStatus(exchangeData._id, 'closed'),
+                exchangeService.updateExchange(exchangeData._id, 'closed'),
                 postsService.closePost(exchangeData.givenPost._id)])
             })
             .then(() => {

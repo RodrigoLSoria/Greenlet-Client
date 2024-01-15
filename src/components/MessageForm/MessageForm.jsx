@@ -12,7 +12,8 @@ import { Modal, Button } from 'react-bootstrap'
 import { useConfetti } from '../../contexts/confetti.context'
 import { Link } from 'react-router-dom'
 
-const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, updateConversationExchangeStatus }) => {
+const MessageForm = ({ postOwnerId, postId, selectedConversation, setSelectedConversation, onNewMessage, updateConversationExchangeStatus }) => {
+
     const { loggedUser } = useContext(AuthContext)
     const { socket } = useContext(SocketContext)
     const { setShowMessageModal } = useMessageModalContext()
@@ -22,9 +23,6 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
     const [content, setContent] = useState('')
     const [isExchangeConfirmed, setIsExchangeConfirmed] = useState(false)
     const [showModal, setShowModal] = useState(false)
-    const [exchangeId, setExchangeId] = useState(null)
-
-
 
     const isOwner = loggedUser?._id === selectedConversation?.post.owner
     const post = selectedConversation ? selectedConversation?.post._id : postId
@@ -94,7 +92,7 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
 
         try {
             const response = await exchangeService.saveExchange(exchangeData)
-            setExchangeId(response.data._id)
+            setSelectedConversation(response.data.updatedConversation)
             updateConversationExchangeStatus(selectedConversation._id, 'pending')
             setIsExchangeConfirmed(true)
             setShowModal(true)
@@ -108,26 +106,25 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
     }
 
     const handleCancelExchange = async () => {
-        if (!exchangeId) {
-            console.error("Exchange ID is not set.");
-            return;
+        if (!selectedConversation.exchangeId) {
+            console.error("Exchange ID is not set.")
+            return
         }
 
-        setIsButtonDisabled(true);
+        setIsButtonDisabled(true)
 
         try {
-            await exchangeService.updateExchange(exchangeId, 'none');
-            updateConversationExchangeStatus(selectedConversation._id, 'none');
+            await exchangeService.updateExchange(selectedConversation.exchangeId, 'none')
+            updateConversationExchangeStatus(selectedConversation._id, 'none')
         } catch (error) {
-            console.error('Error canceling the exchange:', error);
+            console.error('Error canceling the exchange:', error)
         } finally {
-            setIsButtonDisabled(false);
+            setIsButtonDisabled(false)
         }
     }
 
     useEffect(() => {
-        console.log("Current exchangeId:", exchangeId);
-    }, [exchangeId])
+    }, [selectedConversation])
     return (
         <>
             <div className="MessageForm">
@@ -141,7 +138,7 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
                             </button>
                         </div>
                     )}
-                    {/* {showCancelExchangeButton && (
+                    {showCancelExchangeButton && (
                         <div className="message-form-button">
                             <button type="button" onClick={handleCancelExchange}
                                 className="cancel-button"
@@ -149,7 +146,7 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
                                 Cancel Exchange/Gift
                             </button>
                         </div>
-                    )} */}
+                    )}
                     <div className="input-group">
                         <div className="message-input-container">
                             <input

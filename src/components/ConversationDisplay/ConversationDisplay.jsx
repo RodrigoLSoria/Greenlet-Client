@@ -3,7 +3,7 @@ import MessageForm from '../MessageForm/MessageForm'
 import ConversationLog from '../ConversationLog/ConversationLog'
 
 
-const ConversationDisplay = ({ selectedConversation, updateConversationExchangeStatus
+const ConversationDisplay = ({ selectedConversation, setSelectedConversation, updateConversationExchangeStatus
 }) => {
     return (
         <div className="conversation-display">
@@ -13,6 +13,7 @@ const ConversationDisplay = ({ selectedConversation, updateConversationExchangeS
             <div className="chat-footer">
                 <div className="chat-footer-input">
                     <MessageForm selectedConversation={selectedConversation}
+                        setSelectedConversation={setSelectedConversation}
                         updateConversationExchangeStatus={updateConversationExchangeStatus}
 
                     />

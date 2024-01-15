@@ -22,12 +22,10 @@ class ExchangeService {
     }
 
     updateExchange(exchange_id, exchangeData) {
-        return this.api.put(`/updateExchange/${exchange_id}`, exchangeData)
+        console.log("al service llega esto", exchange_id, exchangeData)
+        return this.api.put(`/updateExchange/${exchange_id}`, { exchangeData })
     }
 
-    updateExchangeStatus(exchange_id, status) {
-        return this.api.put(`/updateExchange/${exchange_id}`, { status })
-    }
 
     getExchangesForUserByStatus(user_id, status) {
         return this.api.get(`/getExchangesForUserByStatus/${user_id}/${status}`)

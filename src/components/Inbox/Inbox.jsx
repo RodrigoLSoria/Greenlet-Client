@@ -89,6 +89,7 @@ const Inbox = ({ conversations, setConversations }) => {
             <div className="chat-panel">
                 {selectedConversation && (
                     <ConversationDisplay selectedConversation={selectedConversation}
+                        setSelectedConversation={setSelectedConversation}
                         updateConversationExchangeStatus={updateConversationExchangeStatus}
                     />
                 )}
