@@ -5,10 +5,6 @@ import ConversationLog from '../ConversationLog/ConversationLog'
 
 const ConversationDisplay = ({ selectedConversation, updateConversationExchangeStatus
 }) => {
-
-    console.log("selected conversation", selectedConversation)
-
-
     return (
         <div className="conversation-display">
             <div className="chat-body">

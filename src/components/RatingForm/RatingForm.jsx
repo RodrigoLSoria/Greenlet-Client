@@ -14,9 +14,6 @@ const RatingForm = ({ setShowRatingModal, exchangeData }) => {
     const { loggedUser } = useContext(AuthContext)
     const ratedUserId = exchangeData.receiver._id
 
-    console.log("esto es lo que me llega por exchangedata", exchangeData)
-    //te quedas aqui, comprobando si el echangaedata owner id es undefinded o no y porque te da este error en consola = 
-
 
     const handleSubmit = () => {
         const ratingData = {

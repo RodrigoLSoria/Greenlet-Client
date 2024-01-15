@@ -36,7 +36,6 @@ const ProfilePage = () => {
     const closedPosts = posts.filter(post => post.isClosed)
 
 
-    // console.log("pendingExchanges", pendingExchanges)
     useEffect(() => {
         loadUserDetails()
         loadUserPosts()
@@ -49,7 +48,6 @@ const ProfilePage = () => {
     }, [])
 
     useEffect(() => {
-        // Update local wishlist when user data is updated
         setWishlist(user.wishlist || [])
     }, [user])
 
@@ -61,7 +59,6 @@ const ProfilePage = () => {
     }, [user])
 
     const [editData, setEditData] = useState({
-        // ... other fields,
         wishlist: user.wishlist || []
     })
 
@@ -80,13 +77,11 @@ const ProfilePage = () => {
     }
 
     const loadExchangesByStatus = (status) => {
-        console.log("este es el status", status, "y este el id del user", user_id)
         exchangeService
-            .getExchangesForUserByStatus(user_id, status) // Updated service function name
+            .getExchangesForUserByStatus(user_id, status)
             .then(({ data }) => {
 
                 if (status === 'pending') {
-                    console.log("hay exchanfes con status pendinggggggg")
                     setPendingExchanges(data)
                 } else if (status === 'closed') {
                     setClosedExchanges(data)

@@ -31,10 +31,6 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, onNewMessage, 
     const showConfirmExchangeButton = selectedConversation?.exchangeStatus === 'none' && isOwner
     const showCancelExchangeButton = selectedConversation?.exchangeStatus === 'pending' && isOwner
 
-
-    console.log("lets check the selectedconversation data", selectedConversation)
-
-
     const handleMessageSubmit = async (e) => {
         e.preventDefault()
 
