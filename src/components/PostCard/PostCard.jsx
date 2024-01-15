@@ -10,7 +10,7 @@ import { useLoginModalContext } from "../../contexts/loginModal.context"
 
 
 
-const PostCard = ({ previousPostData }) => {
+const PostCard = ({ previousPostData, onUnfavorite }) => {
 
     const { loggedUser } = useContext(AuthContext)
     const [isFavorite, setIsFavorite] = useState(false)
@@ -28,6 +28,7 @@ const PostCard = ({ previousPostData }) => {
             .favouritePost(previousPostData?._id, loggedUser?._id)
             .then(() => {
                 setIsFavorite(true)
+
             })
             .catch(err => {
                 console.error('Error favoriting post:', err)
@@ -39,6 +40,9 @@ const PostCard = ({ previousPostData }) => {
             .unfavouritePost(previousPostData?._id, loggedUser._id)
             .then(() => {
                 setIsFavorite(false)
+                if (onUnfavorite) {
+                    onUnfavorite(previousPostData._id);
+                }
             })
             .catch(err => {
                 console.error('Error unfavoriting post:', err)

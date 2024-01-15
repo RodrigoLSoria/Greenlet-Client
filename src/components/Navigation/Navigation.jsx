@@ -10,7 +10,6 @@ import { usePosts } from "../../contexts/posts.context"
 import * as Constants from "../../consts/consts"
 import { Button, Modal } from "react-bootstrap"
 import "./Navigation.css"
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import setGeolocation from '../../utils/setGeolocation'
 import mapsService from "../../services/maps.services"
 import postsService from "../../services/posts.services"
@@ -22,6 +21,8 @@ import Maps from "../Maps/Maps"
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { useRef } from "react"
+import FavoriteIcon from '@mui/icons-material/Favorite'
+
 
 const Navigation = () => {
 
@@ -52,24 +53,21 @@ const Navigation = () => {
     const shouldShowFooterNavbar = windowWidth < 1000
     const isFeedPage = pageLocation.pathname === '/'
 
-    const userOptionsRef = useRef(null);
+    const userOptionsRef = useRef(null)
 
     useEffect(() => {
-        // Function to handle clicking outside of the dropdown to close it
         const handleClickOutside = (event) => {
             if (userOptionsRef.current && !userOptionsRef.current.contains(event.target)) {
-                setShowUserOptions(false);
+                setShowUserOptions(false)
             }
-        };
+        }
 
-        // Add event listener when the component mounts
-        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside)
 
-        // Remove event listener on cleanup
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [userOptionsRef]);
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [userOptionsRef])
 
     const handleLogout = () => {
         logout()
@@ -132,7 +130,7 @@ const Navigation = () => {
         }
 
         if (radius !== null) {
-            queryParams.radius = radius;
+            queryParams.radius = radius
         }
 
         postsService
@@ -238,16 +236,16 @@ const Navigation = () => {
     }
 
     const clearFilters = () => {
-        setSearchQuery('');
-        setSelectedCategories([]);
-        setSelectedPlantTypes([]);
-        setDateFilter('all');
-        loadFeed();
-        setRadius(5000);
+        setSearchQuery('')
+        setSelectedCategories([])
+        setSelectedPlantTypes([])
+        setDateFilter('all')
+        loadFeed()
+        setRadius(5000)
     }
 
     const toggleUserOptions = () => {
-        setShowUserOptions(!showUserOptions);
+        setShowUserOptions(!showUserOptions)
     }
 
     return (
@@ -285,7 +283,10 @@ const Navigation = () => {
                                         <Link to={`/getAllForUser/${loggedUser?._id}`} className="footer-icon">
                                             <EmailIcon />
                                         </Link>
-                                        <Link to={`/UserFavourites/${loggedUser._id}`} className='nav-link'><FavoriteBorderIcon /></Link>
+                                        <Link to={`/saved/${loggedUser?._id}`} className="footer-icon">
+                                            <FavoriteIcon />
+                                        </Link>
+
 
                                     </>
                                 ) : (
@@ -294,7 +295,7 @@ const Navigation = () => {
                                             onClick={() => setShowLoginModal(true)}>Upload Plant</Link>
                                         <Link onClick={() => setShowLoginModal(true)} className='nav-link'> <SentimentSatisfiedAltIcon /></Link>
                                         <EmailIcon onClick={() => setShowLoginModal(true)} />
-                                        <Link onClick={() => setShowLoginModal(true)} className='nav-link'><FavoriteBorderIcon /></Link>
+                                        <Link onClick={() => setShowLoginModal(true)} className='nav-link'><FavoriteIcon /></Link>
 
 
                                     </>

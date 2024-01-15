@@ -23,6 +23,10 @@ const FeedPage = () => {
         }
     }, [searchParams, setPosts])
 
+    useEffect(() => {
+        console.log("FeedPage posts updated:", posts);
+    }, [posts])
+
     return (
         <div className="feedPage">
             <Container>

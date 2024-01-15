@@ -6,6 +6,8 @@ import { AuthContext } from "../../contexts/auth.context"
 import * as Constants from '../../consts/consts'
 import setGeolocation from '../../utils/setGeolocation'
 import "./NewPostForm.css"
+import { usePosts } from '../../contexts/posts.context'
+
 
 
 const NewPostForm = ({ setShowNewPostFormModal, setShowEditModal, previousPostData, onPostUpdate }) => {
@@ -50,6 +52,7 @@ const NewPostForm = ({ setShowNewPostFormModal, setShowEditModal, previousPostDa
 
     const { loggedUser } = useContext(AuthContext)
     const [postData, setPostData] = useState(emptyPostForm)
+    const { setPosts } = usePosts()
     const [loadingImage, setLoadingImage] = useState(false)
     const [showCareInstructions, setShowCareInstructions] = useState(false)
     const [descriptionPlaceholder, setDescriptionPlaceholder] = useState('')
@@ -112,9 +115,11 @@ const NewPostForm = ({ setShowNewPostFormModal, setShowEditModal, previousPostDa
 
         postsService
             .savePost(postData)
-            .then(() => {
+            .then((response) => {
+                setPosts(prevPosts => [...prevPosts, response.data])
                 setShowNewPostFormModal(false)
                 checkForAlertMatches(postData)
+
             })
             .catch(err => console.log(err))
 

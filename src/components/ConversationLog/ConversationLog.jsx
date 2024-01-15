@@ -21,8 +21,9 @@ const ConversationLog = ({ messages, conversationId }) => {
 
     useEffect(() => {
         const handleNewMessage = (newMessage) => {
+            console.log('New message received:', newMessage)
             if (newMessage.conversation === conversationId) {
-                setVisibleMessages(prevMessages => [...prevMessages, newMessage])
+                setVisibleMessages(prevMessages => [newMessage, ...prevMessages])
             }
         }
 

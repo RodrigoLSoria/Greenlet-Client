@@ -16,6 +16,8 @@ import UserProfile from "../../components/UserProfile/UserProfile"
 import SavedPostsPage from "../SavedPostsPage/SavedPostsPage"
 import UserBadges from "../../components/UserBadges/UserBadges"
 import RatingForm from "../../components/RatingForm/RatingForm"
+import { usePosts } from '../../contexts/posts.context'
+
 
 const ProfilePage = () => {
 

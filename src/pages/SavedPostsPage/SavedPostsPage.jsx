@@ -25,6 +25,11 @@ const SavedPostsPage = () => {
                 console.error('Error fetching user favorites:', error)
             })
     }
+    const handleUnfavoritePost = (postId) => {
+        setFavoritePosts(currentFavoritePosts =>
+            currentFavoritePosts.filter(post => post._id !== postId)
+        )
+    }
 
     return (
         <div className='savedPosts-container'>
@@ -40,6 +45,7 @@ const SavedPostsPage = () => {
                             <Col key={elm._id} xs={4} sm={4} md={3} xl={3}>
                                 <PostCard
                                     previousPostData={elm}
+                                    onUnfavorite={handleUnfavoritePost}
                                 />
                             </Col>
                         ))}
