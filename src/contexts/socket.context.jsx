@@ -13,7 +13,7 @@ export const SocketProvider = ({ children }) => {
         const newSocket = io(SOCKET_SERVER_URL)
         setSocket(newSocket)
 
-        newSocket.on('connect', () => {
+        newSocket.on('connection', () => {
             console.log("Socket connected:", newSocket.id);
         })
 
