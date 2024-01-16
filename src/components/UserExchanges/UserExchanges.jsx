@@ -13,7 +13,7 @@ const UserExchanges = ({ exchanges, loadPendingExchanges, handleShowRatingModal 
         loadPendingExchanges()
     }
 
-
+    console.log("los exchanges", exchanges)
     return (
         <div className='userExchanges-container' >
             <h4>My pending exchanges</h4>

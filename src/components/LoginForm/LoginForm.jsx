@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import authService from "../../services/auth.services"
 import { AuthContext } from "../../contexts/auth.context"
 import './LoginForm.css'
+import FormError from "../FormError/FormError"
 
 
 const LoginForm = ({ setShowLoginModal, setShowSignupModal }) => {
@@ -12,7 +13,7 @@ const LoginForm = ({ setShowLoginModal, setShowSignupModal }) => {
         email: '',
         password: ''
     })
-
+    const [errors, setErrors] = useState([])
     const navigate = useNavigate()
 
     const { authenticateUser, storeToken } = useContext(AuthContext)
@@ -34,7 +35,8 @@ const LoginForm = ({ setShowLoginModal, setShowSignupModal }) => {
                 setShowLoginModal(false)
                 navigate('/')
             })
-            .catch(err => console.log(err))
+            .catch(err => setErrors([err.response.data.message]))
+
 
     }
 
@@ -57,6 +59,13 @@ const LoginForm = ({ setShowLoginModal, setShowSignupModal }) => {
                     onChange={handleInputChange}
                     name="password" />
             </Form.Group>
+
+            {
+                errors.length > 0 && (
+                    <FormError>
+                        {errors.map((elm, index) => <p key={index}>{elm}</p>)}
+                    </FormError>
+                )}
 
             <div className="text-center">
                 <Button variant="dark" type="submit" className="my-1">

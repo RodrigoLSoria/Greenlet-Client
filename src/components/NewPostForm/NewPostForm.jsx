@@ -7,7 +7,7 @@ import * as Constants from '../../consts/consts'
 import setGeolocation from '../../utils/setGeolocation'
 import "./NewPostForm.css"
 import { usePosts } from '../../contexts/posts.context'
-
+import FormError from "../FormError/FormError"
 
 
 const NewPostForm = ({ setShowNewPostFormModal, setShowEditModal, previousPostData, onPostUpdate }) => {
@@ -54,6 +54,8 @@ const NewPostForm = ({ setShowNewPostFormModal, setShowEditModal, previousPostDa
     const [postData, setPostData] = useState(emptyPostForm)
     const { setPosts } = usePosts()
     const [loadingImage, setLoadingImage] = useState(false)
+    const [errors, setErrors] = useState([])
+    console.log("the errorrrrrrrs", errors)
     const [showCareInstructions, setShowCareInstructions] = useState(false)
     const [descriptionPlaceholder, setDescriptionPlaceholder] = useState('')
     const [instructionVisibility, setInstructionVisibility] = useState({
@@ -121,7 +123,10 @@ const NewPostForm = ({ setShowNewPostFormModal, setShowEditModal, previousPostDa
                 checkForAlertMatches(postData)
 
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                console.log("the errors", err.response.data.errorMessages)
+                setErrors(err.response.data.errorMessages)
+            })
 
     }
 
@@ -206,7 +211,6 @@ const NewPostForm = ({ setShowNewPostFormModal, setShowEditModal, previousPostDa
         }));
     };
 
-
     return (
         <div className="NewPostForm">
             <Form onSubmit={previousPostData ? handleEditPost : handlePostSubmit}>
@@ -260,6 +264,13 @@ const NewPostForm = ({ setShowNewPostFormModal, setShowEditModal, previousPostDa
 
                     />
                 </Form.Group>
+
+                {errors.length > 0 && (
+                    <FormError>
+                        {errors.map((elm, index) => <p key={index}>{elm}</p>)}
+                    </FormError>
+                )}
+
                 <Form.Group className="mb-3" controlId="addCareInstructions">
                     <Form.Check
                         type="checkbox"
@@ -487,7 +498,7 @@ const NewPostForm = ({ setShowNewPostFormModal, setShowEditModal, previousPostDa
                 )}
 
                 <div className="d-grid">
-                    <Button onClick={() => setShowNewPostFormModal(false)} variant="primary" type="submit">
+                    <Button variant="primary" type="submit">
                         Post
                     </Button>
                 </div>

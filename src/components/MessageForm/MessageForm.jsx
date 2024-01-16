@@ -175,9 +175,9 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, setSelectedCon
                 <Modal.Body>
                     Awesome! You've set up an exchange for <strong>"{selectedConversation?.post?.title}"</strong>
                     with <strong>{selectedConversation?.participants.find(p => p._id !== loggedUser._id)?.username}</strong>.
+
                     Now it's time to deliver the plant and make someone's day! Once you've done so,
-                    swing by <a href={`/profile/${loggedUser._id}?section=exchanges`}>your Exchanges</a>
-                    to wrap things up and rate your swap!
+                    swing by <a href={`/profile/${loggedUser._id}?section=exchanges`}>your Exchanges</a> to wrap things up and rate your swap!
                 </Modal.Body>
 
                 <Modal.Footer>
