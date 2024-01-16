@@ -30,7 +30,6 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, setSelectedCon
     const showCancelExchangeButton = selectedConversation?.exchangeStatus === 'pending' && isOwner
 
 
-
     const handleMessageSubmit = async (e) => {
         e.preventDefault()
 
@@ -123,8 +122,8 @@ const MessageForm = ({ postOwnerId, postId, selectedConversation, setSelectedCon
         }
     }
 
-    useEffect(() => {
-    }, [selectedConversation])
+
+
     return (
         <>
             <div className="MessageForm">

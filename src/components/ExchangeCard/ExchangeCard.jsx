@@ -69,7 +69,7 @@ const ExchangeCard = ({ exchangeData, onExchangeUpdate, handleShowRatingModal })
                 <p className="exchange-plantType">Posted: {formatDate(exchangeData.givenPost.createdAt)}</p>
                 <p className="exchange-plantType">{exchangeData.givenPost.plantType}</p>
                 <hr />
-                <p>Did you complete the exchange?</p>
+                <p className='exchange-plantType'>Did you complete the exchange?</p>
                 <button onClick={handleBadgeUpdate}
                     disabled={isDisabled}
                     className="exchange-button">

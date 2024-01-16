@@ -22,10 +22,6 @@ const ChatItem = ({ conversationData, onClick }) => {
         participant._id !== loggedUser?._id)
 
 
-    useEffect(() => {
-    }, [conversationData.exchangeStatus])
-
-
 
     const handleDeleteConversation = async () => {
         try {
@@ -54,7 +50,7 @@ const ChatItem = ({ conversationData, onClick }) => {
         ) : (
             <div role="gridcell"
                 aria-colindex="2"
-                className={`${itemClass}`}
+                className={`${itemClass} ${HoveredConversation ? 'hovered' : ''}`}
                 onClick={() => onClick(conversationData)}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>

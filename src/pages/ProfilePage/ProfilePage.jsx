@@ -17,6 +17,10 @@ import SavedPostsPage from "../SavedPostsPage/SavedPostsPage"
 import UserBadges from "../../components/UserBadges/UserBadges"
 import RatingForm from "../../components/RatingForm/RatingForm"
 import { usePosts } from '../../contexts/posts.context'
+import DynamicFeedIcon from '@mui/icons-material/DynamicFeed'
+import HandshakeIcon from '@mui/icons-material/Handshake'
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
 
 const ProfilePage = () => {
@@ -202,16 +206,20 @@ const ProfilePage = () => {
                         <hr />
                     </div>
                     <div className="sidebar-item" onClick={() => handleSidebarClick('myPosts')}>
-                        My Posts
+                        <DynamicFeedIcon className="sidebar-icon" />
+                        <span className="sidebar-text">My Posts</span>
                     </div>
                     <div className="sidebar-item" onClick={() => handleSidebarClick('pendingExchanges')}>
-                        Pending Exchanges
+                        <HandshakeIcon className="sidebar-icon" />
+                        <span className="sidebar-text">Pending Exchanges</span>
                     </div>
                     <div className="sidebar-item" onClick={() => handleSidebarClick('myFavourites')}>
-                        Favourites
+                        <FavoriteIcon className="sidebar-icon" />
+                        <span className="sidebar-text">Saved Posts</span>
                     </div>
                     <div className="sidebar-item" onClick={() => handleSidebarClick('myBadges')}>
-                        Badges
+                        <EmojiEventsIcon className="sidebar-icon" />
+                        <span className="sidebar-text">Badges</span>
                     </div>
                 </div>
                 <div className="profile-content">

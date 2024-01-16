@@ -19,6 +19,7 @@ const Inbox = ({ conversations, setConversations }) => {
         setConversations(updatedConversations)
     }
 
+
     const { socket } = useContext(SocketContext)
 
     useEffect(() => {
@@ -29,6 +30,15 @@ const Inbox = ({ conversations, setConversations }) => {
             socket && socket.off('newMessage', handleMessage)
         }
     }, [socket,])
+
+    useEffect(() => {
+        if (selectedConversation) {
+            const updatedConversation = conversations.find(convo => convo._id === selectedConversation._id)
+            if (updatedConversation) {
+                setSelectedConversation(updatedConversation)
+            }
+        }
+    }, [conversations])
 
 
     const handleMessage = (newMessage) => {
